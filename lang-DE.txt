@@ -10,7 +10,7 @@ TRANSLATIONS FOR leparagliding.txt
 "* Wing name"                                    "* Flügelname"
 "* Drawing scale"                                "* Massstab der Zeichnung"
 "* Wing scale"                                   "* Massstab des Flügels"
-"* Number of cells"                              "* Número de celdas"
+"* Number of cells"                              "* Anzahl Zellen"
 "* Number of ribs"                               "* Número de costillas"
 "* Alpha wingtip, parameter, alpha center"       "* Alpha punta de ala, parámetro, alpha centro"
 "* Paraglider type and parameter"
