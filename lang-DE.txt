@@ -1,0 +1,73 @@
+-----------------------------------------------------------------------------------------------------------
+TRANSLATE LEFT CHAIN (EN) TO RIGHT CHAIN (DE):
+-----------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+TRANSLATIONS FOR leparagliding.txt
+-----------------------------------------------------------------------------------------------------------
+"* Input data file version"    "* Version der Datendatei"  
+"*             1. GEOMETRY"                      "*             1. GEOMETRÍA"            
+"* Brand name"                                   "* Fabricante"
+"* Wing name"                                    "* Nombre del ala"
+"* Drawing scale"                                "* Escala del dibujo"
+"* Wing scale"                                   "* Escala del ala"
+"* Number of cells"                              "* Número de celdas"
+"* Number of ribs"                               "* Número de costillas"
+"* Alpha wingtip, parameter, alpha center"       "* Alpha punta de ala, parámetro, alpha centro"
+"* Paraglider type and parameter"
+"* Rib geometric parameters"
+"* Rib	x-rib	y-LE	y-TE	xp	z	beta	RP	Washin"
+"*       2. AIRFOILS       	                     
+"* Airfoil name, intake in, intake out, open , disp. rrw"
+"*       3. ANCHOR POINTS                               
+"* Airf	Anch	A	B	C	D	E	F"
+"*       4. AIRFOIL HOLES"                                 
+"*       5. SKIN TENSION"                                 
+"Extrados                Intrados"
+"*       6. SEWING ALLOWANCES"                            		
+"upper panels (mm)"
+"lower panels (mm)"
+"*       7. MARKS"
+"*       8. Global angle of attack estimation"           
+"* Finesse GR"
+"* Center of pressure % of chord"
+"* Calage %"
+"* Risers lenght cm"
+"* Line lenght cm"
+"* Karabiners cm"
+"*       9. SUSPENSION LINES DESCRIPTION"
+"*       10. BRAKES"
+"* Brake distribution"
+"*       11. Ramification lengths"
+"*	 12. H V and VH ribs"
+"* 	 15. Extrados colors"
+"*	 16. Intrados colors"
+"*       17. Aditional rib points"
+"*       18. Elastic lines corrections"
+
+-----------------------------------------------------------------------------------------------------------
+TRANSLATIONS FOR pre-data.txt
+-----------------------------------------------------------------------------------------------------------
+
+(...)
+
+-----------------------------------------------------------------------------------------------------------
+TRANSLATIONS FOR leg.tcl
+-----------------------------------------------------------------------------------------------------------
+
+(...)
+
+-----------------------------------------------------------------------------------------------------------
+TRANSLATIONS FOR d_lep_w.tcl
+-----------------------------------------------------------------------------------------------------------
+
+(...)
+
+-----------------------------------------------------------------------------------------------------------
+TRANSLATIONS FOR d_pre_w.tcl
+-----------------------------------------------------------------------------------------------------------
+
+(...)
+
+
+
+	
