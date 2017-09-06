@@ -5,11 +5,11 @@ TRANSLATE LEFT CHAIN (EN) TO RIGHT CHAIN (DE):
 TRANSLATIONS FOR leparagliding.txt
 -----------------------------------------------------------------------------------------------------------
 "* Input data file version"    "* Version der Datendatei"  
-"*             1. GEOMETRY"                      "*             1. GEOMETRÍA"            
-"* Brand name"                                   "* Fabricante"
-"* Wing name"                                    "* Nombre del ala"
-"* Drawing scale"                                "* Escala del dibujo"
-"* Wing scale"                                   "* Escala del ala"
+"*             1. GEOMETRY"                      "*             1. Geometrie"            
+"* Brand name"                                   "* Hersteller"
+"* Wing name"                                    "* Flügelname"
+"* Drawing scale"                                "* Massstab der Zeichnung"
+"* Wing scale"                                   "* Massstab des Flügels"
 "* Number of cells"                              "* Número de celdas"
 "* Number of ribs"                               "* Número de costillas"
 "* Alpha wingtip, parameter, alpha center"       "* Alpha punta de ala, parámetro, alpha centro"
