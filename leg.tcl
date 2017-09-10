@@ -1,7 +1,8 @@
 #! /usr/bin/tclsh8.6
 
  package require Tk
-
+ package require msgcat
+ 
  set data_le(c0) 10.11
 
  #---------------------------------------------------------------------
@@ -49,12 +50,16 @@
  #
  #---------------------------------------------------------------------
  proc myAppInitGui { root } {
+	 
+	 #-----------------------------------------------------------------
+	 # setup translation framework
+	 #-----------------------------------------------------------------
+	 ::msgcat::mclocale de
+	 ::msgcat::mcload [file join [file dirname [info script]]]
 
      #-----------------------------------------------------------------
      #  treat root window "." as a special case
      #-----------------------------------------------------------------
-
-   
      if {$root == "."} {
          set base ""
      } else {
@@ -65,52 +70,103 @@
      #  Define the menu bar
      #-----------------------------------------------------------------
      menu $base.menu
-     $root config -menu $base.menu
-     foreach m {File Edit Main Planform Vault Airfoils Calage Skin VH-ribs \
-     Lines Colors Parameters DXF txt Settings Help} {
-         # Use [string tolower] to ensure magic menu names are right
-         set $m [menu $base.menu.[string tolower $m] -tearoff 0]
-         $base.menu add cascade -label $m -underline 0 -menu [set $m]
-     }
-
-     $File add command -underline 0 -label "New..." -command myAppFileNew
-     $File add command -underline 0 -label "Open..." -command myAppFileOpen
-     $File add command -underline 0 -label "Close" -command myAppFileClose
-     $File add separator
-     $File add command -underline 0 -label "Save" -command myAppFileSave
-     $File add command -underline 5 -label "Save As..." -command myAppFileSaveAs
-     $File add separator
-     $File add command -underline 1 -label "Exit" -command myAppExit
-
-     $Edit add command -underline 2 -label "Cut" -command myAppEditCut
-     $Edit add command -underline 0 -label "Copy" -command myAppEditCopy
-     $Edit add command -underline 0 -label "Paste" -command myAppEditPaste
-
-     $Planform add command -underline 0 -label "Leading edge" -command myAppLeadingEdge
-     $Planform add command -underline 1 -label "Trailing edge"
-     $Planform add command -underline 2 -label "Cells number and distribution" \
-     -command myAppCells
-     $Planform add command -underline 0 -label "Geometry matrix inspection" \
-     -command myAppGeometry
-
-     $Lines add command -underline 0 -label "Basic"
-     $Lines add command -underline 0 -label "Lines A"
-     $Lines add command -underline 0 -label "Lines B"
-     $Lines add command -underline 0 -label "Lines C"
-     $Lines add command -underline 0 -label "Lines D"
-     $Lines add command -underline 0 -label "Lines E"
-     $Lines add command -underline 0 -label "Brakes"
-
-     $Settings add command -underline 0 -label "Language"
+     menu $base.menu.file -tearoff 0
+     menu $base.menu.edit -tearoff 0
+     menu $base.menu.planform -tearoff 0
+     menu $base.menu.vault -tearoff 0
+     menu $base.menu.airfoils -tearoff 0
+     menu $base.menu.calage -tearoff 0
+     menu $base.menu.skin -tearoff 0
+     menu $base.menu.vhribs -tearoff 0
+     menu $base.menu.lines -tearoff 0
+     menu $base.menu.colors -tearoff 0
+     menu $base.menu.parameters -tearoff 0
+     menu $base.menu.dxf -tearoff 0
+     menu $base.menu.txt -tearoff 0
+     menu $base.menu.settings -tearoff 0
+     menu $base.menu.help -tearoff 0
      
-     $Help add command -underline 0 -label "Version" -command myAppVersion
+     $root config -menu $base.menu
+     
+     # File menu
+     $base.menu add cascade -label [::msgcat::mc "File"] -underline 0 -menu $base.menu.file
+     
+     $base.menu.file add command -underline 0 -label [::msgcat::mc "New"] -command myAppFileNew
+     $base.menu.file add command -underline 0 -label [::msgcat::mc "Open..."] -command myAppFileOpen
+     $base.menu.file add command -underline 0 -label [::msgcat::mc "Close"] -command myAppFileClose
+     $base.menu.file add separator
+     $base.menu.file add command -underline 0 -label [::msgcat::mc "Save"] -command myAppFileSave
+     $base.menu.file add command -underline 5 -label [::msgcat::mc "Save As"] -command myAppFileSaveAs
+     $base.menu.file add separator
+     $base.menu.file add command -underline 1 -label [::msgcat::mc "Exit"] -command myAppExit
 
+	 # Edit menu
+	 $base.menu add cascade -label [::msgcat::mc "Edit"] -underline 0 -menu $base.menu.edit
+     
+     $base.menu.edit add command -underline 2 -label [::msgcat::mc "Cut"] -command myAppEditCut
+     $base.menu.edit add command -underline 0 -label [::msgcat::mc "Copy"] -command myAppEditCopy
+     $base.menu.edit add command -underline 0 -label [::msgcat::mc "Paste"] -command myAppEditPaste
+     
+     # Planform menu
+     $base.menu add cascade -label [::msgcat::mc "Planform"] -underline 0 -menu $base.menu.planform
+     
+     $base.menu.planform add command -underline 0 -label [::msgcat::mc "Leading edge"] -command myAppLeadingEdge
+     $base.menu.planform add command -underline 1 -label [::msgcat::mc "Trailing edge"]
+	 $base.menu.planform add command -underline 2 -label [::msgcat::mc "Cells number and distribution"] -command myAppCells
+	 $base.menu.planform add command -underline 0 -label [::msgcat::mc "Geometry matrix inspection"] -command myAppGeometry
+     
+     # Vault menu
+     $base.menu add cascade -label [::msgcat::mc "Vault"] -underline 0 -menu $base.menu.vault
+     
+     # Airfolils menu
+     $base.menu add cascade -label [::msgcat::mc "Airfoils"] -underline 0 -menu $base.menu.airfolils
+     
+     # Calage menu
+     $base.menu add cascade -label [::msgcat::mc "Calage"] -underline 0 -menu $base.menu.calage
+     
+     # Skin menu
+     $base.menu add cascade -label [::msgcat::mc "Skin"] -underline 0 -menu $base.menu.skin
+     
+     # VH-ribs menu
+     $base.menu add cascade -label [::msgcat::mc "VH-ribs"] -underline 0 -menu $base.menu.vhribs
+     
+     # Lines menu
+     $base.menu add cascade -label [::msgcat::mc "Lines"] -underline 0 -menu $base.menu.lines
+	 
+	 $base.menu.lines add command -underline 0 -label [::msgcat::mc "Basic"]
+	 $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines A"]
+	 $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines B"]
+	 $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines C"]
+	 $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines D"]
+	 $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines E"]
+	 $base.menu.lines add command -underline 0 -label [::msgcat::mc "Brakes"]
+
+	 # Colors menu
+	 $base.menu add cascade -label [::msgcat::mc "Colors"] -underline 0 -menu $base.menu.colors
+	 
+     # Parameters menu
+     $base.menu add cascade -label [::msgcat::mc "Parameters"] -underline 0 -menu $base.menu.parameters
+     
+     # DXF menu
+     $base.menu add cascade -label [::msgcat::mc "DXF"] -underline 0 -menu $base.menu.dxf
+     
+     # txt menu
+     $base.menu add cascade -label [::msgcat::mc "txt"] -underline 0 -menu $base.menu.txt
+     
+     # Settings menu
+     $base.menu add cascade -label [::msgcat::mc "Settings"] -underline 0 -menu $base.menu.settings
+     
+     $base.menu.settings add command -underline 0 -label [::msgcat::mc "Language"]
+     
+	 # Help menu
+	 $base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
+     
+	 $base.menu.help add command -underline 0 -label [::msgcat::mc "Version"] -command myAppVersion
+	 $base.menu.help add command -underline 0 -label [::msgcat::mc "About"] -command myAppHelpAbout
 
      # Test if focus returns a valid window before calling
-     append pCmd "myAppConfigEditMenu $Edit " {{if {[focus] != {}} {[bindtags [focus]]}}}
-     $Edit configure -postcommand $pCmd
-
-     $Help add command -label About -command myAppHelpAbout
+	 # append pCmd "myAppConfigEditMenu $Edit " {{if {[focus] != {}} {[bindtags [focus]]}}}
+	 # $Edit configure -postcommand $pCmd
 
      #-----------------------------------------------------------------
      #  Set window manager properties for myApp
