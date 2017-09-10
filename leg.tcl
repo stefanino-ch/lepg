@@ -1,187 +1,187 @@
 #! /usr/bin/tclsh8.6
 
- package require Tk
- package require msgcat
+package require Tk
+package require msgcat
  
- set data_le(c0) 10.11
+set data_le(c0) 10.11
 
- #---------------------------------------------------------------------
- #
- #  leg.tcl
- #
- #  LEparagliding GUI 
- #  version 0.1 2016-08-20
- #
- #  Pere Casellas
- #  http://www.laboratoridenvol.com
- #
- #  General Public License GNU GPL 3.0
- #
- #---------------------------------------------------------------------
+#---------------------------------------------------------------------
+#
+#  leg.tcl
+#
+#  LEparagliding GUI 
+#  version 0.1 2016-08-20
+#
+#  Pere Casellas
+#  http://www.laboratoridenvol.com
+#
+#  General Public License GNU GPL 3.0
+#
+#---------------------------------------------------------------------
 
- #---------------------------------------------------------------------
- #
- #  1. myAppMain
- #
- #  Performs basic initialization of myApp.
- #
- #---------------------------------------------------------------------
- proc myAppMain { argc argv } {
+#---------------------------------------------------------------------
+#
+#  1. myAppMain
+#
+#  Performs basic initialization of myApp.
+#
+#---------------------------------------------------------------------
+proc myAppMain { argc argv } {
 
-     #-----------------------------------------------------------------
-     #  Construct the UI
-     #-----------------------------------------------------------------
-     myAppInitGui . 
+    #-----------------------------------------------------------------
+    #  Construct the UI
+    #-----------------------------------------------------------------
+    myAppInitGui . 
 
-          #------------------------------------------------------------
-     #  If we have an argument, then open the file
-     #-----------------------------------------------------------------
-     if { [llength $argv] > 0 } {
-         myAppFileOpen [lindex $argv 0]
-     }
- }
+    #------------------------------------------------------------
+    #  If we have an argument, then open the file
+    #-----------------------------------------------------------------
+    if { [llength $argv] > 0 } {
+        myAppFileOpen [lindex $argv 0]
+    }
+}
 #----------------------------------------------------------------------
 
- #---------------------------------------------------------------------
- #
- #  2. myAppInitGui
- #
- #  Construct and initialize UI
- #
- #---------------------------------------------------------------------
- proc myAppInitGui { root } {
+#---------------------------------------------------------------------
+#
+#  2. myAppInitGui
+#
+#  Construct and initialize UI
+#
+#---------------------------------------------------------------------
+proc myAppInitGui { root } {
 	 
-	 #-----------------------------------------------------------------
-	 # setup translation framework
-	 #-----------------------------------------------------------------
-	 ::msgcat::mclocale de
-	 ::msgcat::mcload [file join [file dirname [info script]]]
+    #-----------------------------------------------------------------
+	# setup translation framework
+	#-----------------------------------------------------------------
+	::msgcat::mclocale de
+	::msgcat::mcload [file join [file dirname [info script]]]
 
-     #-----------------------------------------------------------------
-     #  treat root window "." as a special case
-     #-----------------------------------------------------------------
-     if {$root == "."} {
-         set base ""
-     } else {
-         set base $root
-     }
+    #-----------------------------------------------------------------
+    #  treat root window "." as a special case
+    #-----------------------------------------------------------------
+    if {$root == "."} {
+        set base ""
+    } else {
+        set base $root
+    }
+    
+    #-----------------------------------------------------------------
+    #  Define the menu bar
+    #-----------------------------------------------------------------
+    menu $base.menu
+    menu $base.menu.file -tearoff 0
+    menu $base.menu.edit -tearoff 0
+    menu $base.menu.planform -tearoff 0
+    menu $base.menu.vault -tearoff 0
+    menu $base.menu.airfoils -tearoff 0
+    menu $base.menu.calage -tearoff 0
+    menu $base.menu.skin -tearoff 0
+    menu $base.menu.vhribs -tearoff 0
+    menu $base.menu.lines -tearoff 0
+    menu $base.menu.colors -tearoff 0
+    menu $base.menu.parameters -tearoff 0
+    menu $base.menu.dxf -tearoff 0
+    menu $base.menu.txt -tearoff 0
+    menu $base.menu.settings -tearoff 0
+    menu $base.menu.help -tearoff 0
+     
+    $root config -menu $base.menu
+     
+    # File menu
+    $base.menu add cascade -label [::msgcat::mc "File"] -underline 0 -menu $base.menu.file
+     
+    $base.menu.file add command -underline 0 -label [::msgcat::mc "New"] -command myAppFileNew
+    $base.menu.file add command -underline 0 -label [::msgcat::mc "Open..."] -command myAppFileOpen
+    $base.menu.file add command -underline 0 -label [::msgcat::mc "Close"] -command myAppFileClose
+    $base.menu.file add separator
+    $base.menu.file add command -underline 0 -label [::msgcat::mc "Save"] -command myAppFileSave
+    $base.menu.file add command -underline 5 -label [::msgcat::mc "Save As"] -command myAppFileSaveAs
+    $base.menu.file add separator
+    $base.menu.file add command -underline 1 -label [::msgcat::mc "Exit"] -command myAppExit
 
-     #-----------------------------------------------------------------
-     #  Define the menu bar
-     #-----------------------------------------------------------------
-     menu $base.menu
-     menu $base.menu.file -tearoff 0
-     menu $base.menu.edit -tearoff 0
-     menu $base.menu.planform -tearoff 0
-     menu $base.menu.vault -tearoff 0
-     menu $base.menu.airfoils -tearoff 0
-     menu $base.menu.calage -tearoff 0
-     menu $base.menu.skin -tearoff 0
-     menu $base.menu.vhribs -tearoff 0
-     menu $base.menu.lines -tearoff 0
-     menu $base.menu.colors -tearoff 0
-     menu $base.menu.parameters -tearoff 0
-     menu $base.menu.dxf -tearoff 0
-     menu $base.menu.txt -tearoff 0
-     menu $base.menu.settings -tearoff 0
-     menu $base.menu.help -tearoff 0
+	# Edit menu
+	$base.menu add cascade -label [::msgcat::mc "Edit"] -underline 0 -menu $base.menu.edit
      
-     $root config -menu $base.menu
+    $base.menu.edit add command -underline 2 -label [::msgcat::mc "Cut"] -command myAppEditCut
+    $base.menu.edit add command -underline 0 -label [::msgcat::mc "Copy"] -command myAppEditCopy
+    $base.menu.edit add command -underline 0 -label [::msgcat::mc "Paste"] -command myAppEditPaste
      
-     # File menu
-     $base.menu add cascade -label [::msgcat::mc "File"] -underline 0 -menu $base.menu.file
+    # Planform menu
+    $base.menu add cascade -label [::msgcat::mc "Planform"] -underline 0 -menu $base.menu.planform
      
-     $base.menu.file add command -underline 0 -label [::msgcat::mc "New"] -command myAppFileNew
-     $base.menu.file add command -underline 0 -label [::msgcat::mc "Open..."] -command myAppFileOpen
-     $base.menu.file add command -underline 0 -label [::msgcat::mc "Close"] -command myAppFileClose
-     $base.menu.file add separator
-     $base.menu.file add command -underline 0 -label [::msgcat::mc "Save"] -command myAppFileSave
-     $base.menu.file add command -underline 5 -label [::msgcat::mc "Save As"] -command myAppFileSaveAs
-     $base.menu.file add separator
-     $base.menu.file add command -underline 1 -label [::msgcat::mc "Exit"] -command myAppExit
-
-	 # Edit menu
-	 $base.menu add cascade -label [::msgcat::mc "Edit"] -underline 0 -menu $base.menu.edit
+    $base.menu.planform add command -underline 0 -label [::msgcat::mc "Leading edge"] -command myAppLeadingEdge
+    $base.menu.planform add command -underline 1 -label [::msgcat::mc "Trailing edge"]
+	$base.menu.planform add command -underline 2 -label [::msgcat::mc "Cells number and distribution"] -command myAppCells
+	$base.menu.planform add command -underline 0 -label [::msgcat::mc "Geometry matrix inspection"] -command myAppGeometry
      
-     $base.menu.edit add command -underline 2 -label [::msgcat::mc "Cut"] -command myAppEditCut
-     $base.menu.edit add command -underline 0 -label [::msgcat::mc "Copy"] -command myAppEditCopy
-     $base.menu.edit add command -underline 0 -label [::msgcat::mc "Paste"] -command myAppEditPaste
+    # Vault menu
+    $base.menu add cascade -label [::msgcat::mc "Vault"] -underline 0 -menu $base.menu.vault
      
-     # Planform menu
-     $base.menu add cascade -label [::msgcat::mc "Planform"] -underline 0 -menu $base.menu.planform
+    # Airfolils menu
+    $base.menu add cascade -label [::msgcat::mc "Airfoils"] -underline 0 -menu $base.menu.airfolils
      
-     $base.menu.planform add command -underline 0 -label [::msgcat::mc "Leading edge"] -command myAppLeadingEdge
-     $base.menu.planform add command -underline 1 -label [::msgcat::mc "Trailing edge"]
-	 $base.menu.planform add command -underline 2 -label [::msgcat::mc "Cells number and distribution"] -command myAppCells
-	 $base.menu.planform add command -underline 0 -label [::msgcat::mc "Geometry matrix inspection"] -command myAppGeometry
+    # Calage menu
+    $base.menu add cascade -label [::msgcat::mc "Calage"] -underline 0 -menu $base.menu.calage
      
-     # Vault menu
-     $base.menu add cascade -label [::msgcat::mc "Vault"] -underline 0 -menu $base.menu.vault
+    # Skin menu
+    $base.menu add cascade -label [::msgcat::mc "Skin"] -underline 0 -menu $base.menu.skin
      
-     # Airfolils menu
-     $base.menu add cascade -label [::msgcat::mc "Airfoils"] -underline 0 -menu $base.menu.airfolils
+    # VH-ribs menu
+    $base.menu add cascade -label [::msgcat::mc "VH-ribs"] -underline 0 -menu $base.menu.vhribs
      
-     # Calage menu
-     $base.menu add cascade -label [::msgcat::mc "Calage"] -underline 0 -menu $base.menu.calage
-     
-     # Skin menu
-     $base.menu add cascade -label [::msgcat::mc "Skin"] -underline 0 -menu $base.menu.skin
-     
-     # VH-ribs menu
-     $base.menu add cascade -label [::msgcat::mc "VH-ribs"] -underline 0 -menu $base.menu.vhribs
-     
-     # Lines menu
-     $base.menu add cascade -label [::msgcat::mc "Lines"] -underline 0 -menu $base.menu.lines
+    # Lines menu
+    $base.menu add cascade -label [::msgcat::mc "Lines"] -underline 0 -menu $base.menu.lines
 	 
-	 $base.menu.lines add command -underline 0 -label [::msgcat::mc "Basic"]
-	 $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines A"]
-	 $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines B"]
-	 $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines C"]
-	 $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines D"]
-	 $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines E"]
-	 $base.menu.lines add command -underline 0 -label [::msgcat::mc "Brakes"]
+	$base.menu.lines add command -underline 0 -label [::msgcat::mc "Basic"]
+	$base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines A"]
+	$base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines B"]
+	$base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines C"]
+	$base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines D"]
+	$base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines E"]
+	$base.menu.lines add command -underline 0 -label [::msgcat::mc "Brakes"]
 
-	 # Colors menu
-	 $base.menu add cascade -label [::msgcat::mc "Colors"] -underline 0 -menu $base.menu.colors
+	# Colors menu
+	$base.menu add cascade -label [::msgcat::mc "Colors"] -underline 0 -menu $base.menu.colors
 	 
-     # Parameters menu
-     $base.menu add cascade -label [::msgcat::mc "Parameters"] -underline 0 -menu $base.menu.parameters
+    # Parameters menu
+    $base.menu add cascade -label [::msgcat::mc "Parameters"] -underline 0 -menu $base.menu.parameters
      
-     # DXF menu
-     $base.menu add cascade -label [::msgcat::mc "DXF"] -underline 0 -menu $base.menu.dxf
+    # DXF menu
+    $base.menu add cascade -label [::msgcat::mc "DXF"] -underline 0 -menu $base.menu.dxf
      
-     # txt menu
-     $base.menu add cascade -label [::msgcat::mc "txt"] -underline 0 -menu $base.menu.txt
+    # txt menu
+    $base.menu add cascade -label [::msgcat::mc "txt"] -underline 0 -menu $base.menu.txt
      
-     # Settings menu
-     $base.menu add cascade -label [::msgcat::mc "Settings"] -underline 0 -menu $base.menu.settings
+    # Settings menu
+    $base.menu add cascade -label [::msgcat::mc "Settings"] -underline 0 -menu $base.menu.settings
      
-     $base.menu.settings add command -underline 0 -label [::msgcat::mc "Language"]
+    $base.menu.settings add command -underline 0 -label [::msgcat::mc "Language"]
      
-	 # Help menu
-	 $base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
+	# Help menu
+	$base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
      
-	 $base.menu.help add command -underline 0 -label [::msgcat::mc "Version"] -command myAppVersion
-	 $base.menu.help add command -underline 0 -label [::msgcat::mc "About"] -command myAppHelpAbout
+	$base.menu.help add command -underline 0 -label [::msgcat::mc "Version"] -command myAppVersion
+	$base.menu.help add command -underline 0 -label [::msgcat::mc "About"] -command myAppHelpAbout
 
-     # Test if focus returns a valid window before calling
-	 # append pCmd "myAppConfigEditMenu $Edit " {{if {[focus] != {}} {[bindtags [focus]]}}}
-	 # $Edit configure -postcommand $pCmd
+    # Test if focus returns a valid window before calling
+    # append pCmd "myAppConfigEditMenu $Edit " {{if {[focus] != {}} {[bindtags [focus]]}}}
+    # $Edit configure -postcommand $pCmd
 
-     #-----------------------------------------------------------------
-     #  Set window manager properties for myApp
-     #-----------------------------------------------------------------
-     wm protocol $root WM_DELETE_WINDOW { myAppExit }
-     wm geometry . +100+100 
-     wm title $root "Laboratori d'envol Paragliding Design Program 2.52 gui-0.1 "
+    #-----------------------------------------------------------------
+    #  Set window manager properties for myApp
+    #-----------------------------------------------------------------
+    wm protocol $root WM_DELETE_WINDOW { myAppExit }
+    wm geometry . +100+100 
+    wm title $root "Laboratori d'envol Paragliding Design Program 2.52 gui-0.1 "
 
-     #-----------------------------------------------------------------
-     #  insert code defining myApp main window
-     #-----------------------------------------------------------------
-     ### text .t
-     ### bind .t <Key> {set myAppChangedFlag 1}
-     ### pack .t
- }
+    #-----------------------------------------------------------------
+    #  insert code defining myApp main window
+    #-----------------------------------------------------------------
+    ### text .t
+    ### bind .t <Key> {set myAppChangedFlag 1}
+    ### pack .t
+}
 
 #    End myAppInitGui
 
@@ -190,10 +190,10 @@
 #    Procedures for read and write data files
 #---------------------------------------------------------------------
 #    proc myApp_lep_r
-     source "d_lep_r.tcl"
+    source "d_lep_r.tcl"
 
 #    proc myAp_lep_w
-     source "d_lep_w.tcl"
+    source "d_lep_w.tcl"
 
 
 #----------------------------------------------------------------------
@@ -365,92 +365,92 @@ proc myAppWriteMain { } {
     myAppWriteMain
 
 
- #---------------------------------------------------------------------
- #
- #  File Procedures
- #
- #  Note that opening, saving, and closing files
- #  are all intertwined.  This code assumes that
- #  new/open/close/exit may lose some data.
- #
- #---------------------------------------------------------------------
- set myAppFileName ""
- set myAppChangedFlag 0
- set myAppFileTypes {
-     {{tcl files}   {.tcl .tk}}
-     {{All Files}        *    }
+    #---------------------------------------------------------------------
+    #
+    #  File Procedures
+    #
+    #  Note that opening, saving, and closing files
+    #  are all intertwined.  This code assumes that
+    #  new/open/close/exit may lose some data.
+    #
+    #---------------------------------------------------------------------
+    set myAppFileName ""
+    set myAppChangedFlag 0
+    set myAppFileTypes {
+        {{tcl files}   {.tcl .tk}}
+        {{All Files}        *    }
+    }
+
+proc myAppFileNew { } {
+    global myAppFileName
+    global myAppChangedFlag
+    if { $myAppChangedFlag } {
+        myAppPromptForSave
+    }
+
+    #-----------------------------------------------------------------
+    # insert code for "new" operation
+    #-----------------------------------------------------------------
+    ### .t delete 1.0 end
+
+    set myAppFileName ""
+    set myAppChangedFlag 0
  }
 
- proc myAppFileNew { } {
-     global myAppFileName
-     global myAppChangedFlag
-     if { $myAppChangedFlag } {
-         myAppPromptForSave
-     }
+proc myAppFileOpen { {filename ""} } {
+    global myAppFileName
+    global myAppChangedFlag
+    global myAppFileTypes
+    if { $myAppChangedFlag } {
+        myAppPromptForSave
+    }
 
-     #-----------------------------------------------------------------
-     # insert code for "new" operation
-     #-----------------------------------------------------------------
-     ### .t delete 1.0 end
+    if {$filename == ""} {
+        set filename [tk_getOpenFile -filetypes $myAppFileTypes]
+    }
 
-     set myAppFileName ""
-     set myAppChangedFlag 0
- }
+    if {$filename != ""} {
+        if { [catch {open $filename r} fp] } {
+            error "Cannot Open File $filename for Reading"
+        }
 
- proc myAppFileOpen { {filename ""} } {
-     global myAppFileName
-     global myAppChangedFlag
-     global myAppFileTypes
-     if { $myAppChangedFlag } {
-         myAppPromptForSave
-     }
+        #-------------------------------------------------------------
+        # insert code for "open" operation
+        #-------------------------------------------------------------
+        ### .t insert end [read $fp [file size $filename]]
 
-     if {$filename == ""} {
-         set filename [tk_getOpenFile -filetypes $myAppFileTypes]
-     }
+        close $fp
+        set myAppFileName $filename
+        set myAppChangedFlag 0
+    }
+}
 
-     if {$filename != ""} {
-         if { [catch {open $filename r} fp] } {
-             error "Cannot Open File $filename for Reading"
-         }
+proc myAppFileClose { } {
+    global myAppFileName
+    global myAppChangedFlag
+    if { $myAppChangedFlag } {
+        myAppPromptForSave
+    }
 
-         #-------------------------------------------------------------
-         # insert code for "open" operation
-         #-------------------------------------------------------------
-         ### .t insert end [read $fp [file size $filename]]
+    #-----------------------------------------------------------------
+    # insert code for "close" operation
+    #-----------------------------------------------------------------
+    ### .t delete 1.0 end
 
-         close $fp
-         set myAppFileName $filename
-         set myAppChangedFlag 0
-     }
- }
-
- proc myAppFileClose { } {
-     global myAppFileName
-     global myAppChangedFlag
-     if { $myAppChangedFlag } {
-         myAppPromptForSave
-     }
-
-     #-----------------------------------------------------------------
-     # insert code for "close" operation
-     #-----------------------------------------------------------------
-     ### .t delete 1.0 end
-
-     set myAppFileName ""
-     set myAppChangedFlag 0
+    set myAppFileName ""
+    set myAppChangedFlag 0
  }
 
  proc myAppFileSave { {filename ""} } {
-     global myAppFileName
-     global myAppChangedFlag #BMA
-     if { $filename == "" } {
-         set filename $myAppFileName
-     }
-     if { $filename != "" } {
-         if { [catch {open $filename w} fp] } {
+    global myAppFileName
+    global myAppChangedFlag #BMA
+    if { $filename == "" } {
+        set filename $myAppFileName
+    }
+    if { $filename != "" } {
+        if { [catch {open $filename w} fp] } {
              error "Cannot write to $filename"
-         }
+        }
 
          #-------------------------------------------------------------
          # insert code for "save" operation
@@ -460,30 +460,30 @@ proc myAppWriteMain { } {
          close $fp
          set myAppFileName $filename
          set myAppChangedFlag 0
-     }
- }
+    }
+}
 
- proc myAppFileSaveAs { } {
-     global myAppFileTypes
-     set filename [tk_getSaveFile -filetypes $myAppFileTypes]
-     if { $filename != "" } {
-         myAppFileSave $filename
-     }
- }
+proc myAppFileSaveAs { } {
+    global myAppFileTypes
+    set filename [tk_getSaveFile -filetypes $myAppFileTypes]
+    if { $filename != "" } {
+        myAppFileSave $filename
+    }
+}
 
- proc myAppPromptForSave { } {
-     set answer [tk_messageBox -title "myApp:  Do you want to save?" \
-         -type yesno -icon question \
-         -message "Do you want to save the changes?"]
-     if { $answer == "yes" } {
-         myAppFileSaveAs
-     }
- }
+proc myAppPromptForSave { } {
+    set answer [tk_messageBox -title "myApp:  Do you want to save?" \
+        -type yesno -icon question \
+        -message "Do you want to save the changes?"]
+    if { $answer == "yes" } {
+        myAppFileSaveAs
+    }
+}
 
- proc myAppExit { } {
-     myAppFileClose
-     exit
- }
+proc myAppExit { } {
+    myAppFileClose
+    exit
+}
 
 
 #----------------------------------------------------------------------
@@ -491,7 +491,7 @@ proc myAppWriteMain { } {
 #
 #   Set version and license note
 #----------------------------------------------------------------------
- proc myAppVersion { } {
+proc myAppVersion { } {
 #   Toplevel
     
     toplevel .helplep
@@ -526,7 +526,7 @@ proc myAppWriteMain { } {
 #
 #   Set number of cells and its distribution along span
 #----------------------------------------------------------------------
- proc myAppCells { } {
+proc myAppCells { } {
 #   Toplevel
     toplevel .ncellsdis
 
@@ -537,14 +537,14 @@ proc myAppWriteMain { } {
     frame .ncellsdis.fr1 -width 400 -height 300 -bd 2 
     pack .ncellsdis.fr1 -side top -padx 2m -pady 2m -ipadx 2c -ipady 2c 
 
- }
+}
 
 #----------------------------------------------------------------------
 #   proc myAppGeometry
 #
 #   Prints geometry matrix for inspect and edit
 #----------------------------------------------------------------------
- proc myAppGeometry { } {
+proc myAppGeometry { } {
 
     global rib ribg nribss
 
@@ -606,25 +606,25 @@ proc myAppWriteMain { } {
 
 
 
- #---------------------------------------------------------------------
- #  Cut/Copy/Paste
- #
- #  These procedures generate events
- #  for all Tk Widgets in the GUI
- #---------------------------------------------------------------------
- proc myAppEditCut { } {
-     event generate [focus] <<Cut>>
- }
+#---------------------------------------------------------------------
+#  Cut/Copy/Paste
+#
+#  These procedures generate events
+#  for all Tk Widgets in the GUI
+#---------------------------------------------------------------------
+proc myAppEditCut { } {
+    event generate [focus] <<Cut>>
+}
 
- proc myAppEditCopy { } {
-     event generate [focus] <<Copy>>
- }
+proc myAppEditCopy { } {
+    event generate [focus] <<Copy>>
+}
 
- proc myAppEditPaste { } {
-     event generate [focus] <<Paste>>
- }
+proc myAppEditPaste { } {
+    event generate [focus] <<Paste>>
+}
 
- proc myAppSearchBindingsAndEval {event bindtags script} {
+proc myAppSearchBindingsAndEval {event bindtags script} {
     foreach tag $bindtags {
         foreach sequence [bind $tag] {
             if {[string first $event $sequence] == 0} {
@@ -632,8 +632,8 @@ proc myAppWriteMain { } {
             }
         }
     }
- }
- proc myAppConfigEditMenu {menu bindtags} {
+}
+proc myAppConfigEditMenu {menu bindtags} {
     foreach {event index} {<<Cut>>   0
                            <<Copy>>  1
                            <<Paste>> 2
@@ -643,20 +643,20 @@ proc myAppWriteMain { } {
             $menu entryconfigure $index -state normal
         }
     }
- }
+}
 
- #---------------------------------------------------------------------
- #  Help Operations
- #---------------------------------------------------------------------
+#---------------------------------------------------------------------
+#  Help Operations
+#---------------------------------------------------------------------
 
- proc myAppHelpAbout { } {
-     tk_messageBox -message "LE Paragliding GUI V0.1"
- }
+proc myAppHelpAbout { } {
+    tk_messageBox -message "LE Paragliding GUI V0.1"
+}
 
- #---------------------------------------------------------------------
- #  Execute the main procedure
- #---------------------------------------------------------------------
+#---------------------------------------------------------------------
+#  Execute the main procedure
+#---------------------------------------------------------------------
 
- myAppMain $argc $argv
+myAppMain $argc $argv
 
 
