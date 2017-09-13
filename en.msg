@@ -13,4 +13,8 @@
 "Cut"					"Cut"
 "Copy"					"Copy"
 "Paste"					"Paste"
+
+
+"lbl_LangChanged"       "Language selection changed"
+"txt_PlsRestart"        "Please restart the application to update the user interface."
 }

@@ -5,6 +5,7 @@ package require msgcat
  
 set data_le(c0) 10.11
 
+
 #---------------------------------------------------------------------
 #
 #  leg.tcl
@@ -27,6 +28,14 @@ set data_le(c0) 10.11
 #
 #---------------------------------------------------------------------
 proc myAppMain { argc argv } {
+    
+    
+    #-----------------------------------------------------------------
+    #  Load config file
+    #-----------------------------------------------------------------
+    dict set ::GlobalConfig Language ""
+    set ::GlobalConfig [myAppLoadConfigFile]
+    #puts "Language: [dict get $::GlobalConfig Language]"
 
     #-----------------------------------------------------------------
     #  Construct the UI
@@ -54,7 +63,8 @@ proc myAppInitGui { root } {
     #-----------------------------------------------------------------
 	# setup translation framework
 	#-----------------------------------------------------------------
-	::msgcat::mclocale de
+    
+    ::msgcat::mclocale [dict get $::GlobalConfig Language]
 	::msgcat::mcload [file join [file dirname [info script]]]
 
     #-----------------------------------------------------------------
@@ -84,6 +94,7 @@ proc myAppInitGui { root } {
     menu $base.menu.dxf -tearoff 0
     menu $base.menu.txt -tearoff 0
     menu $base.menu.settings -tearoff 0
+    menu $base.menu.settings.language -tearoff 0
     menu $base.menu.help -tearoff 0
      
     $root config -menu $base.menu
@@ -155,9 +166,11 @@ proc myAppInitGui { root } {
      
     # Settings menu
     $base.menu add cascade -label [::msgcat::mc "Settings"] -underline 0 -menu $base.menu.settings
-     
-    $base.menu.settings add command -underline 0 -label [::msgcat::mc "Language"]
-     
+    
+    $base.menu.settings add cascade -label [::msgcat::mc "Language"] -underline 0 -menu $base.menu.settings.language 
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "English"] -command {myAppSetLanguage "en"}
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "German"] -command {myAppSetLanguage "de"}
+         
 	# Help menu
 	$base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
      
@@ -482,6 +495,7 @@ proc myAppPromptForSave { } {
 
 proc myAppExit { } {
     myAppFileClose
+    myAppSaveConfigFile $::GlobalConfig
     exit
 }
 
@@ -654,9 +668,36 @@ proc myAppHelpAbout { } {
 }
 
 #---------------------------------------------------------------------
+#  Configuration operations
+#---------------------------------------------------------------------
+
+proc myAppLoadConfigFile {} {
+    set ConfigFile [open lep-gui-conf.txt r]
+    while {[gets $ConfigFile ConfigLine] >= 0} {
+        set Tmp [string first ":" $ConfigLine]
+        set Key [string range $ConfigLine 0 [expr $Tmp - 1]]
+        set Value [string range $ConfigLine [expr $Tmp + 1] end]
+        dict set ConfigData $Key $Value
+    }
+    close $ConfigFile
+    return $ConfigData
+}
+
+proc myAppSaveConfigFile {ConfigData} {
+    set ConfigFile [open lep-gui-conf.txt w]
+    dict for {Key Value} $ConfigData {puts $ConfigFile "$Key:$Value"}
+    close $ConfigFile
+}
+
+proc myAppSetLanguage {Lang} {
+    dict set ::GlobalConfig Language $Lang
+    tk_messageBox -title [::msgcat::mc "lbl_LangChanged"] -message [::msgcat::mc "txt_PlsRestart"] -icon info -type ok -default ok
+}
+
+
+#---------------------------------------------------------------------
 #  Execute the main procedure
 #---------------------------------------------------------------------
 
 myAppMain $argc $argv
-
 

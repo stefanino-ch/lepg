@@ -66,4 +66,7 @@
 "Help"							"Hilfe"
 "Version"						"Version"
 "About"							"über"
+
+"lbl_LangChanged"               "Sprache geändert"
+"txt_PlsRestart"                "Bitte starten Sie neu um die änderung zu übernehmen."
 }
