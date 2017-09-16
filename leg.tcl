@@ -3,6 +3,13 @@
 package require Tk
 package require msgcat
 
+# Derive current directory and append it to the package path
+variable myLocation [file normalize [info script]]
+lappend ::auto_path [file dirname $myLocation]
+
+# Load local packages
+package require lepConfigFile
+
 set data_le(c0) 10.11
 
 
@@ -29,13 +36,15 @@ set data_le(c0) 10.11
 #---------------------------------------------------------------------
 proc myAppMain { argc argv } {
 
-
     #-----------------------------------------------------------------
-    #  Load config file
+    #  Global program configuration
     #-----------------------------------------------------------------
-    dict set ::GlobalConfig Language ""
-    set ::GlobalConfig [LoadConfigFile]
-    #puts "Language: [dict get $::GlobalConfig Language]"
+    
+    #First setup hardcoded defaults
+    dict set ::GlobalConfig Language "en"
+    
+    # Hardcoded defaults will be overwritten by config file values
+    set ::GlobalConfig [::lepConfigFile::loadFile $::GlobalConfig]
 
     #-----------------------------------------------------------------
     #  Construct the UI
@@ -65,6 +74,12 @@ proc myAppInitGui { root } {
     #-----------------------------------------------------------------
 
     ::msgcat::mclocale [dict get $::GlobalConfig Language]
+    # make sure translation exists
+    if { [::msgcat::mcexists [dict get $::GlobalConfig Language]] == 0 } {
+        #something wrong with the translation set in config file, load en
+        dict set ::GlobalConfig Language "en"
+        ::msgcat::mclocale [dict get $::GlobalConfig Language]
+    }
     ::msgcat::mcload [file join [file dirname [info script]]]
 
     #-----------------------------------------------------------------
@@ -495,7 +510,7 @@ proc myAppPromptForSave { } {
 
 proc myAppExit { } {
     myAppFileClose
-    SaveConfigFile $::GlobalConfig
+    ::lepConfigFile::saveFile $::GlobalConfig
     exit
 }
 
@@ -671,29 +686,10 @@ proc myAppHelpAbout { } {
 #  Configuration operations
 #---------------------------------------------------------------------
 
-proc LoadConfigFile {} {
-    set ConfigFile [open lep-gui-conf.txt r]
-    while {[gets $ConfigFile ConfigLine] >= 0} {
-        set Tmp [string first ":" $ConfigLine]
-        set Key [string range $ConfigLine 0 [expr $Tmp - 1]]
-        set Value [string range $ConfigLine [expr $Tmp + 1] end]
-        dict set ConfigData $Key $Value
-    }
-    close $ConfigFile
-    return $ConfigData
-}
-
-proc SaveConfigFile {ConfigData} {
-    set ConfigFile [open lep-gui-conf.txt w]
-    dict for {Key Value} $ConfigData {puts $ConfigFile "$Key:$Value"}
-    close $ConfigFile
-}
-
 proc myAppSetLanguage {Lang} {
     dict set ::GlobalConfig Language $Lang
     tk_messageBox -title [::msgcat::mc "lbl_LangChanged"] -message [::msgcat::mc "txt_PlsRestart"] -icon info -type ok -default ok
 }
-
 
 #---------------------------------------------------------------------
 #  Execute the main procedure
