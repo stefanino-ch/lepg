@@ -2,7 +2,7 @@
 
 package require Tk
 package require msgcat
- 
+
 set data_le(c0) 10.11
 
 
@@ -10,7 +10,7 @@ set data_le(c0) 10.11
 #
 #  leg.tcl
 #
-#  LEparagliding GUI 
+#  LEparagliding GUI
 #  version 0.1 2016-08-20
 #
 #  Pere Casellas
@@ -28,19 +28,19 @@ set data_le(c0) 10.11
 #
 #---------------------------------------------------------------------
 proc myAppMain { argc argv } {
-    
-    
+
+
     #-----------------------------------------------------------------
     #  Load config file
     #-----------------------------------------------------------------
     dict set ::GlobalConfig Language ""
-    set ::GlobalConfig [myAppLoadConfigFile]
+    set ::GlobalConfig [LoadConfigFile]
     #puts "Language: [dict get $::GlobalConfig Language]"
 
     #-----------------------------------------------------------------
     #  Construct the UI
     #-----------------------------------------------------------------
-    myAppInitGui . 
+    myAppInitGui .
 
     #------------------------------------------------------------
     #  If we have an argument, then open the file
@@ -59,13 +59,13 @@ proc myAppMain { argc argv } {
 #
 #---------------------------------------------------------------------
 proc myAppInitGui { root } {
-	 
+
     #-----------------------------------------------------------------
-	# setup translation framework
-	#-----------------------------------------------------------------
-    
+    # setup translation framework
+    #-----------------------------------------------------------------
+
     ::msgcat::mclocale [dict get $::GlobalConfig Language]
-	::msgcat::mcload [file join [file dirname [info script]]]
+    ::msgcat::mcload [file join [file dirname [info script]]]
 
     #-----------------------------------------------------------------
     #  treat root window "." as a special case
@@ -75,7 +75,7 @@ proc myAppInitGui { root } {
     } else {
         set base $root
     }
-    
+
     #-----------------------------------------------------------------
     #  Define the menu bar
     #-----------------------------------------------------------------
@@ -96,12 +96,12 @@ proc myAppInitGui { root } {
     menu $base.menu.settings -tearoff 0
     menu $base.menu.settings.language -tearoff 0
     menu $base.menu.help -tearoff 0
-     
+
     $root config -menu $base.menu
-     
+
     # File menu
     $base.menu add cascade -label [::msgcat::mc "File"] -underline 0 -menu $base.menu.file
-     
+
     $base.menu.file add command -underline 0 -label [::msgcat::mc "New"] -command myAppFileNew
     $base.menu.file add command -underline 0 -label [::msgcat::mc "Open..."] -command myAppFileOpen
     $base.menu.file add command -underline 0 -label [::msgcat::mc "Close"] -command myAppFileClose
@@ -111,71 +111,71 @@ proc myAppInitGui { root } {
     $base.menu.file add separator
     $base.menu.file add command -underline 1 -label [::msgcat::mc "Exit"] -command myAppExit
 
-	# Edit menu
-	$base.menu add cascade -label [::msgcat::mc "Edit"] -underline 0 -menu $base.menu.edit
-     
+    # Edit menu
+    $base.menu add cascade -label [::msgcat::mc "Edit"] -underline 0 -menu $base.menu.edit
+
     $base.menu.edit add command -underline 2 -label [::msgcat::mc "Cut"] -command myAppEditCut
     $base.menu.edit add command -underline 0 -label [::msgcat::mc "Copy"] -command myAppEditCopy
     $base.menu.edit add command -underline 0 -label [::msgcat::mc "Paste"] -command myAppEditPaste
-     
+
     # Planform menu
     $base.menu add cascade -label [::msgcat::mc "Planform"] -underline 0 -menu $base.menu.planform
-     
+
     $base.menu.planform add command -underline 0 -label [::msgcat::mc "Leading edge"] -command myAppLeadingEdge
     $base.menu.planform add command -underline 1 -label [::msgcat::mc "Trailing edge"]
-	$base.menu.planform add command -underline 2 -label [::msgcat::mc "Cells number and distribution"] -command myAppCells
-	$base.menu.planform add command -underline 0 -label [::msgcat::mc "Geometry matrix inspection"] -command myAppGeometry
-     
+    $base.menu.planform add command -underline 2 -label [::msgcat::mc "Cells number and distribution"] -command myAppCells
+    $base.menu.planform add command -underline 0 -label [::msgcat::mc "Geometry matrix inspection"] -command myAppGeometry
+
     # Vault menu
     $base.menu add cascade -label [::msgcat::mc "Vault"] -underline 0 -menu $base.menu.vault
-     
+
     # Airfolils menu
     $base.menu add cascade -label [::msgcat::mc "Airfoils"] -underline 0 -menu $base.menu.airfolils
-     
+
     # Calage menu
     $base.menu add cascade -label [::msgcat::mc "Calage"] -underline 0 -menu $base.menu.calage
-     
+
     # Skin menu
     $base.menu add cascade -label [::msgcat::mc "Skin"] -underline 0 -menu $base.menu.skin
-     
+
     # VH-ribs menu
     $base.menu add cascade -label [::msgcat::mc "VH-ribs"] -underline 0 -menu $base.menu.vhribs
-     
+
     # Lines menu
     $base.menu add cascade -label [::msgcat::mc "Lines"] -underline 0 -menu $base.menu.lines
-	 
-	$base.menu.lines add command -underline 0 -label [::msgcat::mc "Basic"]
-	$base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines A"]
-	$base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines B"]
-	$base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines C"]
-	$base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines D"]
-	$base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines E"]
-	$base.menu.lines add command -underline 0 -label [::msgcat::mc "Brakes"]
 
-	# Colors menu
-	$base.menu add cascade -label [::msgcat::mc "Colors"] -underline 0 -menu $base.menu.colors
-	 
+    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Basic"]
+    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines A"]
+    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines B"]
+    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines C"]
+    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines D"]
+    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines E"]
+    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Brakes"]
+
+    # Colors menu
+    $base.menu add cascade -label [::msgcat::mc "Colors"] -underline 0 -menu $base.menu.colors
+
     # Parameters menu
     $base.menu add cascade -label [::msgcat::mc "Parameters"] -underline 0 -menu $base.menu.parameters
-     
+
     # DXF menu
     $base.menu add cascade -label [::msgcat::mc "DXF"] -underline 0 -menu $base.menu.dxf
-     
+
     # txt menu
     $base.menu add cascade -label [::msgcat::mc "txt"] -underline 0 -menu $base.menu.txt
-     
+
     # Settings menu
     $base.menu add cascade -label [::msgcat::mc "Settings"] -underline 0 -menu $base.menu.settings
-    
-    $base.menu.settings add cascade -label [::msgcat::mc "Language"] -underline 0 -menu $base.menu.settings.language 
+
+    $base.menu.settings add cascade -label [::msgcat::mc "Language"] -underline 0 -menu $base.menu.settings.language
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "English"] -command {myAppSetLanguage "en"}
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "German"] -command {myAppSetLanguage "de"}
-         
-	# Help menu
-	$base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
-     
-	$base.menu.help add command -underline 0 -label [::msgcat::mc "Version"] -command myAppVersion
-	$base.menu.help add command -underline 0 -label [::msgcat::mc "About"] -command myAppHelpAbout
+
+    # Help menu
+    $base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
+
+    $base.menu.help add command -underline 0 -label [::msgcat::mc "Version"] -command myAppVersion
+    $base.menu.help add command -underline 0 -label [::msgcat::mc "About"] -command myAppHelpAbout
 
     # Test if focus returns a valid window before calling
     # append pCmd "myAppConfigEditMenu $Edit " {{if {[focus] != {}} {[bindtags [focus]]}}}
@@ -185,7 +185,7 @@ proc myAppInitGui { root } {
     #  Set window manager properties for myApp
     #-----------------------------------------------------------------
     wm protocol $root WM_DELETE_WINDOW { myAppExit }
-    wm geometry . +100+100 
+    wm geometry . +100+100
     wm title $root "Laboratori d'envol Paragliding Design Program 2.52 gui-0.1 "
 
     #-----------------------------------------------------------------
@@ -215,12 +215,12 @@ proc myAppInitGui { root } {
 proc myAppWriteMain { } {
 
     global data_le
- 
+
     global linea bname wname xkf xwf ncells nribst nribss alpham kbbb \
     alphac atp kaaa rib ribg nomair ndis nrib1 nrib2 nhols hol \
     skin htens ndif xndif \
-    xupp xupple xuppte xlow xlowle xlowte xrib xvrib xmark xcir xdes 
-    
+    xupp xupple xuppte xlow xlowle xlowte xrib xvrib xmark xcir xdes
+
 #   Read lep data file
     myApp_lep_r
 
@@ -229,7 +229,7 @@ proc myAppWriteMain { } {
 
     set area 1.0
 
-    set span [expr 0.01*2*$rib($nribss,2)] 
+    set span [expr 0.01*2*$rib($nribss,2)]
 
 #----------------------------------------------------------------------
 #
@@ -268,7 +268,7 @@ proc myAppWriteMain { } {
     .uno.c1 create text 150 10 -text $bname -tag texto2 -fill red -anchor w
     .uno.c1 create text 20 30 -text "Model:" -tag texto3 -fill black -anchor w
     .uno.c1 create text 150 30 -text $wname -tag texto4 -fill blue -anchor w
-    .uno.c1 create text 20 50 -tag texto3 -fill black -anchor w -text "Cells:" 
+    .uno.c1 create text 20 50 -tag texto3 -fill black -anchor w -text "Cells:"
     .uno.c1 create text 150 50 -text $ncells -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 70 -text "Draw scale:" -tag texto3 -fill black -anchor w
     .uno.c1 create text 150 70 -text $xkf -tag texto4 -fill blue -anchor w
@@ -303,9 +303,9 @@ proc myAppWriteMain { } {
 
 
 #   Print geometry matrix
-    set i 1 
+    set i 1
     set xx 0
-    while {$i <= $nribss} { 
+    while {$i <= $nribss} {
     foreach j {1 2 3 4 6 7 9 10 51} {
     set xx [expr $xx+40]
     set yy [expr 10+20*($i-1)]
@@ -326,16 +326,16 @@ proc myAppWriteMain { } {
 #----------------------------------------------------------------------
 
     .dos.c1 create text 40 10 -text "Planform:" -tag texto -fill black -justify left
-    set i 1 
-    while {$i <= $nribss} { 
+    set i 1
+    while {$i <= $nribss} {
     .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
     [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] -tag linea2 -fill green
     .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
     [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] -tag linea2 -fill red
     incr i }
 
-    set i 1 
-    while {$i <= [expr $nribss-1]} { 
+    set i 1
+    while {$i <= [expr $nribss-1]} {
     .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
     [expr $c_c+$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],3)] -tag linea2 -fill green
     .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
@@ -355,10 +355,10 @@ proc myAppWriteMain { } {
 #----------------------------------------------------------------------
 #   Draw basic front view
 #----------------------------------------------------------------------
-   
+
     .dos.c2 create text 40 10 -text "Front view:" -tag texto -fill black -justify left
-    set i 1 
-    while {$i <= [expr $nribss-1]} { 
+    set i 1
+    while {$i <= [expr $nribss-1]} {
     .dos.c2 create line [expr $c_c+$sf*$rib($i,6)] [expr 20+$sf*$rib($i,7)] \
     [expr $c_c+$sf*$rib([expr $i+1],6)] [expr 20+$sf*$rib([expr $i+1],7)] -tag linea2 -fill green
     .dos.c2 create line [expr $c_c-$sf*$rib($i,6)] [expr 20+$sf*$rib($i,7)] \
@@ -495,7 +495,7 @@ proc myAppPromptForSave { } {
 
 proc myAppExit { } {
     myAppFileClose
-    myAppSaveConfigFile $::GlobalConfig
+    SaveConfigFile $::GlobalConfig
     exit
 }
 
@@ -507,18 +507,18 @@ proc myAppExit { } {
 #----------------------------------------------------------------------
 proc myAppVersion { } {
 #   Toplevel
-    
+
     toplevel .helplep
 
     wm geometry .helplep 500x240+200+200
     wm title .helplep "LEparagliding"
     focus .helplep
 
-    frame .helplep.fr1 -width 500 -height 200 -bd 2 
-    pack  .helplep.fr1 -side top -padx 2m -pady 2m -ipadx 2c -ipady 2c 
+    frame .helplep.fr1 -width 500 -height 200 -bd 2
+    pack  .helplep.fr1 -side top -padx 2m -pady 2m -ipadx 2c -ipady 2c
 
-    set img [image create photo -file img/le-ge.png] 
-    label .helplep.fr1.lb1 -image $img 
+    set img [image create photo -file img/le-ge.png]
+    label .helplep.fr1.lb1 -image $img
     pack  .helplep.fr1.lb1 -side  top
 
     label .helplep.fr1.lb2 -text " "
@@ -526,12 +526,12 @@ proc myAppVersion { } {
     label .helplep.fr1.lb4 -text "General Public License GNU GPL3.0"
     label .helplep.fr1.lb5 -text "Pere Casellas"
     label .helplep.fr1.lb6 -text "http://www.laboratoridenvol.com"
-   
+
     pack .helplep.fr1.lb2 .helplep.fr1.lb3 .helplep.fr1.lb4 .helplep.fr1.lb5 \
     .helplep.fr1.lb6 -side top
 
     button .helplep.fr1.holaok -text " OK " -command {destroy .helplep}
-    pack .helplep.fr1.holaok -padx 20 -pady 10 
+    pack .helplep.fr1.holaok -padx 20 -pady 10
 
 }
 
@@ -548,8 +548,8 @@ proc myAppCells { } {
     wm title .ncellsdis "Number of cells and distribution"
     focus .ncellsdis
 
-    frame .ncellsdis.fr1 -width 400 -height 300 -bd 2 
-    pack .ncellsdis.fr1 -side top -padx 2m -pady 2m -ipadx 2c -ipady 2c 
+    frame .ncellsdis.fr1 -width 400 -height 300 -bd 2
+    pack .ncellsdis.fr1 -side top -padx 2m -pady 2m -ipadx 2c -ipady 2c
 
 }
 
@@ -564,33 +564,33 @@ proc myAppGeometry { } {
 
     myApp_lep_r
 
-    set w .text 
-    catch {destroy $w} 
-    toplevel $w 
+    set w .text
+    catch {destroy $w}
+    toplevel $w
     focus $w
-    wm title $w "Geometry matrix inspection and edit" 
+    wm title $w "Geometry matrix inspection and edit"
     wm geometry $w 600x300+50+50
 
     frame $w.f1 -width 600 -height 50 -bd 2 -relief groove
     frame $w.f2 -width 600 -height 300 -bd 2 -relief groove -bg yellow
     pack $w.f1 $w.f2 -side top
 
-    text $w.f2.text -width 600 -height 400 -relief sunken -bd 2 -setgrid 1 -height 30 
-#    scrollbar $w.scroll -command $w.text yview 
-#    pack $w.scroll -side right -fill y 
-#    pack $w.f2.text -fill both 
+    text $w.f2.text -width 600 -height 400 -relief sunken -bd 2 -setgrid 1 -height 30
+#    scrollbar $w.scroll -command $w.text yview
+#    pack $w.scroll -side right -fill y
+#    pack $w.f2.text -fill both
 
     pack $w.f2.text -side top
 
-    # Se inserta el texto en el widget 
+    # Se inserta el texto en el widget
     set i 1
     while {$i <= $nribss} {
     $w.f2.text insert $i.0 $ribg($i)\n
-    incr i } 
+    incr i }
 
     button $w.ok -text " OK " -command {destroy .text}
-    pack $w.ok -padx 20 -pady 10 
-      
+    pack $w.ok -padx 20 -pady 10
+
 }
 
 
@@ -671,7 +671,7 @@ proc myAppHelpAbout { } {
 #  Configuration operations
 #---------------------------------------------------------------------
 
-proc myAppLoadConfigFile {} {
+proc LoadConfigFile {} {
     set ConfigFile [open lep-gui-conf.txt r]
     while {[gets $ConfigFile ConfigLine] >= 0} {
         set Tmp [string first ":" $ConfigLine]
@@ -683,7 +683,7 @@ proc myAppLoadConfigFile {} {
     return $ConfigData
 }
 
-proc myAppSaveConfigFile {ConfigData} {
+proc SaveConfigFile {ConfigData} {
     set ConfigFile [open lep-gui-conf.txt w]
     dict for {Key Value} $ConfigData {puts $ConfigFile "$Key:$Value"}
     close $ConfigFile
