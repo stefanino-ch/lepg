@@ -39,10 +39,8 @@ proc myAppMain { argc argv } {
     #-----------------------------------------------------------------
     #  Global program configuration
     #-----------------------------------------------------------------
-    
     #First setup hardcoded defaults
     dict set ::GlobalConfig Language "en"
-    
     # Hardcoded defaults will be overwritten by config file values
     set ::GlobalConfig [::lepConfigFile::loadFile $::GlobalConfig]
 
@@ -72,14 +70,7 @@ proc myAppInitGui { root } {
     #-----------------------------------------------------------------
     # setup translation framework
     #-----------------------------------------------------------------
-
     ::msgcat::mclocale [dict get $::GlobalConfig Language]
-    # make sure translation exists
-    if { [::msgcat::mcexists [dict get $::GlobalConfig Language]] == 0 } {
-        #something wrong with the translation set in config file, load en
-        dict set ::GlobalConfig Language "en"
-        ::msgcat::mclocale [dict get $::GlobalConfig Language]
-    }
     ::msgcat::mcload [file join [file dirname [info script]]]
 
     #-----------------------------------------------------------------
