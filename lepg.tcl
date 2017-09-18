@@ -12,13 +12,13 @@ package require lepConfigFile
 
 set data_le(c0) 10.11
 
-
 #---------------------------------------------------------------------
 #
 #  leg.tcl
 #
 #  LEparagliding GUI
-#  version 0.1 2016-08-20
+set VersionNumber "V0.2"
+set VersionDate   "2016-08-20"
 #
 #  Pere Casellas
 #  http://www.laboratoridenvol.com
@@ -66,7 +66,8 @@ proc myAppMain { argc argv } {
 #
 #---------------------------------------------------------------------
 proc myAppInitGui { root } {
-
+	global VersionNumber
+	
     #-----------------------------------------------------------------
     # setup translation framework
     #-----------------------------------------------------------------
@@ -180,8 +181,8 @@ proc myAppInitGui { root } {
     # Help menu
     $base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
 
-    $base.menu.help add command -underline 0 -label [::msgcat::mc "Version"] -command myAppVersion
-    $base.menu.help add command -underline 0 -label [::msgcat::mc "About"] -command myAppHelpAbout
+    $base.menu.help add command -underline 0 -label [::msgcat::mc "Version"] -command VersionInfo
+    $base.menu.help add command -underline 0 -label [::msgcat::mc "About"] -command HelpAbout
 
     # Test if focus returns a valid window before calling
     # append pCmd "myAppConfigEditMenu $Edit " {{if {[focus] != {}} {[bindtags [focus]]}}}
@@ -192,7 +193,7 @@ proc myAppInitGui { root } {
     #-----------------------------------------------------------------
     wm protocol $root WM_DELETE_WINDOW { myAppExit }
     wm geometry . +100+100
-    wm title $root "Laboratori d'envol Paragliding Design Program 2.52 gui-0.1 "
+    wm title $root "Laboratori d'envol Paragliding Design Program 2.52 gui-$VersionNumber "
 
     #-----------------------------------------------------------------
     #  insert code defining myApp main window
@@ -507,11 +508,13 @@ proc myAppExit { } {
 
 
 #----------------------------------------------------------------------
-#   proc myAppVersion
+#   proc VersionInfo
 #
 #   Set version and license note
 #----------------------------------------------------------------------
-proc myAppVersion { } {
+proc VersionInfo { } {
+	global VersionNumber
+	global VersionDate
 #   Toplevel
 
     toplevel .helplep
@@ -523,12 +526,13 @@ proc myAppVersion { } {
     frame .helplep.fr1 -width 500 -height 200 -bd 2
     pack  .helplep.fr1 -side top -padx 2m -pady 2m -ipadx 2c -ipady 2c
 
-    set img [image create photo -file img/le-ge.png]
-    label .helplep.fr1.lb1 -image $img
-    pack  .helplep.fr1.lb1 -side  top
+    # Image is missing
+    # set img [image create photo -file img/le-ge.png]
+    # label .helplep.fr1.lb1 -image $img
+    # pack  .helplep.fr1.lb1 -side  top
 
     label .helplep.fr1.lb2 -text " "
-    label .helplep.fr1.lb3 -text "LEparagliding 2.52 gui-0.1 (2016-08-20)"
+    label .helplep.fr1.lb3 -text "LEparagliding 2.52 gui-$VersionNumber ($VersionDate)"
     label .helplep.fr1.lb4 -text "General Public License GNU GPL3.0"
     label .helplep.fr1.lb5 -text "Pere Casellas"
     label .helplep.fr1.lb6 -text "http://www.laboratoridenvol.com"
@@ -669,8 +673,9 @@ proc myAppConfigEditMenu {menu bindtags} {
 #  Help Operations
 #---------------------------------------------------------------------
 
-proc myAppHelpAbout { } {
-    tk_messageBox -message "LE Paragliding GUI V0.1"
+proc HelpAbout { } {
+	global VersionNumber
+    tk_messageBox -message "LE Paragliding GUI $VersionNumber"
 }
 
 #---------------------------------------------------------------------
