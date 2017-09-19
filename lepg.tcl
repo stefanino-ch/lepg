@@ -47,7 +47,7 @@ proc myAppMain { argc argv } {
     #-----------------------------------------------------------------
     #  Construct the UI
     #-----------------------------------------------------------------
-    myAppInitGui .
+    InitGui .
 
     #------------------------------------------------------------
     #  If we have an argument, then open the file
@@ -60,12 +60,12 @@ proc myAppMain { argc argv } {
 
 #---------------------------------------------------------------------
 #
-#  2. myAppInitGui
+#  2. InitGui
 #
 #  Construct and initialize UI
 #
 #---------------------------------------------------------------------
-proc myAppInitGui { root } {
+proc InitGui { root } {
 	global VersionNumber
 	
     #-----------------------------------------------------------------
@@ -131,7 +131,7 @@ proc myAppInitGui { root } {
     $base.menu.planform add command -underline 0 -label [::msgcat::mc "Leading edge"] -command myAppLeadingEdge
     $base.menu.planform add command -underline 1 -label [::msgcat::mc "Trailing edge"]
     $base.menu.planform add command -underline 2 -label [::msgcat::mc "Cells number and distribution"] -command myAppCells
-    $base.menu.planform add command -underline 0 -label [::msgcat::mc "Geometry matrix inspection"] -command myAppGeometry
+    $base.menu.planform add command -underline 0 -label [::msgcat::mc "Geometry matrix inspection"] -command GeometryMatrixWindow
 
     # Vault menu
     $base.menu add cascade -label [::msgcat::mc "Vault"] -underline 0 -menu $base.menu.vault
@@ -203,7 +203,7 @@ proc myAppInitGui { root } {
     ### pack .t
 }
 
-#    End myAppInitGui
+#    End InitGui
 
 
 #----------------------------------------------------------------------
@@ -519,17 +519,16 @@ proc VersionInfo { } {
 
     toplevel .helplep
 
-    wm geometry .helplep 500x240+200+200
+    wm geometry .helplep 500x260+200+200
     wm title .helplep "LEparagliding"
     focus .helplep
 
     frame .helplep.fr1 -width 500 -height 200 -bd 2
     pack  .helplep.fr1 -side top -padx 2m -pady 2m -ipadx 2c -ipady 2c
 
-    # Image is missing
-    # set img [image create photo -file img/le-ge.png]
-    # label .helplep.fr1.lb1 -image $img
-    # pack  .helplep.fr1.lb1 -side  top
+    set img [image create photo -file img/le-ge.png]
+    label .helplep.fr1.lb1 -image $img
+    pack  .helplep.fr1.lb1 -side  top
 
     label .helplep.fr1.lb2 -text " "
     label .helplep.fr1.lb3 -text "LEparagliding 2.52 gui-$VersionNumber ($VersionDate)"
@@ -564,11 +563,11 @@ proc myAppCells { } {
 }
 
 #----------------------------------------------------------------------
-#   proc myAppGeometry
+#   proc GeometryMatrixWindow
 #
 #   Prints geometry matrix for inspect and edit
 #----------------------------------------------------------------------
-proc myAppGeometry { } {
+proc GeometryMatrixWindow { } {
 
     global rib ribg nribss
 

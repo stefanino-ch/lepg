@@ -1,7 +1,7 @@
 ﻿::msgcat::mcmset en {
 "##### File Menu"       "##### File Menu"
-"File"                  "File-e"
-"New"                   "New-e"
+"File"                  "File"
+"New"                   "New"
 "Open..."               "Open"
 "Close"                 "Close"
 "Save"                  "Save"
@@ -14,6 +14,8 @@
 "Copy"                  "Copy"
 "Paste"                 "Paste"
 
+"##### Planform Menu"   "##### Planform Menu"
+"Planform"              "Planform"
 
 "lbl_LangChanged"       "Language selection changed"
 "txt_PlsRestart"        "Please restart the application to update the user interface."

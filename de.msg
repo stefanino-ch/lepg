@@ -14,27 +14,27 @@
 "Copy"                          "Kopieren"
 "Paste"                         "Einfügen"
 
-"##### Planform Menu"           "##### Planform Menu"
-"Planform"                      "Planform-d"
+"##### Planform Menu"           "##### Grundriss Menu"
+"Planform"                      "Grundriss"
 "Leading edge"                  "Eintrittskante"
 "Trailing edge"                 "Austrittskante"
-"Cells number and distribution" "Cells number and distribution-d"
-"Geometry matrix inspection"    "Geometry matrix inspection-d"
+"Cells number and distribution" "Zellenanzahl und Verteilung"
+"Geometry matrix inspection"    "Geometrie Matrix"
 
-"##### Vault Menu"              "##### Vault-d Menu"
-"Vault"                         "Vault-d"
+"##### Vault Menu"              "##### Vault Menu"
+"Vault"                         "Vault"
 
-"##### Airfoils Menu"           "##### Airfoils-d Menu"
-"Airfoils"                      "Airfoils-d"
+"##### Airfoils Menu"           "##### Airfoils Menu"
+"Airfoils"                      "Airfoils"
 
-"##### Calage Menu"             "##### Calage-d Menu"
-"Calage"                        "Calage-d"
+"##### Calage Menu"             "##### Calage Menu"
+"Calage"                        "Calage"
 
-"##### Skin Menu"               "##### Skin-d Menu"
-"Skin"                          "Skin-d"
+"##### Skin Menu"               "##### Skin Menu"
+"Skin"                          "Skin"
 
-"##### VH-ribs Menu"            "##### VH-ribs-d Menu"
-"VH-ribs"                       "VH-ribs-d"
+"##### VH-ribs Menu"            "##### VH-ribs Menu"
+"VH-ribs"                       "VH-ribs"
 
 "##### Lines Menu"              "##### Leinen Menu"
 "Lines"                         "Leinen"
