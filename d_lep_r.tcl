@@ -5,7 +5,9 @@
 #----------------------------------------------------------------------
 proc myApp_lep_r { } {
 
-    global linea bname wname xkf xwf ncells nribst nribss alpham kbbb \
+    # linea removed from global
+	
+    global bname wname xkf xwf ncells nribst nribss alpham kbbb \
     alphac atp kaaa rib ribg nomair ndis nrib1 nrib2 nhols hol \
     skin htens ndif xndif \
     xupp xupple xuppte xlow xlowle xlowte xrib xvrib xmark xcir xdes \
@@ -26,26 +28,26 @@ proc myApp_lep_r { } {
 
     set i 1
     while {$i <= 9} {
-    set linea [gets $file]
+    set dataline [gets $file]
     incr i }
     # BrandName
     set bname  [gets $file]
-    set linea  [gets $file]
+    set dataline  [gets $file]
     # WingName
     set wname  [gets $file]
-    set linea  [gets $file]
+    set dataline  [gets $file]
     # DrawScale
     set xkf    [gets $file]
-    set linea  [gets $file]
+    set dataline  [gets $file]
     # WingScale
     set xwf    [gets $file]
-    set linea  [gets $file]
+    set dataline  [gets $file]
     # NumCells
     set ncells [expr [gets $file]]
-    set linea  [gets $file]
+    set dataline  [gets $file]
     # NumRibs
     set nribst [expr [gets $file]]
-    set linea  [gets $file]
+    set dataline  [gets $file]
     
     # washin = negative Flügelschränkung
     # WashinAlphaLine
@@ -71,7 +73,7 @@ proc myApp_lep_r { } {
     set alphac 0.0
     }
 
-    set linea [gets $file]
+    set dataline [gets $file]
     #ParaTypeLine
     set atpp  [gets $file]
 
@@ -82,8 +84,8 @@ proc myApp_lep_r { } {
     # RotLeTriang - Rotate Leading Edge triangle
     set kaaa [lindex $atpp 1]
 
-    set linea [gets $file]
-    set linea [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
 
     set nribss [expr ceil($nribst/2)]
     # Erase ".0" at the end of string
@@ -141,10 +143,10 @@ proc myApp_lep_r { } {
 # set alpham $ribg($nribss,51)
     }
 
-    set linea [gets $file]
-    set linea [gets $file]
-    set linea [gets $file]
-    set linea [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
 
     # Read airfoil data
     set i 1
@@ -183,10 +185,10 @@ proc myApp_lep_r { } {
         incr i 
     }
 
-    set linea [gets $file]
-    set linea [gets $file]
-    set linea [gets $file]
-    set linea [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
 
     # Read anchors A,B,C,D,E,F location
     set i 1
@@ -221,9 +223,9 @@ proc myApp_lep_r { } {
     }
 
     #   Read airfoil holes
-    set linea [gets $file]
-    set linea [gets $file]
-    set linea [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
     # Number of Airfoil configurations
     set ndis  [gets $file]
 
@@ -289,10 +291,10 @@ proc myApp_lep_r { } {
 
     # Read skin tension
 
-    set linea [gets $file]
-    set linea [gets $file]
-    set linea [gets $file]
-    set linea [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
 
     set k 1
     while {$k <= 6} {
@@ -312,33 +314,33 @@ proc myApp_lep_r { } {
     
     # strain in mini-ribs           => don't touch
     set htens [gets $file]
-    set linea [gets $file]
+    set dataline [gets $file]
     # Number of points np           => don't touch
-    set ndif  [lindex $linea 0]
+    set ndif  [lindex $dataline 0]
     # k coeficient 0.0 to 1.0       => don't touch
-    set xndif [lindex $linea 1]
+    set xndif [lindex $dataline 1]
 
     # Read sewing allowances
 
-    set linea  [gets $file]
-    set linea  [gets $file]
-    set linea  [gets $file]
+    set dataline  [gets $file]
+    set dataline  [gets $file]
+    set dataline  [gets $file]
 
-    set linea  [gets $file]
+    set dataline  [gets $file]
     #Seam Allowance upper Panel
-    set xupp   [lindex $linea 0]
+    set xupp   [lindex $dataline 0]
     #Seam Allowance upper Panel Leading Edge
-    set xupple [lindex $linea 1]
+    set xupple [lindex $dataline 1]
     #Seam Allowance upper Panel Trailing Edge
-    set xuppte [lindex $linea 2]
+    set xuppte [lindex $dataline 2]
 
-    set linea  [gets $file]
+    set dataline  [gets $file]
     #Seam Allowance lower Panel
-    set xlow   [lindex $linea 0]
+    set xlow   [lindex $dataline 0]
     #Seam Allowance lower Panel Leading Edge
-    set xlowle [lindex $linea 1]
+    set xlowle [lindex $dataline 1]
     #Seam Allowance lower Panel Trailing Edge
-    set xlowte [lindex $linea 2]
+    set xlowte [lindex $dataline 2]
 
     #Seam Allowance ribs
     set xrib   [gets $file]
@@ -346,48 +348,48 @@ proc myApp_lep_r { } {
     set xvrib  [gets $file]
 
     # Read marks
-    set linea  [gets $file]
-    set linea  [gets $file]
-    set linea  [gets $file]
+    set dataline  [gets $file]
+    set dataline  [gets $file]
+    set dataline  [gets $file]
 
-    set linea  [gets $file]
+    set dataline  [gets $file]
     # Marks spacing
-    set xmark  [lindex $linea 0]
+    set xmark  [lindex $dataline 0]
     # Mark point radius
-    set xcir   [lindex $linea 1]
+    set xcir   [lindex $dataline 1]
     # Mark point displacement
-    set xdes   [lindex $linea 2]
+    set xdes   [lindex $dataline 2]
 
     # Read 8. Global angle of attack
 
-    set linea  [gets $file]
-    set linea  [gets $file]
-    set linea  [gets $file]
+    set dataline  [gets $file]
+    set dataline  [gets $file]
+    set dataline  [gets $file]
 
-    set linea   [gets $file]
+    set dataline   [gets $file]
     # Finesse goal, according to the general proportions of the wing
     set finesse [gets $file]
-    set linea  [gets $file]
+    set dataline  [gets $file]
     # Position of the wing center of pressure estimated as % of central cord
     set cpress [gets $file]
-    set linea  [gets $file]
+    set dataline  [gets $file]
     # Calage in% (distance from the leading edge point to the perpendicular to the central chord from the pilot position)
     set calage [gets $file]
-    set linea  [gets $file]
+    set dataline  [gets $file]
     # Riser basic length [cm]
     set clengr [gets $file]
-    set linea  [gets $file]
+    set dataline  [gets $file]
     # Basic length of lines (maillons - sail) [cm]
     set clengl [gets $file]
-    set linea  [gets $file]
+    set dataline  [gets $file]
     # Separation between main carabiners [cm]
     set clengk [gets $file]
 
     # Read 9. Suspension lines description
 
-    set linea  [gets $file]
-    set linea  [gets $file]
-    set linea  [gets $file]
+    set dataline  [gets $file]
+    set dataline  [gets $file]
+    set dataline  [gets $file]
 
     # Line Control Parameter
     # 0 = lower branches lined only by geometric mean of the anchor points
@@ -403,18 +405,18 @@ proc myApp_lep_r { } {
         # Read 4 levels
         set i 1
         while {$i <= $cam($ii)} {
-            set linea  [gets $file]
-            set mc($ii,$i,1)   [lindex $linea 0]
-            set mc($ii,$i,2)   [lindex $linea 1]
-            set mc($ii,$i,3)   [lindex $linea 2]
-            set mc($ii,$i,4)   [lindex $linea 3]
-            set mc($ii,$i,5)   [lindex $linea 4]
-            set mc($ii,$i,6)   [lindex $linea 5]
-            set mc($ii,$i,7)   [lindex $linea 6]
-            set mc($ii,$i,8)   [lindex $linea 7]
-            set mc($ii,$i,9)   [lindex $linea 8]
-            set mc($ii,$i,14)  [lindex $linea 9]
-            set mc($ii,$i,15)  [lindex $linea 10]
+            set dataline  [gets $file]
+            set mc($ii,$i,1)   [lindex $dataline 0]
+            set mc($ii,$i,2)   [lindex $dataline 1]
+            set mc($ii,$i,3)   [lindex $dataline 2]
+            set mc($ii,$i,4)   [lindex $dataline 3]
+            set mc($ii,$i,5)   [lindex $dataline 4]
+            set mc($ii,$i,6)   [lindex $dataline 5]
+            set mc($ii,$i,7)   [lindex $dataline 6]
+            set mc($ii,$i,8)   [lindex $dataline 7]
+            set mc($ii,$i,9)   [lindex $dataline 8]
+            set mc($ii,$i,14)  [lindex $dataline 9]
+            set mc($ii,$i,15)  [lindex $dataline 10]
             incr i 
         }
 
@@ -423,9 +425,9 @@ proc myApp_lep_r { } {
 
     # Read 10. Brakes
 
-    set linea  [gets $file]
-    set linea  [gets $file]
-    set linea  [gets $file]
+    set dataline  [gets $file]
+    set dataline  [gets $file]
+    set dataline  [gets $file]
 
     set ii [expr $slp+1]
 
@@ -435,108 +437,108 @@ proc myApp_lep_r { } {
     # Read 4 levels
     set i 1
     while {$i <= $cam($ii)} {
-    set linea  [gets $file]
-    set mc($ii,$i,1)   [lindex $linea 0]
-    set mc($ii,$i,2)   [lindex $linea 1]
-    set mc($ii,$i,3)   [lindex $linea 2]
-    set mc($ii,$i,4)   [lindex $linea 3]
-    set mc($ii,$i,5)   [lindex $linea 4]
-    set mc($ii,$i,6)   [lindex $linea 5]
-    set mc($ii,$i,7)   [lindex $linea 6]
-    set mc($ii,$i,8)   [lindex $linea 7]
-    set mc($ii,$i,9)   [lindex $linea 8]
-    set mc($ii,$i,14)  [lindex $linea 9]
-    set brake($i,3)    [lindex $linea 10]
+    set dataline  [gets $file]
+    set mc($ii,$i,1)   [lindex $dataline 0]
+    set mc($ii,$i,2)   [lindex $dataline 1]
+    set mc($ii,$i,3)   [lindex $dataline 2]
+    set mc($ii,$i,4)   [lindex $dataline 3]
+    set mc($ii,$i,5)   [lindex $dataline 4]
+    set mc($ii,$i,6)   [lindex $dataline 5]
+    set mc($ii,$i,7)   [lindex $dataline 6]
+    set mc($ii,$i,8)   [lindex $dataline 7]
+    set mc($ii,$i,9)   [lindex $dataline 8]
+    set mc($ii,$i,14)  [lindex $dataline 9]
+    set brake($i,3)    [lindex $dataline 10]
     incr i }
 
-    set linea   [gets $file]
+    set dataline   [gets $file]
 
-    set linea   [gets $file]
-    set bd(1,1) [lindex $linea 0]
-    set bd(2,1) [lindex $linea 1]
-    set bd(3,1) [lindex $linea 2]
-    set bd(4,1) [lindex $linea 3]
-    set bd(5,1) [lindex $linea 4]
+    set dataline   [gets $file]
+    set bd(1,1) [lindex $dataline 0]
+    set bd(2,1) [lindex $dataline 1]
+    set bd(3,1) [lindex $dataline 2]
+    set bd(4,1) [lindex $dataline 3]
+    set bd(5,1) [lindex $dataline 4]
 
-    set linea   [gets $file]
-    set bd(1,2) [lindex $linea 0]
-    set bd(2,2) [lindex $linea 1]
-    set bd(3,2) [lindex $linea 2]
-    set bd(4,2) [lindex $linea 3]
-    set bd(5,2) [lindex $linea 4]
+    set dataline   [gets $file]
+    set bd(1,2) [lindex $dataline 0]
+    set bd(2,2) [lindex $dataline 1]
+    set bd(3,2) [lindex $dataline 2]
+    set bd(4,2) [lindex $dataline 3]
+    set bd(5,2) [lindex $dataline 4]
 
     # Read 11. Ramification lengths
 
-    set linea  [gets $file]
-    set linea  [gets $file]
-    set linea  [gets $file]
+    set dataline  [gets $file]
+    set dataline  [gets $file]
+    set dataline  [gets $file]
 
-    set linea     [gets $file]
-    set raml(3,1) [lindex $linea 0]
-    set raml(3,3) [lindex $linea 1]
+    set dataline     [gets $file]
+    set raml(3,1) [lindex $dataline 0]
+    set raml(3,3) [lindex $dataline 1]
 
-    set linea     [gets $file]
-    set raml(4,1) [lindex $linea 0]
-    set raml(4,3) [lindex $linea 1]
-    set raml(4,4) [lindex $linea 2]
+    set dataline     [gets $file]
+    set raml(4,1) [lindex $dataline 0]
+    set raml(4,3) [lindex $dataline 1]
+    set raml(4,4) [lindex $dataline 2]
 
-    set linea     [gets $file]
-    set raml(5,1) [lindex $linea 0]
-    set raml(5,3) [lindex $linea 1]
+    set dataline     [gets $file]
+    set raml(5,1) [lindex $dataline 0]
+    set raml(5,3) [lindex $dataline 1]
 
-    set linea     [gets $file]
-    set raml(6,1) [lindex $linea 0]
-    set raml(6,3) [lindex $linea 1]
-    set raml(6,4) [lindex $linea 2]
+    set dataline     [gets $file]
+    set raml(6,1) [lindex $dataline 0]
+    set raml(6,3) [lindex $dataline 1]
+    set raml(6,4) [lindex $dataline 2]
 
     # Read 12. H V and VH ribs
 
-    set linea [gets $file]
-    set linea [gets $file]
-    set linea [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
 
     set nhvr  [gets $file]
 
-    set linea [gets $file]
-    set xrsep [lindex $linea 0]
-    set yrsep [lindex $linea 1]
+    set dataline [gets $file]
+    set xrsep [lindex $dataline 0]
+    set yrsep [lindex $dataline 1]
 
     set i 1
     while {$i <= $nhvr} {
-    set linea [gets $file]
+    set dataline [gets $file]
     foreach j {0 1 2 3 4 5 6 7 8 9} {
-    set hvr($i,[expr $j+1]) [lindex $linea $j]
+    set hvr($i,[expr $j+1]) [lindex $dataline $j]
     }
     # If case 6, read 12 numbers
     if { $hvr($i,2) == 6 } {
     foreach j {0 1 2 3 4 5 6 7 8 9 10 11} {
-    set hvr($i,[expr $j+1]) [lindex $linea $j]
+    set hvr($i,[expr $j+1]) [lindex $dataline $j]
     }
     }
     incr i }
 
     # Read 15. Extrados colors
 
-    set linea [gets $file]
-    set linea [gets $file]
-    set linea [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
 
     set npce  [gets $file]
 
     set k 1
     while {$k <= $npce} {
 
-    set linea [gets $file]
-    set npc1e($k) [lindex $linea 0]
-    set npc2e($k) [lindex $linea 1]
+    set dataline [gets $file]
+    set npc1e($k) [lindex $dataline 0]
+    set npc2e($k) [lindex $dataline 1]
 
     set l 1
     while {$l <= $npc2e($k)} {
 
-    set linea [gets $file]
-    set npc3e($k,$l) [lindex $linea 0]
-    set xpc1e($k,$l) [lindex $linea 1]
-    set xpc2e($k,$l) [lindex $linea 2]
+    set dataline [gets $file]
+    set npc3e($k,$l) [lindex $dataline 0]
+    set xpc1e($k,$l) [lindex $dataline 1]
+    set xpc2e($k,$l) [lindex $dataline 2]
 
     incr l }
 
@@ -544,26 +546,26 @@ proc myApp_lep_r { } {
 
     # Read 16. Intrados colors
 
-    set linea [gets $file]
-    set linea [gets $file]
-    set linea [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
 
     set npci  [gets $file]
 
     set k 1
     while {$k <= $npci} {
 
-    set linea [gets $file]
-    set npc1i($k) [lindex $linea 0]
-    set npc2i($k) [lindex $linea 1]
+    set dataline [gets $file]
+    set npc1i($k) [lindex $dataline 0]
+    set npc2i($k) [lindex $dataline 1]
 
     set l 1
     while {$l <= $npc2i($k)} {
 
-    set linea [gets $file]
-    set npc3i($k,$l) [lindex $linea 0]
-    set xpc1i($k,$l) [lindex $linea 1]
-    set xpc2i($k,$l) [lindex $linea 2]
+    set dataline [gets $file]
+    set npc3i($k,$l) [lindex $dataline 0]
+    set xpc1i($k,$l) [lindex $dataline 1]
+    set xpc2i($k,$l) [lindex $dataline 2]
 
     incr l }
 
@@ -571,48 +573,48 @@ proc myApp_lep_r { } {
 
     # Read 17. Aditional rib points
 
-    set linea [gets $file]
-    set linea [gets $file]
-    set linea [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
 
     set narp [gets $file]
 
     set i 1
     while {$i <= $narp} {
-    set linea [gets $file]
-    set xarp($i) [lindex $linea 0]
-    set yarp($i) [lindex $linea 1]
+    set dataline [gets $file]
+    set xarp($i) [lindex $dataline 0]
+    set yarp($i) [lindex $dataline 1]
     incr i }
 
     # Read 18. Elastic lines corrections
 
-    set linea [gets $file]
-    set linea [gets $file]
-    set linea [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
+    set dataline [gets $file]
 
     set csusl [gets $file]
 
-    set linea [gets $file]
-    set cdis(2,1) [lindex $linea 0]
-    set cdis(2,2) [lindex $linea 1]
+    set dataline [gets $file]
+    set cdis(2,1) [lindex $dataline 0]
+    set cdis(2,2) [lindex $dataline 1]
 
-    set linea [gets $file]
-    set cdis(3,1) [lindex $linea 0]
-    set cdis(3,2) [lindex $linea 1]
-    set cdis(3,3) [lindex $linea 2]
+    set dataline [gets $file]
+    set cdis(3,1) [lindex $dataline 0]
+    set cdis(3,2) [lindex $dataline 1]
+    set cdis(3,3) [lindex $dataline 2]
 
-    set linea [gets $file]
-    set cdis(4,1) [lindex $linea 0]
-    set cdis(4,2) [lindex $linea 1]
-    set cdis(4,3) [lindex $linea 2]
-    set cdis(4,4) [lindex $linea 3]
+    set dataline [gets $file]
+    set cdis(4,1) [lindex $dataline 0]
+    set cdis(4,2) [lindex $dataline 1]
+    set cdis(4,3) [lindex $dataline 2]
+    set cdis(4,4) [lindex $dataline 3]
 
-    set linea [gets $file]
-    set cdis(5,1) [lindex $linea 0]
-    set cdis(5,2) [lindex $linea 1]
-    set cdis(5,3) [lindex $linea 2]
-    set cdis(5,4) [lindex $linea 3]
-    set cdis(5,5) [lindex $linea 4]
+    set dataline [gets $file]
+    set cdis(5,1) [lindex $dataline 0]
+    set cdis(5,2) [lindex $dataline 1]
+    set cdis(5,3) [lindex $dataline 2]
+    set cdis(5,4) [lindex $dataline 3]
+    set cdis(5,5) [lindex $dataline 4]
 
     #----------------------------------------------------------------------
     close $file
