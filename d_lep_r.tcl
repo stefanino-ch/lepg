@@ -5,8 +5,6 @@
 #----------------------------------------------------------------------
 proc myApp_lep_r { } {
 
-    # linea removed from global
-	
     global bname wname xkf xwf ncells nribst nribss alpham kbbb \
     alphac atp kaaa rib ribg nomair ndis nrib1 nrib2 nhols hol \
     skin htens ndif xndif \
@@ -321,7 +319,6 @@ proc myApp_lep_r { } {
     set xndif [lindex $dataline 1]
 
     # Read sewing allowances
-
     set dataline  [gets $file]
     set dataline  [gets $file]
     set dataline  [gets $file]
@@ -437,19 +434,20 @@ proc myApp_lep_r { } {
     # Read 4 levels
     set i 1
     while {$i <= $cam($ii)} {
-    set dataline  [gets $file]
-    set mc($ii,$i,1)   [lindex $dataline 0]
-    set mc($ii,$i,2)   [lindex $dataline 1]
-    set mc($ii,$i,3)   [lindex $dataline 2]
-    set mc($ii,$i,4)   [lindex $dataline 3]
-    set mc($ii,$i,5)   [lindex $dataline 4]
-    set mc($ii,$i,6)   [lindex $dataline 5]
-    set mc($ii,$i,7)   [lindex $dataline 6]
-    set mc($ii,$i,8)   [lindex $dataline 7]
-    set mc($ii,$i,9)   [lindex $dataline 8]
-    set mc($ii,$i,14)  [lindex $dataline 9]
-    set brake($i,3)    [lindex $dataline 10]
-    incr i }
+        set dataline  [gets $file]
+        set mc($ii,$i,1)   [lindex $dataline 0]
+        set mc($ii,$i,2)   [lindex $dataline 1]
+        set mc($ii,$i,3)   [lindex $dataline 2]
+        set mc($ii,$i,4)   [lindex $dataline 3]
+        set mc($ii,$i,5)   [lindex $dataline 4]
+        set mc($ii,$i,6)   [lindex $dataline 5]
+        set mc($ii,$i,7)   [lindex $dataline 6]
+        set mc($ii,$i,8)   [lindex $dataline 7]
+        set mc($ii,$i,9)   [lindex $dataline 8]
+        set mc($ii,$i,14)  [lindex $dataline 9]
+        set brake($i,3)    [lindex $dataline 10]
+        incr i 
+    }
 
     set dataline   [gets $file]
 
@@ -505,17 +503,18 @@ proc myApp_lep_r { } {
 
     set i 1
     while {$i <= $nhvr} {
-    set dataline [gets $file]
-    foreach j {0 1 2 3 4 5 6 7 8 9} {
-    set hvr($i,[expr $j+1]) [lindex $dataline $j]
+        set dataline [gets $file]
+        foreach j {0 1 2 3 4 5 6 7 8 9} {
+            set hvr($i,[expr $j+1]) [lindex $dataline $j]
+		}
+		# If case 6, read 12 numbers
+		if { $hvr($i,2) == 6 } {
+			foreach j {0 1 2 3 4 5 6 7 8 9 10 11} {
+				set hvr($i,[expr $j+1]) [lindex $dataline $j]
+			}
+		}
+		incr i 
     }
-    # If case 6, read 12 numbers
-    if { $hvr($i,2) == 6 } {
-    foreach j {0 1 2 3 4 5 6 7 8 9 10 11} {
-    set hvr($i,[expr $j+1]) [lindex $dataline $j]
-    }
-    }
-    incr i }
 
     # Read 15. Extrados colors
 
@@ -527,22 +526,21 @@ proc myApp_lep_r { } {
 
     set k 1
     while {$k <= $npce} {
+		set dataline [gets $file]
+		set npc1e($k) [lindex $dataline 0]
+		set npc2e($k) [lindex $dataline 1]
 
-    set dataline [gets $file]
-    set npc1e($k) [lindex $dataline 0]
-    set npc2e($k) [lindex $dataline 1]
+		set l 1
+		while {$l <= $npc2e($k)} {
+			set dataline [gets $file]
+			set npc3e($k,$l) [lindex $dataline 0]
+			set xpc1e($k,$l) [lindex $dataline 1]
+			set xpc2e($k,$l) [lindex $dataline 2]
+			incr l 
+			}
 
-    set l 1
-    while {$l <= $npc2e($k)} {
-
-    set dataline [gets $file]
-    set npc3e($k,$l) [lindex $dataline 0]
-    set xpc1e($k,$l) [lindex $dataline 1]
-    set xpc2e($k,$l) [lindex $dataline 2]
-
-    incr l }
-
-    incr k }
+		incr k 
+    }
 
     # Read 16. Intrados colors
 
@@ -555,21 +553,23 @@ proc myApp_lep_r { } {
     set k 1
     while {$k <= $npci} {
 
-    set dataline [gets $file]
-    set npc1i($k) [lindex $dataline 0]
-    set npc2i($k) [lindex $dataline 1]
+			set dataline [gets $file]
+			set npc1i($k) [lindex $dataline 0]
+			set npc2i($k) [lindex $dataline 1]
 
-    set l 1
-    while {$l <= $npc2i($k)} {
+			set l 1
+			while {$l <= $npc2i($k)} {
 
-    set dataline [gets $file]
-    set npc3i($k,$l) [lindex $dataline 0]
-    set xpc1i($k,$l) [lindex $dataline 1]
-    set xpc2i($k,$l) [lindex $dataline 2]
+			set dataline [gets $file]
+			set npc3i($k,$l) [lindex $dataline 0]
+			set xpc1i($k,$l) [lindex $dataline 1]
+			set xpc2i($k,$l) [lindex $dataline 2]
 
-    incr l }
+			incr l 
+		}
 
-    incr k }
+		incr k 
+    }
 
     # Read 17. Aditional rib points
 
@@ -581,10 +581,11 @@ proc myApp_lep_r { } {
 
     set i 1
     while {$i <= $narp} {
-    set dataline [gets $file]
-    set xarp($i) [lindex $dataline 0]
-    set yarp($i) [lindex $dataline 1]
-    incr i }
+		set dataline [gets $file]
+		set xarp($i) [lindex $dataline 0]
+		set yarp($i) [lindex $dataline 1]
+		incr i 
+	}
 
     # Read 18. Elastic lines corrections
 
