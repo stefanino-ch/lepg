@@ -67,7 +67,7 @@ proc myAppMain { argc argv } {
 #---------------------------------------------------------------------
 proc InitGui { root } {
 	global VersionNumber
-	
+
     #-----------------------------------------------------------------
     # setup translation framework
     #-----------------------------------------------------------------
@@ -175,8 +175,10 @@ proc InitGui { root } {
     $base.menu add cascade -label [::msgcat::mc "Settings"] -underline 0 -menu $base.menu.settings
 
     $base.menu.settings add cascade -label [::msgcat::mc "Language"] -underline 0 -menu $base.menu.settings.language
-    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "English"] -command {myAppSetLanguage "en"}
-    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "German"] -command {myAppSetLanguage "de"}
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Catalan"] -command {SetLanguage "ca"}
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "English"] -command {SetLanguage "en"}
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "German"] -command {SetLanguage "de"}
+
 
     # Help menu
     $base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
@@ -681,7 +683,7 @@ proc HelpAbout { } {
 #  Configuration operations
 #---------------------------------------------------------------------
 
-proc myAppSetLanguage {Lang} {
+proc SetLanguage {Lang} {
     dict set ::GlobalConfig Language $Lang
     tk_messageBox -title [::msgcat::mc "lbl_LangChanged"] -message [::msgcat::mc "txt_PlsRestart"] -icon info -type ok -default ok
 }
@@ -691,4 +693,3 @@ proc myAppSetLanguage {Lang} {
 #---------------------------------------------------------------------
 
 myAppMain $argc $argv
-
