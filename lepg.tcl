@@ -14,8 +14,6 @@ set data_le(c0) 10.11
 
 #---------------------------------------------------------------------
 #
-#  leg.tcl
-#
 #  LEparagliding GUI
 set VersionNumber "V0.2"
 set VersionDate   "2016-08-20"
@@ -67,7 +65,7 @@ proc myAppMain { argc argv } {
 #---------------------------------------------------------------------
 proc InitGui { root } {
 	global VersionNumber
-	
+
     #-----------------------------------------------------------------
     # setup translation framework
     #-----------------------------------------------------------------
@@ -221,9 +219,11 @@ proc InitGui { root } {
 #----------------------------------------------------------------------
 proc myAppWriteMain { } {
 
+    source "lep_GlobalWingVars.tcl"
+
     global data_le
 
-    global linea bname wname xkf xwf ncells nribst nribss alpham kbbb \
+    global linea wname xkf xwf ncells nribst nribss alpham kbbb \
     alphac atp kaaa rib ribg nomair ndis nrib1 nrib2 nhols hol \
     skin htens ndif xndif \
     xupp xupple xuppte xlow xlowle xlowte xrib xvrib xmark xcir xdes
@@ -691,4 +691,3 @@ proc myAppSetLanguage {Lang} {
 #---------------------------------------------------------------------
 
 myAppMain $argc $argv
-
