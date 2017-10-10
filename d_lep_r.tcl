@@ -5,476 +5,551 @@
 #----------------------------------------------------------------------
 proc myApp_lep_r { } {
 
-    global linea bname wname xkf xwf ncells nribst nribss alpham kbbb \
-    alphac atp kaaa rib ribg nomair ndis nrib1 nrib2 nhols hol \
-    skin htens ndif xndif \
-    xupp xupple xuppte xlow xlowle xlowte xrib xvrib xmark xcir xdes \
-    finesse cpress calage clengr clengl clengk zcontrol slp cam mc \
-    clengb brake bd raml nhvr xrsep yrsep hvr \
-    npce npc1e npc2e npc3e xpc1e xpc2e \
-    npci npc1i npc2i npc3i xpc1i xpc2i \
-    narp xarp yarp csusl cdis
-    
+    source "lep_GlobalWingVars.tcl"
+
     set file [open "lep/leparagliding.txt" r+]
 
-#----------------------------------------------------------------------
-#   Note: read structure and variables names exactly like in the
-#   leparagliding.f fortran file
-#----------------------------------------------------------------------
+    #----------------------------------------------------------------------
+    #   Note: read structure and variables names exactly like in the
+    #   leparagliding.f fortran file
+    #----------------------------------------------------------------------
 
-#   Read 1, Geometry
-
-    set i 1 
-    while {$i <= 9} { 
-    set linea [gets $file] 
-    incr i }
+    # Read 1, Geometry
+    set i 1
+        while {$i <= 9} {
+        set DataLine [gets $file]
+        incr i
+    }
+    # BrandName
     set bname  [gets $file]
-    set linea  [gets $file] 
-    set wname  [gets $file] 
-    set linea  [gets $file] 
-    set xkf    [gets $file] 
-    set linea  [gets $file] 
-    set xwf    [gets $file] 
-    set linea  [gets $file] 
+    set DataLine  [gets $file]
+    # WingName
+    set wname  [gets $file]
+    set DataLine  [gets $file]
+    # DrawScale
+    set xkf    [gets $file]
+    set DataLine  [gets $file]
+    # WingScale
+    set xwf    [gets $file]
+    set DataLine  [gets $file]
+    # NumCells
     set ncells [expr [gets $file]]
-    set linea  [gets $file] 
+    set DataLine  [gets $file]
+    # NumRibsTot
     set nribst [expr [gets $file]]
-    set linea  [gets $file] 
-    set alphamp [gets $file] 
+    set DataLine  [gets $file]
 
-#   Extract alphamp line
-    set alpham [lindex $alphamp 0]
-    set kbbb   [lindex $alphamp 1]
+    # washin = negative Flügelschränkung
+    # WashinAlphaLine
+    set AlphaMaxParLine [gets $file]
+
+    # Extract AlphaMaxParLine line
+    # AlphaMax
+    set alpham [lindex $AlphaMaxParLine 0]
+
+    # WashinMode
+    set kbbb   [lindex $AlphaMaxParLine 1]
     if { $kbbb == 2 } {
-    set alphac [lindex $alphamp 2]
+        # AlphaCenter
+        set alphac [lindex $AlphaMaxParLine 2]
     }
     if { $kbbb == 1 } {
-    set alphac 0.0
+        set alphac 0.0
     }
 
-    set linea [gets $file] 
-    set atpp  [gets $file] 
+    set DataLine [gets $file]
 
-#   Extract atpp line
-    set atp  [lindex $atpp 0]
-    set kaaa [lindex $atpp 1]
+    set ParaTypeLine  [gets $file]
 
-    set linea [gets $file] 
-    set linea [gets $file] 
+    # Extract ParaTypeLine line
+    # ParaType
+    set atp  [lindex $ParaTypeLine 0]
 
+    # RotLeTriang - Rotate Leading Edge triangle
+    set kaaa [lindex $ParaTypeLine 1]
+
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+
+    # NumRibsHalf
     set nribss [expr ceil($nribst/2)]
-#   Erase ".0" at the end of string
+    # Erase ".0" at the end of string
     set l [string length $nribss]
+    # NumberRibs
     set nribss [string range $nribss 0 [expr $l-3]]
 
-#   Read matrix of geometry
-    set i 1 
-    while {$i <= $nribss} { 
-    set ribg($i) [gets $file] 
-      foreach j {0 1 2 3 4 5 6 7 8} {
-      set sib($i,$j) [lindex $ribg($i) $j]
+    # Read matrix of geometry
+    set i 1
+    while {$i <= $nribss} {
+        # RibGeomLine
+        set ribg($i) [gets $file]
+        foreach j {0 1 2 3 4 5 6 7 8} {
+          # RibGeom
+          set RibGeom($i,$j) [lindex $ribg($i) $j]
+        }
+
+        set rib($i,1) $RibGeom($i,0)
+        set rib($i,2) $RibGeom($i,1)
+        set rib($i,3) $RibGeom($i,2)
+        set rib($i,4) $RibGeom($i,3)
+        set rib($i,6) $RibGeom($i,4)
+        set rib($i,7) $RibGeom($i,5)
+        set rib($i,9) $RibGeom($i,6)
+        set rib($i,10) $RibGeom($i,7)
+        set rib($i,51) $RibGeom($i,8)
+
+        incr i
     }
-    set rib($i,1) $sib($i,0)
-    set rib($i,2) $sib($i,1)
-    set rib($i,3) $sib($i,2)
-    set rib($i,4) $sib($i,3)
-    set rib($i,6) $sib($i,4)
-    set rib($i,7) $sib($i,5)
-    set rib($i,9) $sib($i,6)
-    set rib($i,10) $sib($i,7)
-    set rib($i,51) $sib($i,8)
 
-    incr i }
-
-#   Set washin parameteres if kbbb=0
+    # Set washin parameteres if kbbb=0 => manual washin
     if { $kbbb == 0 } {
-    set alphac $rib(1,8)
-    set alpham $rib($nribss,8)
+        set alphac $RibGeom(1,8)
+        set alpham $RibGeom($nribss,8)
     }
 
-    set linea [gets $file] 
-    set linea [gets $file] 
-    set linea [gets $file] 
-    set linea [gets $file] 
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
 
-#   Read airfoil data
-    set i 1 
-    while {$i <= $nribss} { 
-    set rib($i) [gets $file] 
-      foreach j {0 1 2 3 4 5 6 7} {
-      set sib($i,$j) [lindex $rib($i) $j]
-      }
-
-    set rib($i,1)  $sib($i,0)
-    set nomair($i) $sib($i,1)
-    set rib($i,11) $sib($i,2)
-    set rib($i,12) $sib($i,3)
-    set rib($i,14) $sib($i,4)
-    set rib($i,50) $sib($i,5)
-    set rib($i,55) $sib($i,6)
-    set rib($i,56) $sib($i,7)
-
-    incr i }
-
-    set linea [gets $file] 
-    set linea [gets $file] 
-    set linea [gets $file] 
-    set linea [gets $file] 
-
-#   Read anchors A,B,C,D,E,F location
-    set i 1 
-    while {$i <= $nribss} { 
-    set rib($i) [gets $file] 
-      foreach j {0 1 2 3 4 5 6 7} {
-      set sib($i,$j) [lindex $rib($i) $j]
-      }
-
-    set rib($i,1)  $sib($i,0)
-    set rib($i,15) $sib($i,1)
-    set rib($i,16) $sib($i,2)
-    set rib($i,17) $sib($i,3)
-    set rib($i,18) $sib($i,4)
-    set rib($i,19) $sib($i,5)
-    set rib($i,20) $sib($i,6)
-    set rib($i,21) $sib($i,7)
-
-    incr i }
+    # Read airfoil data
+    set i 1
+    while {$i <= $nribss} {
+        set DataLine [gets $file]
+        foreach j {0 1 2 3 4 5 6 7} {
+            puts [lindex $DataLine $j]
+            set RibGeom($i,$j) [lindex $DataLine $j]
+        }
 
 
-#   Read airfoil holes
+        set rib($i,1)  $RibGeom($i,0)
+        # airfoilName
+        set nomair($i) $RibGeom($i,1)
+        set rib($i,11) $RibGeom($i,2)
+        set rib($i,12) $RibGeom($i,3)
+        set rib($i,14) $RibGeom($i,4)
+        set rib($i,50) $RibGeom($i,5)
+        set rib($i,55) $RibGeom($i,6)
+        set rib($i,56) $RibGeom($i,7)
 
-    set linea [gets $file] 
-    set linea [gets $file] 
-    set linea [gets $file] 
-    set ndis  [gets $file] 
+        incr i
+    }
 
-    set m 1 
-    while {$m <= $ndis} {
-    set nrib1($m) [gets $file] 
-    set nrib2($m) [gets $file] 
-    set nhols($m) [gets $file] 
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
 
-    set ir $nrib1($m)
+    # Read anchors A,B,C,D,E,F location
+    set i 1
+    while {$i <= $nribss} {
+        set DataLine [gets $file]
+        foreach j {0 1 2 3 4 5 6 7} {
+            set RibGeom($i,$j) [lindex $DataLine $j]
+        }
 
-    set l 1
-    while {$l <= $nhols($m)} { 
-    set rib($l) [gets $file] 
-      foreach j {0 1 2 3 4 5 6 7} {
-      set sib($l,$j) [lindex $rib($l) $j]
-      }
-    set hol($ir,$l,9) $sib($l,0)
-    set hol($ir,$l,2) $sib($l,1)
-    set hol($ir,$l,3) $sib($l,2)
-    set hol($ir,$l,4) $sib($l,3)
-    set hol($ir,$l,5) $sib($l,4)
-    set hol($ir,$l,6) $sib($l,5)
-    set hol($ir,$l,7) $sib($l,6)
-    set hol($ir,$l,8) $sib($l,7)
+        set rib($i,1)  $RibGeom($i,0)
+        set rib($i,15) $RibGeom($i,1)
+        set rib($i,16) $RibGeom($i,2)
+        set rib($i,17) $RibGeom($i,3)
+        set rib($i,18) $RibGeom($i,4)
+        set rib($i,19) $RibGeom($i,5)
+        set rib($i,20) $RibGeom($i,6)
+        set rib($i,21) $RibGeom($i,7)
 
-    incr l }
+        incr i
+    }
 
-    incr m }
+    #   Read airfoil holes
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+    # AirfConfigNum - Number of Airfoil configurations
+    set ndis  [gets $file]
 
-#   Read skin tension
+    set ConfigIt 1
+    while {$ConfigIt <= $ndis} {
+        # Initial rib for first lightening configuration
+        # holeRibNum1
+        set nrib1($ConfigIt) [gets $file]
+        # Final rib for first lightening configuration
+        # holeRibNum2
+        set nrib2($ConfigIt) [gets $file]
+        # Number of holes for the first lightening configuration
+        # numHoles
+        set nhols($ConfigIt) [gets $file]
 
-    set linea [gets $file] 
-    set linea [gets $file] 
-    set linea [gets $file] 
-    set linea [gets $file] 
+        set HoleIt 1
+        while {$HoleIt <= $nhols($ConfigIt)} {
+            set DataLine [gets $file]
+            foreach j {0 1 2 3 4 5 6 7} {
+                set HoleGeom($HoleIt,$j) [lindex $DataLine $j]
+            }
 
-    set k 1
-    while {$k <= 6} { 
-    set rib($k) [gets $file] 
-      foreach j {0 1 2 3} {
-      set skin($k,[expr $j+1]) [lindex $rib($k) $j]
-      }
-    incr k }
+            set hol($nrib1($ConfigIt),$HoleIt,9) $HoleGeom($HoleIt,0)
+            set hol($nrib1($ConfigIt),$HoleIt,2) $HoleGeom($HoleIt,1)
+            set hol($nrib1($ConfigIt),$HoleIt,3) $HoleGeom($HoleIt,2)
+            set hol($nrib1($ConfigIt),$HoleIt,4) $HoleGeom($HoleIt,3)
+            set hol($nrib1($ConfigIt),$HoleIt,5) $HoleGeom($HoleIt,4)
+            set hol($nrib1($ConfigIt),$HoleIt,6) $HoleGeom($HoleIt,5)
+            set hol($nrib1($ConfigIt),$HoleIt,7) $HoleGeom($HoleIt,6)
+            set hol($nrib1($ConfigIt),$HoleIt,8) $HoleGeom($HoleIt,7)
 
-    set htens [gets $file] 
-    set linea [gets $file] 
-    set ndif  [lindex $linea 0]
-    set xndif [lindex $linea 1]
+            incr HoleIt
+        }
 
-#   Read sewing allowances
+        incr ConfigIt
+    }
 
-    set linea  [gets $file] 
-    set linea  [gets $file] 
-    set linea  [gets $file]
- 
-    set linea  [gets $file] 
-    set xupp   [lindex $linea 0]
-    set xupple [lindex $linea 1]
-    set xuppte [lindex $linea 2]
+    # Read skin tension
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
 
-    set linea  [gets $file] 
-    set xlow   [lindex $linea 0]
-    set xlowle [lindex $linea 1]
-    set xlowte [lindex $linea 2]
+    set i 1
+    while {$i <= 6} {
+        set DataLine [gets $file]
+        foreach j {0 1 2 3} {
+            # skinTension
+            set skin($i,[expr $j+1]) [lindex $DataLine $j]
+        }
+        incr i
+    }
 
-    set xrib   [gets $file] 
-    set xvrib  [gets $file] 
+    # strainMiniRibs
+    set htens [gets $file]
+    set DataLine [gets $file]
+    # numStrainPoints
+    set ndif  [lindex $DataLine 0]
+    # strainCoef
+    set xndif [lindex $DataLine 1]
 
-#   Read marks
+    # Read sewing allowances
+    set DataLine  [gets $file]
+    set DataLine  [gets $file]
+    set DataLine  [gets $file]
 
-    set linea  [gets $file] 
-    set linea  [gets $file] 
-    set linea  [gets $file]
- 
-    set linea  [gets $file] 
-    set xmark  [lindex $linea 0]
-    set xcir   [lindex $linea 1]
-    set xdes   [lindex $linea 2]
+    set DataLine  [gets $file]
+    # seamUp
+    set xupp   [lindex $DataLine 0]
+    # seamUpLe
+    set xupple [lindex $DataLine 1]
+    # seamUpTe
+    set xuppte [lindex $DataLine 2]
 
-#   Read 8. Global angle of attack
+    set DataLine  [gets $file]
+    # seamLo
+    set xlow   [lindex $DataLine 0]
+    # seamLoLe
+    set xlowle [lindex $DataLine 1]
+    # seamloTe
+    set xlowte [lindex $DataLine 2]
 
-    set linea  [gets $file] 
-    set linea  [gets $file] 
-    set linea  [gets $file]
+    # seamRib
+    set xrib   [gets $file]
+    # seamVRib
+    set xvrib  [gets $file]
 
-    set linea   [gets $file]
+    # Read marks
+    set DataLine  [gets $file]
+    set DataLine  [gets $file]
+    set DataLine  [gets $file]
+
+    set DataLine  [gets $file]
+    # markSpace
+    set xmark  [lindex $DataLine 0]
+    # markRad
+    set xcir   [lindex $DataLine 1]
+    # markDisp
+    set xdes   [lindex $DataLine 2]
+
+    # Read 8. Global angle of attack
+
+    set DataLine  [gets $file]
+    set DataLine  [gets $file]
+    set DataLine  [gets $file]
+
+    set DataLine   [gets $file]
+    # finesse
     set finesse [gets $file]
-    set linea  [gets $file]
+    set DataLine  [gets $file]
+    # posCOP
     set cpress [gets $file]
-    set linea  [gets $file]
+    set DataLine  [gets $file]
+    # calage
     set calage [gets $file]
-    set linea  [gets $file]
+    set DataLine  [gets $file]
+    # riserLength
     set clengr [gets $file]
-    set linea  [gets $file]
+    set DataLine  [gets $file]
+    # lineLength
     set clengl [gets $file]
-    set linea  [gets $file]
+    set DataLine  [gets $file]
+    # distTowP
     set clengk [gets $file]
 
-#   Read 9. Suspension lines description
+    # Read 9. Suspension lines description
 
-    set linea  [gets $file] 
-    set linea  [gets $file] 
-    set linea  [gets $file]
+    set DataLine  [gets $file]
+    set DataLine  [gets $file]
+    set DataLine  [gets $file]
 
+    # Line Control Parameter
+    # lineMode
     set zcontrol [gets $file]
+    # numLinePlan
     set slp      [gets $file]
 
-    set ii 1
-    while {$ii <= $slp} { 
+    set LinePlanIt 1
+    while {$LinePlanIt <= $slp} {
 
-    set cam($ii) [gets $file]
+        # numLinePath
+        set cam($LinePlanIt) [gets $file]
 
-#   Read 4 levels
-    set i 1
-    while {$i <= $cam($ii)} {
-    set linea  [gets $file] 
-    set mc($ii,$i,1)   [lindex $linea 0]
-    set mc($ii,$i,2)   [lindex $linea 1]
-    set mc($ii,$i,3)   [lindex $linea 2]
-    set mc($ii,$i,4)   [lindex $linea 3]
-    set mc($ii,$i,5)   [lindex $linea 4]
-    set mc($ii,$i,6)   [lindex $linea 5]
-    set mc($ii,$i,7)   [lindex $linea 6]
-    set mc($ii,$i,8)   [lindex $linea 7]
-    set mc($ii,$i,9)   [lindex $linea 8]
-    set mc($ii,$i,14)  [lindex $linea 9]
-    set mc($ii,$i,15)  [lindex $linea 10]
-    incr i }
+        # Read Line Paths
+        set i 1
+        while {$i <= $cam($LinePlanIt)} {
+            set DataLine [gets $file]
+            # LinePath
+            set mc($LinePlanIt,$i,1)   [lindex $DataLine 0]
+            set mc($LinePlanIt,$i,2)   [lindex $DataLine 1]
+            set mc($LinePlanIt,$i,3)   [lindex $DataLine 2]
+            set mc($LinePlanIt,$i,4)   [lindex $DataLine 3]
+            set mc($LinePlanIt,$i,5)   [lindex $DataLine 4]
+            set mc($LinePlanIt,$i,6)   [lindex $DataLine 5]
+            set mc($LinePlanIt,$i,7)   [lindex $DataLine 6]
+            set mc($LinePlanIt,$i,8)   [lindex $DataLine 7]
+            set mc($LinePlanIt,$i,9)   [lindex $DataLine 8]
+            set mc($LinePlanIt,$i,14)  [lindex $DataLine 9]
+            set mc($LinePlanIt,$i,15)  [lindex $DataLine 10]
+            incr i
+        }
 
-    incr ii }
+        incr LinePlanIt
+    }
 
-#   Read 10. Brakes
+    # Read Brakes
 
-    set linea  [gets $file] 
-    set linea  [gets $file] 
-    set linea  [gets $file]
+    set DataLine  [gets $file]
+    set DataLine  [gets $file]
+    set DataLine  [gets $file]
 
-    set ii [expr $slp+1]
+    set LinePlanIt [expr $slp+1]
 
+    # brakeLength
     set clengb   [gets $file]
-    set cam($ii) [gets $file]
+    set cam($LinePlanIt) [gets $file]
 
-#   Read 4 levels
+    # Read 4 levels
     set i 1
-    while {$i <= $cam($ii)} {
-    set linea  [gets $file] 
-    set mc($ii,$i,1)   [lindex $linea 0]
-    set mc($ii,$i,2)   [lindex $linea 1]
-    set mc($ii,$i,3)   [lindex $linea 2]
-    set mc($ii,$i,4)   [lindex $linea 3]
-    set mc($ii,$i,5)   [lindex $linea 4]
-    set mc($ii,$i,6)   [lindex $linea 5]
-    set mc($ii,$i,7)   [lindex $linea 6]
-    set mc($ii,$i,8)   [lindex $linea 7]
-    set mc($ii,$i,9)   [lindex $linea 8]
-    set mc($ii,$i,14)  [lindex $linea 9]
-    set brake($i,3)    [lindex $linea 10]
-    incr i }
+    while {$i <= $cam($LinePlanIt)} {
+        set DataLine  [gets $file]
+        set mc($LinePlanIt,$i,1)   [lindex $DataLine 0]
+        set mc($LinePlanIt,$i,2)   [lindex $DataLine 1]
+        set mc($LinePlanIt,$i,3)   [lindex $DataLine 2]
+        set mc($LinePlanIt,$i,4)   [lindex $DataLine 3]
+        set mc($LinePlanIt,$i,5)   [lindex $DataLine 4]
+        set mc($LinePlanIt,$i,6)   [lindex $DataLine 5]
+        set mc($LinePlanIt,$i,7)   [lindex $DataLine 6]
+        set mc($LinePlanIt,$i,8)   [lindex $DataLine 7]
+        set mc($LinePlanIt,$i,9)   [lindex $DataLine 8]
+        set mc($LinePlanIt,$i,14)  [lindex $DataLine 9]
+        set brake($i,3)    [lindex $DataLine 10]
+        incr i
+    }
 
-    set linea   [gets $file] 
+    set DataLine   [gets $file]
 
-    set linea   [gets $file] 
-    set bd(1,1) [lindex $linea 0]
-    set bd(2,1) [lindex $linea 1]
-    set bd(3,1) [lindex $linea 2]
-    set bd(4,1) [lindex $linea 3]
-    set bd(5,1) [lindex $linea 4]
+    set DataLine   [gets $file]
+    # brakeDistr
+    set bd(1,1) [lindex $DataLine 0]
+    set bd(2,1) [lindex $DataLine 1]
+    set bd(3,1) [lindex $DataLine 2]
+    set bd(4,1) [lindex $DataLine 3]
+    set bd(5,1) [lindex $DataLine 4]
 
-    set linea   [gets $file] 
-    set bd(1,2) [lindex $linea 0]
-    set bd(2,2) [lindex $linea 1]
-    set bd(3,2) [lindex $linea 2]
-    set bd(4,2) [lindex $linea 3]
-    set bd(5,2) [lindex $linea 4]
+    set DataLine   [gets $file]
+    set bd(1,2) [lindex $DataLine 0]
+    set bd(2,2) [lindex $DataLine 1]
+    set bd(3,2) [lindex $DataLine 2]
+    set bd(4,2) [lindex $DataLine 3]
+    set bd(5,2) [lindex $DataLine 4]
 
-#   Read 11. Ramification lengths
+    # Read 11. Ramification lengths
 
-    set linea  [gets $file] 
-    set linea  [gets $file] 
-    set linea  [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
 
-    set linea     [gets $file] 
-    set raml(3,1) [lindex $linea 0]
-    set raml(3,3) [lindex $linea 1]
+    set DataLine [gets $file]
+    # ramLength
+    set raml(3,1) [lindex $DataLine 0]
+    set raml(3,3) [lindex $DataLine 1]
 
-    set linea     [gets $file] 
-    set raml(4,1) [lindex $linea 0]
-    set raml(4,3) [lindex $linea 1]
-    set raml(4,4) [lindex $linea 2]
+    set DataLine     [gets $file]
+    set raml(4,1) [lindex $DataLine 0]
+    set raml(4,3) [lindex $DataLine 1]
+    set raml(4,4) [lindex $DataLine 2]
 
-    set linea     [gets $file] 
-    set raml(5,1) [lindex $linea 0]
-    set raml(5,3) [lindex $linea 1]
+    set DataLine     [gets $file]
+    set raml(5,1) [lindex $DataLine 0]
+    set raml(5,3) [lindex $DataLine 1]
 
-    set linea     [gets $file] 
-    set raml(6,1) [lindex $linea 0]
-    set raml(6,3) [lindex $linea 1]
-    set raml(6,4) [lindex $linea 2]
+    set DataLine     [gets $file]
+    set raml(6,1) [lindex $DataLine 0]
+    set raml(6,3) [lindex $DataLine 1]
+    set raml(6,4) [lindex $DataLine 2]
 
-#   Read 12. H V and VH ribs
+    # Read 12. H V and VH ribs
 
-    set linea [gets $file] 
-    set linea [gets $file] 
-    set linea [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
 
-    set nhvr  [gets $file] 
+    # numMiniRibs
+    set nhvr  [gets $file]
 
-    set linea [gets $file] 
-    set xrsep [lindex $linea 0]
-    set yrsep [lindex $linea 1]
+    set DataLine [gets $file]
+    # miniRibXSep
+    set xrsep [lindex $DataLine 0]
+    # miniRibYSep
+    set yrsep [lindex $DataLine 1]
 
     set i 1
     while {$i <= $nhvr} {
-    set linea [gets $file]
-    foreach j {0 1 2 3 4 5 6 7 8 9} {
-    set hvr($i,[expr $j+1]) [lindex $linea $j]
+        set DataLine [gets $file]
+        foreach j {0 1 2 3 4 5 6 7 8 9} {
+            # miniRib
+            set hvr($i,[expr $j+1]) [lindex $DataLine $j]
+		}
+
+        # If case 6 (V-rib type 6 general diagonal), read 12 numbers
+		if { $hvr($i,2) == 6 } {
+			foreach j {0 1 2 3 4 5 6 7 8 9 10 11} {
+				set hvr($i,[expr $j+1]) [lindex $DataLine $j]
+			}
+		}
+		incr i
     }
-    # If case 6, read 12 numbers
-    if { $hvr($i,2) == 6 } {
-    foreach j {0 1 2 3 4 5 6 7 8 9 10 11} {
-    set hvr($i,[expr $j+1]) [lindex $linea $j]
+
+    # Read 15. Extrados colors
+
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+
+    # numTeCol
+    set npce  [gets $file]
+
+    set TeColIt 1
+
+    while {$TeColIt <= $npce} {
+		set DataLine [gets $file]
+        # teColRibNum
+        set npc1e($TeColIt) [lindex $DataLine 0]
+        # numTeColMark
+		set npc2e($TeColIt) [lindex $DataLine 1]
+
+		set i 1
+		while {$i <= $npc2e($TeColIt)} {
+			set DataLine [gets $file]
+            # teColMarkNum
+            set npc3e($TeColIt,$i) [lindex $DataLine 0]
+            # teColMarkYDist
+			set xpc1e($TeColIt,$i) [lindex $DataLine 1]
+            # teColMarkXDist
+            set xpc2e($TeColIt,$i) [lindex $DataLine 2]
+			incr i
+		}
+		incr TeColIt
     }
+
+    # Read 16. Intrados colors
+
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+
+    # numLeCol
+    set npci  [gets $file]
+
+    set LeColIt 1
+    while {$LeColIt <= $npci} {
+			set DataLine [gets $file]
+            # leColRibNum
+			set npc1i($LeColIt) [lindex $DataLine 0]
+            # numleColMark
+			set npc2i($LeColIt) [lindex $DataLine 1]
+
+			set i 1
+			while {$i <= $npc2i($LeColIt)} {
+    			set DataLine [gets $file]
+                # leColMarkNum
+                set npc3i($LeColIt,$i) [lindex $DataLine 0]
+                # leColMarkYDist
+                set xpc1i($LeColIt,$i) [lindex $DataLine 1]
+                # leColMarkXDist
+                set xpc2i($LeColIt,$i) [lindex $DataLine 2]
+    			incr i
+		}
+		incr LeColIt
     }
-    incr i }
 
-#   Read 15. Extrados colors
+    # Read 17. Aditional rib points
 
-    set linea [gets $file] 
-    set linea [gets $file] 
-    set linea [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
 
-    set npce  [gets $file] 
-
-    set k 1
-    while {$k <= $npce} {
-
-    set linea [gets $file] 
-    set npc1e($k) [lindex $linea 0]
-    set npc2e($k) [lindex $linea 1]
-
-    set l 1
-    while {$l <= $npc2e($k)} {
-
-    set linea [gets $file] 
-    set npc3e($k,$l) [lindex $linea 0]
-    set xpc1e($k,$l) [lindex $linea 1]
-    set xpc2e($k,$l) [lindex $linea 2]
-
-    incr l }
-
-    incr k }
-
-#   Read 16. Intrados colors
-
-    set linea [gets $file] 
-    set linea [gets $file] 
-    set linea [gets $file]
-
-    set npci  [gets $file] 
-
-    set k 1
-    while {$k <= $npci} {
-
-    set linea [gets $file] 
-    set npc1i($k) [lindex $linea 0]
-    set npc2i($k) [lindex $linea 1]
-
-    set l 1
-    while {$l <= $npc2i($k)} {
-
-    set linea [gets $file] 
-    set npc3i($k,$l) [lindex $linea 0]
-    set xpc1i($k,$l) [lindex $linea 1]
-    set xpc2i($k,$l) [lindex $linea 2]
-
-    incr l }
-
-    incr k }
-
-#   Read 17. Aditional rib points
-
-    set linea [gets $file] 
-    set linea [gets $file] 
-    set linea [gets $file]
-
-    set narp [gets $file] 
+    # numAddRipPo
+    set narp [gets $file]
 
     set i 1
     while {$i <= $narp} {
-    set linea [gets $file] 
-    set xarp($i) [lindex $linea 0]
-    set yarp($i) [lindex $linea 1]
-    incr i }
+		set DataLine [gets $file]
+        # addRipPoX
+        set xarp($i) [lindex $DataLine 0]
+        # addRipPoY
+		set yarp($i) [lindex $DataLine 1]
+		incr i
+	}
 
-#   Read 18. Elastic lines corrections
+    # Read 18. Elastic lines corrections
 
-    set linea [gets $file] 
-    set linea [gets $file] 
-    set linea [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
 
+    # loadTot
     set csusl [gets $file]
 
-    set linea [gets $file] 
-    set cdis(2,1) [lindex $linea 0]
-    set cdis(2,2) [lindex $linea 1]
+    # loadDistr
+    set DataLine [gets $file]
+    set cdis(2,1) [lindex $DataLine 0]
+    set cdis(2,2) [lindex $DataLine 1]
 
-    set linea [gets $file] 
-    set cdis(3,1) [lindex $linea 0]
-    set cdis(3,2) [lindex $linea 1]
-    set cdis(3,3) [lindex $linea 2]
+    set DataLine [gets $file]
+    set cdis(3,1) [lindex $DataLine 0]
+    set cdis(3,2) [lindex $DataLine 1]
+    set cdis(3,3) [lindex $DataLine 2]
 
-    set linea [gets $file] 
-    set cdis(4,1) [lindex $linea 0]
-    set cdis(4,2) [lindex $linea 1]
-    set cdis(4,3) [lindex $linea 2]
-    set cdis(4,4) [lindex $linea 3]
+    set DataLine [gets $file]
+    set cdis(4,1) [lindex $DataLine 0]
+    set cdis(4,2) [lindex $DataLine 1]
+    set cdis(4,3) [lindex $DataLine 2]
+    set cdis(4,4) [lindex $DataLine 3]
 
-    set linea [gets $file] 
-    set cdis(5,1) [lindex $linea 0]
-    set cdis(5,2) [lindex $linea 1]
-    set cdis(5,3) [lindex $linea 2]
-    set cdis(5,4) [lindex $linea 3]
-    set cdis(5,5) [lindex $linea 4]
+    set DataLine [gets $file]
+    set cdis(5,1) [lindex $DataLine 0]
+    set cdis(5,2) [lindex $DataLine 1]
+    set cdis(5,3) [lindex $DataLine 2]
+    set cdis(5,4) [lindex $DataLine 3]
+    set cdis(5,5) [lindex $DataLine 4]
 
-#----------------------------------------------------------------------
+    # loadDeform
+    # code to read this is missing
+
+    #----------------------------------------------------------------------
     close $file
 }
-
-
-
-
-
