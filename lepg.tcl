@@ -15,7 +15,7 @@ set data_le(c0) 10.11
 #---------------------------------------------------------------------
 #
 #  LEparagliding GUI
-set VersionNumber "V0.2"
+set VersionNumber "V0.2.1"
 set VersionDate   "2016-08-20"
 #
 #  Pere Casellas
@@ -222,11 +222,6 @@ proc myAppWriteMain { } {
     source "lep_GlobalWingVars.tcl"
 
     global data_le
-
-    global linea wname xkf xwf ncells nribst nribss alpham kbbb \
-    alphac atp kaaa rib ribg nomair ndis nrib1 nrib2 nhols hol \
-    skin htens ndif xndif \
-    xupp xupple xuppte xlow xlowle xlowte xrib xvrib xmark xcir xdes
 
 #   Read lep data file
     myApp_lep_r
@@ -569,7 +564,7 @@ proc myAppCells { } {
 #----------------------------------------------------------------------
 proc GeometryMatrixWindow { } {
 
-    global rib ribg nribss
+    source "lep_GlobalWingVars.tcl"
 
     myApp_lep_r
 

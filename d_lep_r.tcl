@@ -7,16 +7,6 @@ proc myApp_lep_r { } {
 
     source "lep_GlobalWingVars.tcl"
 
-    global wname xkf xwf ncells nribst nribss alpham kbbb \
-    alphac atp kaaa rib ribg nomair ndis nrib1 nrib2 nhols hol \
-    skin htens ndif xndif \
-    xupp xupple xuppte xlow xlowle xlowte xrib xvrib xmark xcir xdes \
-    finesse cpress calage clengr clengl clengk zcontrol slp cam mc \
-    clengb brake bd raml nhvr xrsep yrsep hvr \
-    npce npc1e npc2e npc3e xpc1e xpc2e \
-    npci npc1i npc2i npc3i xpc1i xpc2i \
-    narp xarp yarp csusl cdis
-
     set file [open "lep/leparagliding.txt" r+]
 
     #----------------------------------------------------------------------
@@ -45,7 +35,7 @@ proc myApp_lep_r { } {
     # NumCells
     set ncells [expr [gets $file]]
     set DataLine  [gets $file]
-    # NumRibs
+    # NumRibsTot
     set nribst [expr [gets $file]]
     set DataLine  [gets $file]
 
@@ -81,6 +71,7 @@ proc myApp_lep_r { } {
     set DataLine [gets $file]
     set DataLine [gets $file]
 
+    # NumRibsHalf
     set nribss [expr ceil($nribst/2)]
     # Erase ".0" at the end of string
     set l [string length $nribss]
@@ -318,8 +309,9 @@ proc myApp_lep_r { } {
 
         # Read Line Paths
         set i 1
-        while {$i <= $cam($ii)} {
+        while {$i <= $cam($LinePlanIt)} {
             set DataLine [gets $file]
+            # LinePath
             set mc($LinePlanIt,$i,1)   [lindex $DataLine 0]
             set mc($LinePlanIt,$i,2)   [lindex $DataLine 1]
             set mc($LinePlanIt,$i,3)   [lindex $DataLine 2]
@@ -351,7 +343,7 @@ proc myApp_lep_r { } {
 
     # Read 4 levels
     set i 1
-    while {$i <= $cam($ii)} {
+    while {$i <= $cam($LinePlanIt)} {
         set DataLine  [gets $file]
         set mc($LinePlanIt,$i,1)   [lindex $DataLine 0]
         set mc($LinePlanIt,$i,2)   [lindex $DataLine 1]
@@ -447,25 +439,30 @@ proc myApp_lep_r { } {
     set DataLine [gets $file]
     set DataLine [gets $file]
 
-    # numTeColors
+    # numTeCol
     set npce  [gets $file]
 
-    set TeColorIt 1
+    set TeColIt 1
 
-    while {$TeColorIt <= $npce} {
+    while {$TeColIt <= $npce} {
 		set DataLine [gets $file]
-		set npc1e($TeColorIt) [lindex $DataLine 0]
-		set npc2e($TeColorIt) [lindex $DataLine 1]
+        # teColRibNum
+        set npc1e($TeColIt) [lindex $DataLine 0]
+        # numTeColMark
+		set npc2e($TeColIt) [lindex $DataLine 1]
 
 		set i 1
-		while {$i <= $npc2e($TeColorIt)} {
+		while {$i <= $npc2e($TeColIt)} {
 			set DataLine [gets $file]
-			set npc3e($TeColorIt, $i) [lindex $DataLine 0]
-			set xpc1e($TeColorIt, $i) [lindex $DataLine 1]
-			set xpc2e($TeColorIt, $i) [lindex $DataLine 2]
+            # teColMarkNum
+            set npc3e($TeColIt,$i) [lindex $DataLine 0]
+            # teColMarkYDist
+			set xpc1e($TeColIt,$i) [lindex $DataLine 1]
+            # teColMarkXDist
+            set xpc2e($TeColIt,$i) [lindex $DataLine 2]
 			incr i
 		}
-		incr TeColorIt
+		incr TeColIt
     }
 
     # Read 16. Intrados colors
@@ -474,27 +471,29 @@ proc myApp_lep_r { } {
     set DataLine [gets $file]
     set DataLine [gets $file]
 
+    # numLeCol
     set npci  [gets $file]
 
-    set k 1
-    while {$k <= $npci} {
-
+    set LeColIt 1
+    while {$LeColIt <= $npci} {
 			set DataLine [gets $file]
-			set npc1i($k) [lindex $DataLine 0]
-			set npc2i($k) [lindex $DataLine 1]
+            # leColRibNum
+			set npc1i($LeColIt) [lindex $DataLine 0]
+            # numleColMark
+			set npc2i($LeColIt) [lindex $DataLine 1]
 
-			set l 1
-			while {$l <= $npc2i($k)} {
-
-			set DataLine [gets $file]
-			set npc3i($k,$l) [lindex $DataLine 0]
-			set xpc1i($k,$l) [lindex $DataLine 1]
-			set xpc2i($k,$l) [lindex $DataLine 2]
-
-			incr l
+			set i 1
+			while {$i <= $npc2i($LeColIt)} {
+    			set DataLine [gets $file]
+                # leColMarkNum
+                set npc3i($LeColIt,$i) [lindex $DataLine 0]
+                # leColMarkYDist
+                set xpc1i($LeColIt,$i) [lindex $DataLine 1]
+                # leColMarkXDist
+                set xpc2i($LeColIt,$i) [lindex $DataLine 2]
+    			incr i
 		}
-
-		incr k
+		incr LeColIt
     }
 
     # Read 17. Aditional rib points
@@ -503,12 +502,15 @@ proc myApp_lep_r { } {
     set DataLine [gets $file]
     set DataLine [gets $file]
 
+    # numAddRipPo
     set narp [gets $file]
 
     set i 1
     while {$i <= $narp} {
 		set DataLine [gets $file]
-		set xarp($i) [lindex $DataLine 0]
+        # addRipPoX
+        set xarp($i) [lindex $DataLine 0]
+        # addRipPoY
 		set yarp($i) [lindex $DataLine 1]
 		incr i
 	}
@@ -519,8 +521,10 @@ proc myApp_lep_r { } {
     set DataLine [gets $file]
     set DataLine [gets $file]
 
+    # loadTot
     set csusl [gets $file]
 
+    # loadDistr
     set DataLine [gets $file]
     set cdis(2,1) [lindex $DataLine 0]
     set cdis(2,2) [lindex $DataLine 1]
@@ -542,6 +546,9 @@ proc myApp_lep_r { } {
     set cdis(5,3) [lindex $DataLine 2]
     set cdis(5,4) [lindex $DataLine 3]
     set cdis(5,5) [lindex $DataLine 4]
+
+    # loadDeform
+    # code to read this is missing
 
     #----------------------------------------------------------------------
     close $file
