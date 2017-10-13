@@ -3,8 +3,8 @@
 #  Global Wing variables used across lep and lepg including explanations
 #
 #  Pere Casellas
-#  http://www.laboratoridenvol.com
 #  Stefan Feuz
+#  http://www.laboratoridenvol.com
 #
 #  General Public License GNU GPL 3.0
 #

@@ -1,4 +1,423 @@
 #----------------------------------------------------------------------
+#  proc DetectFileVersion
+#
+#  Determines version of the lep data file to be read.
+#----------------------------------------------------------------------
+proc DetectFileVersion {FilePathName} {
+    source "lep_ConstantValues.tcl"
+
+    # return values
+    #  -1 : file not available or not readable
+    # x.y : version string
+
+    if {[catch {set file [open $FilePathName]}] == 0} {
+        # puts "All cool file is open"
+    } else {
+        # puts "Could not open file."
+        return -1
+    }
+
+    # check first for the data files <= 2.6
+    set i 1
+    while {$i <= 10} {
+        set DataLine [gets $file]
+        # The default 2.52 file has a version indicator in the header
+        if { [string first "2.52" $DataLine] >= 0 } {
+            close $file
+            return "2.52"
+        }
+        # The default 2.6 file has no version idicator, but you never now
+        if { [string first "2.6" $DataLine] >= 0 } {
+            close $file
+            return "2.6"
+        }
+        incr i
+    }
+
+    # Check for data files >2.6
+    set i 1
+    while {$i <= 20} {
+        set DataLine [gets $file]
+
+        if { [string first $c_VersionSectId $DataLine] >= 0 } {
+            # file version 2.7 or later
+            set DataLine [gets $file]
+            set DataLine [gets $file]
+            close $file
+            return $DataLine
+        }
+        incr i
+    }
+
+    # If we arrive here it is not a 2.52 version file
+    # It is also not a new style file
+    # Therefore it could only be 2.6
+    close $file
+    return "2.6"
+}
+
+#----------------------------------------------------------------------
+#  proc readLepDataFile
+#  Reads the lep data file
+#
+# IN:   FilePathName    Full path and name of file
+# OUT:  -1 : file not available or unsupported version
+#        0 : all cool file read, data should be available
+#----------------------------------------------------------------------
+proc readLepDataFile {FilePathName} {
+
+    set ReturnValue -1
+
+    # Check what file version to be read
+    set FileVersion [DetectFileVersion $FilePathName]
+
+    # Call the apropriate reader
+    switch $FileVersion {
+        2.52 {
+            puts 2.52
+            set ReturnValue [ReadLepDataFileV2_52 $FilePathName]
+        }
+        2.6 {
+            puts 2.6
+            set ReturnValue [ReadLepDataFileV2_52 $FilePathName]
+        }
+        2.7 {
+            puts 2.7
+            set ReturnValue [ReadLepDataFileV2_7 $FilePathName]
+        }
+        default {
+            # data file could not be opened or unsupported version
+            set ReturnValue -1
+        }
+    }
+
+    return $ReturnValue
+}
+
+#----------------------------------------------------------------------
+#  proc JumpToLine
+#  Moves file pointer to a specific line
+#
+#  IN:  LineNum number to move the file pointer to
+#       File    File pointer
+#  OUT: File    File pointer
+#----------------------------------------------------------------------
+proc JumpToLine {LineNum File} {
+    # Set file pointer to the start of the file
+    seek $File 0 start
+
+    set i 1
+    while {$i <= ($LineNum -1)} {
+        if { [gets $File Dataline] <0 } {
+            # end of file reached
+            return [list -1 $File]
+        }
+        incr i
+    }
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  proc ReadLepDataFileV2_52
+#  Reads the 2.52 and 2.6 data file
+#
+#  IN:  FilePathName    Full path and name of file
+#  OUT:                 Global Wing variables set with file values
+#----------------------------------------------------------------------
+proc ReadLepDataFileV2_52 {FilePathName} {
+    source "lep_ConstantValues.tcl"
+
+    # open data file
+    # as we know the version number we don't need to do error handling anymore
+    set File [open $FilePathName r+]
+
+    #---------
+    # Geometry
+    lassign [JumpToLine $c_GeometrySectLineNum $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+    # ReadGeometrySect $File
+
+    #----------
+    # Well read
+    close $File
+    return 0
+}
+
+#----------------------------------------------------------------------
+#  proc JumpToSection
+#  Moves file pointer to a specific line
+#
+#  IN:  SectionId   Section id string to point to
+#       File        File pointer
+#  OUT: File        File pointer
+#----------------------------------------------------------------------
+proc JumpToSection {SectionId File} {
+    # Set file pointer to the start of the file
+    seek $File 0 start
+
+    while { [gets $File DataLine] >= 0 } {
+        if { [string first $SectionId $DataLine] >= 0 } {
+            # section id found and read
+            # file pointer stays on first data line
+
+            return [list 0 $File]
+        }
+    }
+
+    # SectionId not found
+    return [list -1 $File]
+}
+
+#----------------------------------------------------------------------
+#  proc ReadLepDataFileV2_7
+#  Reads the 2.7 and later data file
+#
+#  IN:  FilePathName    Full path and name of file
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue     0 : all parameters loaded
+#                       -1: problem during parameter loading
+#----------------------------------------------------------------------
+proc ReadLepDataFileV2_7  {FilePathName} {
+    source "lep_ConstantValues.tcl"
+    # open data file
+    # as we know the version number=> file is there and readable=> we don't need to do error handling anymore
+    set File [open $FilePathName r+]
+
+    #---------
+    # Geometry
+    lassign [JumpToSection $c_GeometrySectId $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+    lassign [ReadGeometrySectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
+    #--------
+    # Airfoil
+    lassign [JumpToSection $c_AirfoilSectId $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+    lassign [ReadAirfoilSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
+    #--------------
+    # Anchor points
+
+    #--------------
+    # Airfoil holes
+
+    #-------------
+    # Skin tension
+
+    #------------------
+    # Sewing allowances
+
+    #--------
+    # Airfoil
+
+    #------
+    # Marks
+
+    #-----------------------
+    # Global angle of attack
+
+    #-----------------
+    # Suspension lines
+
+    #-------
+    # Brakes
+
+    #---------------------
+    # Ramification lengths
+
+    #----------------
+    # H V and VH ribs
+
+    #----------------------
+    # Trailing edge  colors
+
+    #--------------------
+    # Leading edge colors
+
+    #----------------------
+    # Additional rib points
+
+    #--------------------------
+    # Elastig lines corrections
+
+
+
+    puts [gets $File]
+
+
+
+    #----------
+    # Well read
+    close $File
+    return 0
+}
+
+#----------------------------------------------------------------------
+#  proc ReadGeometrySectV2_52
+#  Reads the Geometry section of a lep data file
+#  Applicable versions 2.52 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadGeometrySectV2_52 {File} {
+    source "lep_GlobalWingVars.tcl"
+
+    set DataLine  [gets $File]
+    # BrandName
+    set bname  [gets $File]
+    set DataLine  [gets $File]
+    # WingName
+    set wname  [gets $File]
+    set DataLine  [gets $File]
+    # DrawScale
+    set xkf    [gets $File]
+    set DataLine  [gets $File]
+    # WingScale
+    set xwf    [gets $File]
+    set DataLine  [gets $File]
+    # NumCells
+    set ncells [expr [gets $File]]
+    set DataLine  [gets $File]
+    # NumRibsTot
+    set nribst [expr [gets $File]]
+    set DataLine  [gets $File]
+
+    # washin = negative Flügelschränkung
+    # WashinAlphaLine
+    set AlphaMaxParLine [gets $File]
+
+    # Extract AlphaMaxParLine line
+    # AlphaMax
+    set alpham [lindex $AlphaMaxParLine 0]
+
+    # WashinMode
+    set kbbb   [lindex $AlphaMaxParLine 1]
+    if { $kbbb == 2 } {
+        # AlphaCenter
+        set alphac [lindex $AlphaMaxParLine 2]
+    }
+    if { $kbbb == 1 } {
+        set alphac 0.0
+    }
+
+    set DataLine [gets $File]
+
+    set ParaTypeLine  [gets $File]
+
+    # Extract ParaTypeLine line
+    # ParaType
+    set atp  [lindex $ParaTypeLine 0]
+
+    # RotLeTriang - Rotate Leading Edge triangle
+    set kaaa [lindex $ParaTypeLine 1]
+
+    set DataLine [gets $File]
+    set DataLine [gets $File]
+
+    # NumRibsHalf
+    set nribss [expr ceil($nribst/2)]
+    # Erase ".0" at the end of string
+    set l [string length $nribss]
+    # NumberRibs
+    set nribss [string range $nribss 0 [expr $l-3]]
+
+    # Read matrix of geometry
+    set i 1
+    while {$i <= $nribss} {
+        # RibGeomLine
+        set ribg($i) [gets $File]
+        foreach j {0 1 2 3 4 5 6 7 8} {
+          # RibGeom
+          set RibGeom($i,$j) [lindex $ribg($i) $j]
+        }
+
+        set rib($i,1) $RibGeom($i,0)
+        set rib($i,2) $RibGeom($i,1)
+        set rib($i,3) $RibGeom($i,2)
+        set rib($i,4) $RibGeom($i,3)
+        set rib($i,6) $RibGeom($i,4)
+        set rib($i,7) $RibGeom($i,5)
+        set rib($i,9) $RibGeom($i,6)
+        set rib($i,10) $RibGeom($i,7)
+        set rib($i,51) $RibGeom($i,8)
+
+        incr i
+    }
+
+    # Set washin parameteres if kbbb=0 => manual washin
+    if { $kbbb == 0 } {
+        set alphac $RibGeom(1,8)
+        set alpham $RibGeom($nribss,8)
+    }
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  proc ReadAirfoilSectV2_52
+#  Reads the Airfoli section of a lep data file
+#  Applicable versions 2.52 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadAirfoilSectV2_52 {File} {
+    source "lep_GlobalWingVars.tcl"
+
+    set DataLine [gets $File]
+
+    set i 1
+    while {$i <= $nribss} {
+        set DataLine [gets $File]
+        foreach j {0 1 2 3 4 5 6 7} {
+            set RibGeom($i,$j) [lindex $DataLine $j]
+        }
+
+
+        set rib($i,1)  $RibGeom($i,0)
+        # airfoilName
+        set nomair($i) $RibGeom($i,1)
+        set rib($i,11) $RibGeom($i,2)
+        set rib($i,12) $RibGeom($i,3)
+        set rib($i,14) $RibGeom($i,4)
+        set rib($i,50) $RibGeom($i,5)
+        set rib($i,55) $RibGeom($i,6)
+        set rib($i,56) $RibGeom($i,7)
+
+        incr i
+    }
+
+    return [list 0 $File]
+}
+
+
+
+#----------------------------------------------------------------------
 #  proc myApp_lep_r
 #
 #  Read all data from leparagliding.txt
@@ -106,18 +525,23 @@ proc myApp_lep_r { } {
         set alphac $RibGeom(1,8)
         set alpham $RibGeom($nribss,8)
     }
+    # end of Geometry Section
+
 
     set DataLine [gets $file]
     set DataLine [gets $file]
     set DataLine [gets $file]
     set DataLine [gets $file]
+
+
+
+
 
     # Read airfoil data
     set i 1
     while {$i <= $nribss} {
         set DataLine [gets $file]
         foreach j {0 1 2 3 4 5 6 7} {
-            puts [lindex $DataLine $j]
             set RibGeom($i,$j) [lindex $DataLine $j]
         }
 
@@ -553,3 +977,14 @@ proc myApp_lep_r { } {
     #----------------------------------------------------------------------
     close $file
 }
+
+
+# below is some test code delete it as soon it's no more needed
+proc myAppMain { argc argv } {
+
+    set ReturnValue [readLepDataFile "leparagliding-V2_7.txt"]
+
+    puts $ReturnValue
+}
+
+myAppMain $argc $argv
