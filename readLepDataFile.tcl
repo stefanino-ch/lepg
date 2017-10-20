@@ -1617,14 +1617,3 @@ proc myApp_lep_r { } {
     #----------------------------------------------------------------------
     close $file
 }
-
-
-# below is some test code delete it as soon it's no more needed
-proc myAppMain { argc argv } {
-
-    set ReturnValue [readLepDataFile "leparagliding-V2_52.txt"]
-
-    puts $ReturnValue
-}
-
-myAppMain $argc $argv
