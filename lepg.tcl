@@ -33,7 +33,7 @@ set VersionDate   "2016-08-20"
 #
 #---------------------------------------------------------------------
 proc myAppMain { argc argv } {
-
+puts "myAppMain"
     #-----------------------------------------------------------------
     #  Global program configuration
     #-----------------------------------------------------------------
@@ -46,6 +46,8 @@ proc myAppMain { argc argv } {
     #  Construct the UI
     #-----------------------------------------------------------------
     InitGui .
+
+    #myAppWriteMain
 
     #------------------------------------------------------------
     #  If we have an argument, then open the file
@@ -64,6 +66,7 @@ proc myAppMain { argc argv } {
 #
 #---------------------------------------------------------------------
 proc InitGui { root } {
+puts "InitGui"
 	global VersionNumber
 
     #-----------------------------------------------------------------
@@ -210,10 +213,10 @@ proc InitGui { root } {
 #    Procedures for read and write data files
 #---------------------------------------------------------------------
 #    proc myApp_lep_r
-    source "d_lep_r.tcl"
+#    source "d_lep_r.tcl"
 
 #    proc myAp_lep_w
-    source "d_lep_w.tcl"
+    #source "d_lep_w.tcl"
 
 
 #----------------------------------------------------------------------
@@ -221,15 +224,18 @@ proc InitGui { root } {
 #----------------------------------------------------------------------
 proc myAppWriteMain { } {
 
+puts "myAppWriteMain"
+
     source "lep_GlobalWingVars.tcl"
+    createGlobalWingVars
 
     global data_le
 
 #   Read lep data file
-    myApp_lep_r
+#    myApp_lep_r
 
 #   Write lep data
-    myApp_lep_w
+#    myApp_lep_w
 
     set area 1.0
 
@@ -379,7 +385,7 @@ proc myAppWriteMain { } {
 }
 #   End of myAppWriteMain
 
-    myAppWriteMain
+
 
 
     #---------------------------------------------------------------------
