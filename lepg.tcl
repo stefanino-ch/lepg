@@ -48,6 +48,7 @@ puts "myAppMain"
     InitGui .
 
     #myAppWriteMain
+    CreateMainWindow
 
     #------------------------------------------------------------
     #  If we have an argument, then open the file
@@ -219,6 +220,41 @@ puts "InitGui"
     #source "d_lep_w.tcl"
 
 
+
+proc CreateMainWindow {} {
+
+    # create the four quadrants
+
+    # Top view
+    ttk::labelframe .tv -text "Top view" -width 400 -height 300
+    # Front view
+    ttk::labelframe .fw -text "Front view" -width 400 -height 300
+    # Side view
+    ttk::labelframe .sv -text "Side view" -width 400 -height 300
+    # Basic data
+    ttk::labelframe .bd -text "Basic data" -width 400 -height 300
+
+    grid .fw -row 0 -column 0
+    grid .sv -row 0 -column 1
+    grid .tv -row 1 -column 0
+    grid .bd -row 1 -column 1
+
+    # put labels in basicData
+    ttk::label .bd.brandName -text "Brand Name"
+    ttk::label .bd.brandNameV -text "."
+    ttk::label .bd.wingName -text "Wing Name"
+    ttk::label .bd.wingNameV -text "."
+
+    grid .bd.brandName -row 0 -column 0
+    grid .bd.brandNameV -row 0 -column 1
+    grid .bd.wingName -row 1 -column 0
+    grid .bd.wingNameV  -row 1 -column 1
+
+
+
+}
+
+
 #----------------------------------------------------------------------
 #    proc main window
 #----------------------------------------------------------------------
@@ -226,8 +262,8 @@ proc myAppWriteMain { } {
 
 puts "myAppWriteMain"
 
-    source "lep_GlobalWingVars.tcl"
-    createGlobalWingVars
+    # source "lep_GlobalWingVars.tcl"
+    # createGlobalWingVars
 
     global data_le
 
@@ -237,9 +273,9 @@ puts "myAppWriteMain"
 #   Write lep data
 #    myApp_lep_w
 
-    set area 1.0
+#    set area 1.0
 
-    set span [expr 0.01*2*$rib($nribss,2)]
+#    set span [expr 0.01*2*$rib($nribss,2)]
 
 #----------------------------------------------------------------------
 #
@@ -269,113 +305,119 @@ puts "myAppWriteMain"
 
     pack .dos.c1 .dos.c2 .dos.c3 -side top
 
-    canvas .tres.c1 -width 10 -height 800 -bg white
+    canvas .tres.c1 -width 100 -height 800 -bg white
     pack .tres.c1 -side right
 
 #   Print basic data
 
     .uno.c1 create text 20 10 -tag texto -fill black -anchor w -text "Brand:"
-    .uno.c1 create text 150 10 -text $bname -tag texto2 -fill red -anchor w
+#    .uno.c1 create text 150 10 -text $bname -tag texto2 -fill red -anchor w
     .uno.c1 create text 20 30 -text "Model:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 30 -text $wname -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 30 -text $wname -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 50 -tag texto3 -fill black -anchor w -text "Cells:"
-    .uno.c1 create text 150 50 -text $ncells -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 50 -text $ncells -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 70 -text "Draw scale:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 70 -text $xkf -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 70 -text $xkf -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 90 -text "Wing scale:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 90 -text $xwf -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 90 -text $xwf -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 110 -text "Surface (m2):" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 110 -text $area -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 110 -text $area -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 130 -text "Span (m):" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 130 -text $span -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 130 -text $span -tag texto4 -fill blue -anchor w
 
     .uno.c1 create text 20 150 -text "Ribs:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 150 -text $nribst -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 150 -text $nribst -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 170 -text "Ribs/2:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 170 -text $nribss -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 170 -text $nribss -tag texto4 -fill blue -anchor w
 
     .uno.c1 create text 20 190 -text "Washin method:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 190 -text $kbbb -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 190 -text $kbbb -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 210 -text "Alpha center (deg):" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 210 -text $alphac -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 210 -text $alphac -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 230 -text "Alpha wingtip (deg):" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 230 -text $alpham -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 230 -text $alpham -tag texto4 -fill blue -anchor w
 
     .uno.c1 create text 20 250 -text "Wing type:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 250 -text $atp -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 250 -text $atp -tag texto4 -fill blue -anchor w
 
     .uno.c1 create text 20 270 -text "c0_LE:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 270 -text $data_le(c0) -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 270 -text $data_le(c0) -tag texto4 -fill blue -anchor w
 
     .uno.c1 create text 20 290 -text "xdes:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 290 -text $xdes -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 290 -text $xdes -tag texto4 -fill blue -anchor w
 
 
 
 #   Print geometry matrix
-    set i 1
-    set xx 0
-    while {$i <= $nribss} {
-    foreach j {1 2 3 4 6 7 9 10 51} {
-    set xx [expr $xx+40]
-    set yy [expr 10+20*($i-1)]
-    .uno.c2 create text $xx $yy -text $rib($i,$j) -tag texto4 -fill black -font {Courier 8}
-      }
-    set xx 0
-    incr i }
+    # set i 1
+    # set xx 0
+    # while {$i <= $nribss} {
+    #     foreach j {1 2 3 4 6 7 9 10 51} {
+    #         set xx [expr $xx+40]
+    #         set yy [expr 10+20*($i-1)]
+    #         .uno.c2 create text $xx $yy -text $rib($i,$j) -tag texto4 -fill black -font {Courier 8}
+    #     }
+    #     set xx 0
+    #     incr i
+    # }
 
 #   Set some canvas and scale parameters
 #   Canvas planform 600x200    .dos.c1
 #   Canvas front view 600x400  .dos.c2
 #   Canvas airfoil 600x200     .dos.c3
-    set c_c 300
-    set sf [expr 2*(300*0.9)/(100*$span)]
+#    set c_c 300
+#    set sf [expr 2*(300*0.9)/(100*$span)]
 
 #----------------------------------------------------------------------
 #   Draw basic planform
+# Grundriss
 #----------------------------------------------------------------------
 
     .dos.c1 create text 40 10 -text "Planform:" -tag texto -fill black -justify left
-    set i 1
-    while {$i <= $nribss} {
-    .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] -tag linea2 -fill green
-    .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] -tag linea2 -fill red
-    incr i }
+    # set i 1
+    # while {$i <= $nribss} {
+    #     .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
+    #     [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] -tag linea2 -fill green
+    #     .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
+    #     [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] -tag linea2 -fill red
+    #     incr i
+    # }
 
-    set i 1
-    while {$i <= [expr $nribss-1]} {
-    .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    [expr $c_c+$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],3)] -tag linea2 -fill green
-    .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    [expr $c_c-$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],3)] -tag linea2 -fill red
-    .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] \
-    [expr $c_c+$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],4)] -tag linea2 -fill green
-    .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] \
-    [expr $c_c-$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],4)] -tag linea2 -fill red
-    incr i }
+    # set i 1
+    # while {$i <= [expr $nribss-1]} {
+    #     .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
+    #     [expr $c_c+$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],3)] -tag linea2 -fill green
+    #     .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
+    #     [expr $c_c-$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],3)] -tag linea2 -fill red
+    #     .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] \
+    #     [expr $c_c+$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],4)] -tag linea2 -fill green
+    #     .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] \
+    #     [expr $c_c-$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],4)] -tag linea2 -fill red
+    #     incr i
+    # }
 
-    .dos.c1 create line [expr $c_c+$sf*$rib(1,2)] [expr 20+$sf*$rib(1,3)] \
-    [expr $c_c-$sf*$rib(1,2)] [expr 20+$sf*$rib(1,3)] -tag linea2 -fill blue
-    .dos.c1 create line [expr $c_c+$sf*$rib(1,2)] [expr 20+$sf*$rib(1,4)] \
-    [expr $c_c-$sf*$rib(1,2)] [expr 20+$sf*$rib(1,4)] -tag linea2 -fill blue
+    # .dos.c1 create line [expr $c_c+$sf*$rib(1,2)] [expr 20+$sf*$rib(1,3)] \
+    # [expr $c_c-$sf*$rib(1,2)] [expr 20+$sf*$rib(1,3)] -tag linea2 -fill blue
+    # .dos.c1 create line [expr $c_c+$sf*$rib(1,2)] [expr 20+$sf*$rib(1,4)] \
+    # [expr $c_c-$sf*$rib(1,2)] [expr 20+$sf*$rib(1,4)] -tag linea2 -fill blue
 
 
 #----------------------------------------------------------------------
 #   Draw basic front view
+# Aufriss
 #----------------------------------------------------------------------
 
     .dos.c2 create text 40 10 -text "Front view:" -tag texto -fill black -justify left
-    set i 1
-    while {$i <= [expr $nribss-1]} {
-    .dos.c2 create line [expr $c_c+$sf*$rib($i,6)] [expr 20+$sf*$rib($i,7)] \
-    [expr $c_c+$sf*$rib([expr $i+1],6)] [expr 20+$sf*$rib([expr $i+1],7)] -tag linea2 -fill green
-    .dos.c2 create line [expr $c_c-$sf*$rib($i,6)] [expr 20+$sf*$rib($i,7)] \
-    [expr $c_c-$sf*$rib([expr $i+1],6)] [expr 20+$sf*$rib([expr $i+1],7)] -tag linea2 -fill red
-    incr i }
-    .dos.c2 create line [expr $c_c+$sf*$rib(1,6)] [expr 20+$sf*$rib(1,7)] \
-    [expr $c_c-$sf*$rib(1,6)] [expr 20+$sf*$rib(1,7)] -tag linea2 -fill blue
+    # set i 1
+    # while {$i <= [expr $nribss-1]} {
+    #     .dos.c2 create line [expr $c_c+$sf*$rib($i,6)] [expr 20+$sf*$rib($i,7)] \
+    #     [expr $c_c+$sf*$rib([expr $i+1],6)] [expr 20+$sf*$rib([expr $i+1],7)] -tag linea2 -fill green
+    #     .dos.c2 create line [expr $c_c-$sf*$rib($i,6)] [expr 20+$sf*$rib($i,7)] \
+    #     [expr $c_c-$sf*$rib([expr $i+1],6)] [expr 20+$sf*$rib([expr $i+1],7)] -tag linea2 -fill red
+    #     incr i
+    # }
+    # .dos.c2 create line [expr $c_c+$sf*$rib(1,6)] [expr 20+$sf*$rib(1,7)] \
+    # [expr $c_c-$sf*$rib(1,6)] [expr 20+$sf*$rib(1,7)] -tag linea2 -fill blue
 
 #   Draw basic calage
 
