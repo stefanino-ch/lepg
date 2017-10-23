@@ -10,6 +10,16 @@ lappend ::auto_path [file dirname $myLocation]
 # Load local packages
 package require lepConfigFile
 
+#---------------------------------------------------------------------
+#  Globals
+#---------------------------------------------------------------------
+set myAppFileName ""
+set g_DataChangedFlag 0
+set g_DataFileTypes {
+    {{Data files}   {.txt}}
+}
+
+
 set data_le(c0) 10.11
 
 #---------------------------------------------------------------------
@@ -54,7 +64,7 @@ puts "myAppMain"
     #  If we have an argument, then open the file
     #-----------------------------------------------------------------
     if { [llength $argv] > 0 } {
-        myAppFileOpen [lindex $argv 0]
+        OpenLepFile [lindex $argv 0]
     }
 }
 #----------------------------------------------------------------------
@@ -112,7 +122,7 @@ puts "InitGui"
     $base.menu add cascade -label [::msgcat::mc "File"] -underline 0 -menu $base.menu.file
 
     $base.menu.file add command -underline 0 -label [::msgcat::mc "New"] -command myAppFileNew
-    $base.menu.file add command -underline 0 -label [::msgcat::mc "Open..."] -command myAppFileOpen
+    $base.menu.file add command -underline 0 -label [::msgcat::mc "Open..."] -command OpenLepFile
     $base.menu.file add command -underline 0 -label [::msgcat::mc "Close"] -command myAppFileClose
     $base.menu.file add separator
     $base.menu.file add command -underline 0 -label [::msgcat::mc "Save"] -command myAppFileSave
@@ -203,7 +213,7 @@ puts "InitGui"
     #  insert code defining myApp main window
     #-----------------------------------------------------------------
     ### text .t
-    ### bind .t <Key> {set myAppChangedFlag 1}
+    ### bind .t <Key> {set g_DataChangedFlag 1}
     ### pack .t
 }
 
@@ -223,8 +233,9 @@ puts "InitGui"
 
 proc CreateMainWindow {} {
 
-    # create the four quadrants
+    source "lep_GlobalWingVars.tcl"
 
+    # create the four quadrants
     # Top view
     ttk::labelframe .tv -text "Top view" -width 400 -height 300
     # Front view
@@ -237,23 +248,35 @@ proc CreateMainWindow {} {
     grid .fw -row 0 -column 0
     grid .sv -row 0 -column 1
     grid .tv -row 1 -column 0
-    grid .bd -row 1 -column 1
+    grid .bd -row 1 -column 1 -sticky nw
 
     # put labels in basicData
     ttk::label .bd.brandName -text "Brand Name"
-    ttk::label .bd.brandNameV -text "."
+    ttk::label .bd.brandNameV -textvariable bname
     ttk::label .bd.wingName -text "Wing Name"
-    ttk::label .bd.wingNameV -text "."
+    ttk::label .bd.wingNameV -textvariable wname
+    ttk::label .bd.drawScale -text "Draw Scale"
+    ttk::label .bd.drawScaleV -textvariable xkf
+    ttk::label .bd.wingScale -text "Wing scale"
+    ttk::label .bd.wingScaleV -textvariable xwf
+    ttk::label .bd.numCells -text "Number of Cells"
+    ttk::label .bd.numCellsV -textvariable ncells
+    ttk::label .bd.numRibs -text "Number of Ribs"
+    ttk::label .bd.numRibsV -textvariable nribst
 
-    grid .bd.brandName -row 0 -column 0
-    grid .bd.brandNameV -row 0 -column 1
-    grid .bd.wingName -row 1 -column 0
-    grid .bd.wingNameV  -row 1 -column 1
-
-
-
+    grid .bd.brandName -row 0 -column 0 -sticky w
+    grid .bd.brandNameV -row 0 -column 1 -sticky w
+    grid .bd.wingName -row 1 -column 0 -sticky w
+    grid .bd.wingNameV  -row 1 -column 1 -sticky w
+    grid .bd.drawScale -row 2 -column 0 -sticky w
+    grid .bd.drawScaleV  -row 2 -column 1 -sticky w
+    grid .bd.wingScale -row 3 -column 0 -sticky w
+    grid .bd.wingScaleV  -row 3 -column 1 -sticky w
+    grid .bd.numCells -row 4 -column 0 -sticky w
+    grid .bd.numCellsV  -row 4 -column 1 -sticky w
+    grid .bd.numRibs -row 5 -column 0 -sticky w
+    grid .bd.numRibsV  -row 5 -column 1 -sticky w
 }
-
 
 #----------------------------------------------------------------------
 #    proc main window
@@ -430,26 +453,12 @@ puts "myAppWriteMain"
 
 
 
-    #---------------------------------------------------------------------
-    #
-    #  File Procedures
-    #
-    #  Note that opening, saving, and closing files
-    #  are all intertwined.  This code assumes that
-    #  new/open/close/exit may lose some data.
-    #
-    #---------------------------------------------------------------------
-    set myAppFileName ""
-    set myAppChangedFlag 0
-    set myAppFileTypes {
-        {{tcl files}   {.tcl .tk}}
-        {{All Files}        *    }
-    }
+
 
 proc myAppFileNew { } {
     global myAppFileName
-    global myAppChangedFlag
-    if { $myAppChangedFlag } {
+    global g_DataChangedFlag
+    if { $g_DataChangedFlag } {
         myAppPromptForSave
     }
 
@@ -459,41 +468,51 @@ proc myAppFileNew { } {
     ### .t delete 1.0 end
 
     set myAppFileName ""
-    set myAppChangedFlag 0
+    set g_DataChangedFlag 0
  }
 
-proc myAppFileOpen { {filename ""} } {
-    global myAppFileName
-    global myAppChangedFlag
-    global myAppFileTypes
-    if { $myAppChangedFlag } {
+proc OpenLepFile { {FilePathName ""} } {
+    # global myAppFileName
+    global g_DataChangedFlag
+    global g_DataFileTypes
+
+    if { $g_DataChangedFlag } {
         myAppPromptForSave
     }
 
-    if {$filename == ""} {
-        set filename [tk_getOpenFile -filetypes $myAppFileTypes]
+    source "readLepDataFile.tcl"
+
+    if {$FilePathName == ""} {
+        set FilePathName [tk_getOpenFile -filetypes $g_DataFileTypes]
     }
 
-    if {$filename != ""} {
-        if { [catch {open $filename r} fp] } {
-            error "Cannot Open File $filename for Reading"
+    if {$FilePathName != ""} {
+        set ReturnValue [ readLepDataFile $FilePathName ]
+
+        if { $ReturnValue != 0 } {
+            error "Cannot Open File $FilePathName for Reading"
         }
+
+
+        # if { [catch {open $filename r} fp] } {
+        #     error "Cannot Open File $filename for Reading"
+        # }
 
         #-------------------------------------------------------------
         # insert code for "open" operation
         #-------------------------------------------------------------
         ### .t insert end [read $fp [file size $filename]]
 
-        close $fp
-        set myAppFileName $filename
-        set myAppChangedFlag 0
+        # close $fp
+        # set myAppFileName $filename
+        set g_DataChangedFlag 0
     }
 }
 
 proc myAppFileClose { } {
     global myAppFileName
-    global myAppChangedFlag
-    if { $myAppChangedFlag } {
+    global g_DataChangedFlag
+    if { $g_DataChangedFlag } {
         myAppPromptForSave
     }
 
@@ -503,12 +522,12 @@ proc myAppFileClose { } {
     ### .t delete 1.0 end
 
     set myAppFileName ""
-    set myAppChangedFlag 0
+    set g_DataChangedFlag 0
  }
 
  proc myAppFileSave { {filename ""} } {
     global myAppFileName
-    global myAppChangedFlag #BMA
+    global g_DataChangedFlag #BMA
     if { $filename == "" } {
         set filename $myAppFileName
     }
@@ -524,7 +543,7 @@ proc myAppFileClose { } {
 
          close $fp
          set myAppFileName $filename
-         set myAppChangedFlag 0
+         set g_DataChangedFlag 0
     }
 }
 
