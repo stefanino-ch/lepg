@@ -10,6 +10,16 @@ lappend ::auto_path [file dirname $myLocation]
 # Load local packages
 package require lepConfigFile
 
+#---------------------------------------------------------------------
+#  Globals
+#---------------------------------------------------------------------
+set myAppFileName ""
+set g_DataChangedFlag 0
+set g_DataFileTypes {
+    {{Data files}   {.txt}}
+}
+
+
 set data_le(c0) 10.11
 
 #---------------------------------------------------------------------
@@ -33,7 +43,7 @@ set VersionDate   "2016-08-20"
 #
 #---------------------------------------------------------------------
 proc myAppMain { argc argv } {
-
+puts "myAppMain"
     #-----------------------------------------------------------------
     #  Global program configuration
     #-----------------------------------------------------------------
@@ -47,11 +57,14 @@ proc myAppMain { argc argv } {
     #-----------------------------------------------------------------
     InitGui .
 
+    #myAppWriteMain
+    CreateMainWindow
+
     #------------------------------------------------------------
     #  If we have an argument, then open the file
     #-----------------------------------------------------------------
     if { [llength $argv] > 0 } {
-        myAppFileOpen [lindex $argv 0]
+        OpenLepFile [lindex $argv 0]
     }
 }
 #----------------------------------------------------------------------
@@ -64,6 +77,7 @@ proc myAppMain { argc argv } {
 #
 #---------------------------------------------------------------------
 proc InitGui { root } {
+puts "InitGui"
 	global VersionNumber
 
     #-----------------------------------------------------------------
@@ -108,7 +122,7 @@ proc InitGui { root } {
     $base.menu add cascade -label [::msgcat::mc "File"] -underline 0 -menu $base.menu.file
 
     $base.menu.file add command -underline 0 -label [::msgcat::mc "New"] -command myAppFileNew
-    $base.menu.file add command -underline 0 -label [::msgcat::mc "Open..."] -command myAppFileOpen
+    $base.menu.file add command -underline 0 -label [::msgcat::mc "Open..."] -command OpenLepFile
     $base.menu.file add command -underline 0 -label [::msgcat::mc "Close"] -command myAppFileClose
     $base.menu.file add separator
     $base.menu.file add command -underline 0 -label [::msgcat::mc "Save"] -command myAppFileSave
@@ -199,7 +213,7 @@ proc InitGui { root } {
     #  insert code defining myApp main window
     #-----------------------------------------------------------------
     ### text .t
-    ### bind .t <Key> {set myAppChangedFlag 1}
+    ### bind .t <Key> {set g_DataChangedFlag 1}
     ### pack .t
 }
 
@@ -210,30 +224,81 @@ proc InitGui { root } {
 #    Procedures for read and write data files
 #---------------------------------------------------------------------
 #    proc myApp_lep_r
-    source "d_lep_r.tcl"
+#    source "d_lep_r.tcl"
 
 #    proc myAp_lep_w
-    source "d_lep_w.tcl"
+    #source "d_lep_w.tcl"
 
+
+
+proc CreateMainWindow {} {
+
+    source "lep_GlobalWingVars.tcl"
+
+    # create the four quadrants
+    # Top view
+    ttk::labelframe .tv -text "Top view" -width 400 -height 300
+    # Front view
+    ttk::labelframe .fw -text "Front view" -width 400 -height 300
+    # Side view
+    ttk::labelframe .sv -text "Side view" -width 400 -height 300
+    # Basic data
+    ttk::labelframe .bd -text "Basic data" -width 400 -height 300
+
+    grid .fw -row 0 -column 0
+    grid .sv -row 0 -column 1
+    grid .tv -row 1 -column 0
+    grid .bd -row 1 -column 1 -sticky nw
+
+    # put labels in basicData
+    ttk::label .bd.brandName -text "Brand Name"
+    ttk::label .bd.brandNameV -textvariable bname
+    ttk::label .bd.wingName -text "Wing Name"
+    ttk::label .bd.wingNameV -textvariable wname
+    ttk::label .bd.drawScale -text "Draw Scale"
+    ttk::label .bd.drawScaleV -textvariable xkf
+    ttk::label .bd.wingScale -text "Wing scale"
+    ttk::label .bd.wingScaleV -textvariable xwf
+    ttk::label .bd.numCells -text "Number of Cells"
+    ttk::label .bd.numCellsV -textvariable ncells
+    ttk::label .bd.numRibs -text "Number of Ribs"
+    ttk::label .bd.numRibsV -textvariable nribst
+
+    grid .bd.brandName -row 0 -column 0 -sticky w
+    grid .bd.brandNameV -row 0 -column 1 -sticky w
+    grid .bd.wingName -row 1 -column 0 -sticky w
+    grid .bd.wingNameV  -row 1 -column 1 -sticky w
+    grid .bd.drawScale -row 2 -column 0 -sticky w
+    grid .bd.drawScaleV  -row 2 -column 1 -sticky w
+    grid .bd.wingScale -row 3 -column 0 -sticky w
+    grid .bd.wingScaleV  -row 3 -column 1 -sticky w
+    grid .bd.numCells -row 4 -column 0 -sticky w
+    grid .bd.numCellsV  -row 4 -column 1 -sticky w
+    grid .bd.numRibs -row 5 -column 0 -sticky w
+    grid .bd.numRibsV  -row 5 -column 1 -sticky w
+}
 
 #----------------------------------------------------------------------
 #    proc main window
 #----------------------------------------------------------------------
 proc myAppWriteMain { } {
 
-    source "lep_GlobalWingVars.tcl"
+puts "myAppWriteMain"
+
+    # source "lep_GlobalWingVars.tcl"
+    # createGlobalWingVars
 
     global data_le
 
 #   Read lep data file
-    myApp_lep_r
+#    myApp_lep_r
 
 #   Write lep data
-    myApp_lep_w
+#    myApp_lep_w
 
-    set area 1.0
+#    set area 1.0
 
-    set span [expr 0.01*2*$rib($nribss,2)]
+#    set span [expr 0.01*2*$rib($nribss,2)]
 
 #----------------------------------------------------------------------
 #
@@ -263,113 +328,119 @@ proc myAppWriteMain { } {
 
     pack .dos.c1 .dos.c2 .dos.c3 -side top
 
-    canvas .tres.c1 -width 10 -height 800 -bg white
+    canvas .tres.c1 -width 100 -height 800 -bg white
     pack .tres.c1 -side right
 
 #   Print basic data
 
     .uno.c1 create text 20 10 -tag texto -fill black -anchor w -text "Brand:"
-    .uno.c1 create text 150 10 -text $bname -tag texto2 -fill red -anchor w
+#    .uno.c1 create text 150 10 -text $bname -tag texto2 -fill red -anchor w
     .uno.c1 create text 20 30 -text "Model:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 30 -text $wname -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 30 -text $wname -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 50 -tag texto3 -fill black -anchor w -text "Cells:"
-    .uno.c1 create text 150 50 -text $ncells -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 50 -text $ncells -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 70 -text "Draw scale:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 70 -text $xkf -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 70 -text $xkf -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 90 -text "Wing scale:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 90 -text $xwf -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 90 -text $xwf -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 110 -text "Surface (m2):" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 110 -text $area -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 110 -text $area -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 130 -text "Span (m):" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 130 -text $span -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 130 -text $span -tag texto4 -fill blue -anchor w
 
     .uno.c1 create text 20 150 -text "Ribs:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 150 -text $nribst -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 150 -text $nribst -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 170 -text "Ribs/2:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 170 -text $nribss -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 170 -text $nribss -tag texto4 -fill blue -anchor w
 
     .uno.c1 create text 20 190 -text "Washin method:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 190 -text $kbbb -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 190 -text $kbbb -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 210 -text "Alpha center (deg):" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 210 -text $alphac -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 210 -text $alphac -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 230 -text "Alpha wingtip (deg):" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 230 -text $alpham -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 230 -text $alpham -tag texto4 -fill blue -anchor w
 
     .uno.c1 create text 20 250 -text "Wing type:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 250 -text $atp -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 250 -text $atp -tag texto4 -fill blue -anchor w
 
     .uno.c1 create text 20 270 -text "c0_LE:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 270 -text $data_le(c0) -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 270 -text $data_le(c0) -tag texto4 -fill blue -anchor w
 
     .uno.c1 create text 20 290 -text "xdes:" -tag texto3 -fill black -anchor w
-    .uno.c1 create text 150 290 -text $xdes -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 290 -text $xdes -tag texto4 -fill blue -anchor w
 
 
 
 #   Print geometry matrix
-    set i 1
-    set xx 0
-    while {$i <= $nribss} {
-    foreach j {1 2 3 4 6 7 9 10 51} {
-    set xx [expr $xx+40]
-    set yy [expr 10+20*($i-1)]
-    .uno.c2 create text $xx $yy -text $rib($i,$j) -tag texto4 -fill black -font {Courier 8}
-      }
-    set xx 0
-    incr i }
+    # set i 1
+    # set xx 0
+    # while {$i <= $nribss} {
+    #     foreach j {1 2 3 4 6 7 9 10 51} {
+    #         set xx [expr $xx+40]
+    #         set yy [expr 10+20*($i-1)]
+    #         .uno.c2 create text $xx $yy -text $rib($i,$j) -tag texto4 -fill black -font {Courier 8}
+    #     }
+    #     set xx 0
+    #     incr i
+    # }
 
 #   Set some canvas and scale parameters
 #   Canvas planform 600x200    .dos.c1
 #   Canvas front view 600x400  .dos.c2
 #   Canvas airfoil 600x200     .dos.c3
-    set c_c 300
-    set sf [expr 2*(300*0.9)/(100*$span)]
+#    set c_c 300
+#    set sf [expr 2*(300*0.9)/(100*$span)]
 
 #----------------------------------------------------------------------
 #   Draw basic planform
+# Grundriss
 #----------------------------------------------------------------------
 
     .dos.c1 create text 40 10 -text "Planform:" -tag texto -fill black -justify left
-    set i 1
-    while {$i <= $nribss} {
-    .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] -tag linea2 -fill green
-    .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] -tag linea2 -fill red
-    incr i }
+    # set i 1
+    # while {$i <= $nribss} {
+    #     .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
+    #     [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] -tag linea2 -fill green
+    #     .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
+    #     [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] -tag linea2 -fill red
+    #     incr i
+    # }
 
-    set i 1
-    while {$i <= [expr $nribss-1]} {
-    .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    [expr $c_c+$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],3)] -tag linea2 -fill green
-    .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    [expr $c_c-$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],3)] -tag linea2 -fill red
-    .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] \
-    [expr $c_c+$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],4)] -tag linea2 -fill green
-    .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] \
-    [expr $c_c-$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],4)] -tag linea2 -fill red
-    incr i }
+    # set i 1
+    # while {$i <= [expr $nribss-1]} {
+    #     .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
+    #     [expr $c_c+$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],3)] -tag linea2 -fill green
+    #     .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
+    #     [expr $c_c-$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],3)] -tag linea2 -fill red
+    #     .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] \
+    #     [expr $c_c+$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],4)] -tag linea2 -fill green
+    #     .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] \
+    #     [expr $c_c-$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],4)] -tag linea2 -fill red
+    #     incr i
+    # }
 
-    .dos.c1 create line [expr $c_c+$sf*$rib(1,2)] [expr 20+$sf*$rib(1,3)] \
-    [expr $c_c-$sf*$rib(1,2)] [expr 20+$sf*$rib(1,3)] -tag linea2 -fill blue
-    .dos.c1 create line [expr $c_c+$sf*$rib(1,2)] [expr 20+$sf*$rib(1,4)] \
-    [expr $c_c-$sf*$rib(1,2)] [expr 20+$sf*$rib(1,4)] -tag linea2 -fill blue
+    # .dos.c1 create line [expr $c_c+$sf*$rib(1,2)] [expr 20+$sf*$rib(1,3)] \
+    # [expr $c_c-$sf*$rib(1,2)] [expr 20+$sf*$rib(1,3)] -tag linea2 -fill blue
+    # .dos.c1 create line [expr $c_c+$sf*$rib(1,2)] [expr 20+$sf*$rib(1,4)] \
+    # [expr $c_c-$sf*$rib(1,2)] [expr 20+$sf*$rib(1,4)] -tag linea2 -fill blue
 
 
 #----------------------------------------------------------------------
 #   Draw basic front view
+# Aufriss
 #----------------------------------------------------------------------
 
     .dos.c2 create text 40 10 -text "Front view:" -tag texto -fill black -justify left
-    set i 1
-    while {$i <= [expr $nribss-1]} {
-    .dos.c2 create line [expr $c_c+$sf*$rib($i,6)] [expr 20+$sf*$rib($i,7)] \
-    [expr $c_c+$sf*$rib([expr $i+1],6)] [expr 20+$sf*$rib([expr $i+1],7)] -tag linea2 -fill green
-    .dos.c2 create line [expr $c_c-$sf*$rib($i,6)] [expr 20+$sf*$rib($i,7)] \
-    [expr $c_c-$sf*$rib([expr $i+1],6)] [expr 20+$sf*$rib([expr $i+1],7)] -tag linea2 -fill red
-    incr i }
-    .dos.c2 create line [expr $c_c+$sf*$rib(1,6)] [expr 20+$sf*$rib(1,7)] \
-    [expr $c_c-$sf*$rib(1,6)] [expr 20+$sf*$rib(1,7)] -tag linea2 -fill blue
+    # set i 1
+    # while {$i <= [expr $nribss-1]} {
+    #     .dos.c2 create line [expr $c_c+$sf*$rib($i,6)] [expr 20+$sf*$rib($i,7)] \
+    #     [expr $c_c+$sf*$rib([expr $i+1],6)] [expr 20+$sf*$rib([expr $i+1],7)] -tag linea2 -fill green
+    #     .dos.c2 create line [expr $c_c-$sf*$rib($i,6)] [expr 20+$sf*$rib($i,7)] \
+    #     [expr $c_c-$sf*$rib([expr $i+1],6)] [expr 20+$sf*$rib([expr $i+1],7)] -tag linea2 -fill red
+    #     incr i
+    # }
+    # .dos.c2 create line [expr $c_c+$sf*$rib(1,6)] [expr 20+$sf*$rib(1,7)] \
+    # [expr $c_c-$sf*$rib(1,6)] [expr 20+$sf*$rib(1,7)] -tag linea2 -fill blue
 
 #   Draw basic calage
 
@@ -379,29 +450,15 @@ proc myAppWriteMain { } {
 }
 #   End of myAppWriteMain
 
-    myAppWriteMain
 
 
-    #---------------------------------------------------------------------
-    #
-    #  File Procedures
-    #
-    #  Note that opening, saving, and closing files
-    #  are all intertwined.  This code assumes that
-    #  new/open/close/exit may lose some data.
-    #
-    #---------------------------------------------------------------------
-    set myAppFileName ""
-    set myAppChangedFlag 0
-    set myAppFileTypes {
-        {{tcl files}   {.tcl .tk}}
-        {{All Files}        *    }
-    }
+
+
 
 proc myAppFileNew { } {
     global myAppFileName
-    global myAppChangedFlag
-    if { $myAppChangedFlag } {
+    global g_DataChangedFlag
+    if { $g_DataChangedFlag } {
         myAppPromptForSave
     }
 
@@ -411,41 +468,51 @@ proc myAppFileNew { } {
     ### .t delete 1.0 end
 
     set myAppFileName ""
-    set myAppChangedFlag 0
+    set g_DataChangedFlag 0
  }
 
-proc myAppFileOpen { {filename ""} } {
-    global myAppFileName
-    global myAppChangedFlag
-    global myAppFileTypes
-    if { $myAppChangedFlag } {
+proc OpenLepFile { {FilePathName ""} } {
+    # global myAppFileName
+    global g_DataChangedFlag
+    global g_DataFileTypes
+
+    if { $g_DataChangedFlag } {
         myAppPromptForSave
     }
 
-    if {$filename == ""} {
-        set filename [tk_getOpenFile -filetypes $myAppFileTypes]
+    source "readLepDataFile.tcl"
+
+    if {$FilePathName == ""} {
+        set FilePathName [tk_getOpenFile -filetypes $g_DataFileTypes]
     }
 
-    if {$filename != ""} {
-        if { [catch {open $filename r} fp] } {
-            error "Cannot Open File $filename for Reading"
+    if {$FilePathName != ""} {
+        set ReturnValue [ readLepDataFile $FilePathName ]
+
+        if { $ReturnValue != 0 } {
+            error "Cannot Open File $FilePathName for Reading"
         }
+
+
+        # if { [catch {open $filename r} fp] } {
+        #     error "Cannot Open File $filename for Reading"
+        # }
 
         #-------------------------------------------------------------
         # insert code for "open" operation
         #-------------------------------------------------------------
         ### .t insert end [read $fp [file size $filename]]
 
-        close $fp
-        set myAppFileName $filename
-        set myAppChangedFlag 0
+        # close $fp
+        # set myAppFileName $filename
+        set g_DataChangedFlag 0
     }
 }
 
 proc myAppFileClose { } {
     global myAppFileName
-    global myAppChangedFlag
-    if { $myAppChangedFlag } {
+    global g_DataChangedFlag
+    if { $g_DataChangedFlag } {
         myAppPromptForSave
     }
 
@@ -455,12 +522,12 @@ proc myAppFileClose { } {
     ### .t delete 1.0 end
 
     set myAppFileName ""
-    set myAppChangedFlag 0
+    set g_DataChangedFlag 0
  }
 
  proc myAppFileSave { {filename ""} } {
     global myAppFileName
-    global myAppChangedFlag #BMA
+    global g_DataChangedFlag #BMA
     if { $filename == "" } {
         set filename $myAppFileName
     }
@@ -476,7 +543,7 @@ proc myAppFileClose { } {
 
          close $fp
          set myAppFileName $filename
-         set myAppChangedFlag 0
+         set g_DataChangedFlag 0
     }
 }
 

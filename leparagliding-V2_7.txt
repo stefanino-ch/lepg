@@ -19,7 +19,7 @@ section-id-000
 **************************************************************
 section-id-010
 * Brand name
-"LABORATORI D'ENVOL"
+"2.7 LABORATORI D'ENVOL"
 * Wing name
 "Theoric-example"
 * Drawing scale

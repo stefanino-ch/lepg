@@ -7,18 +7,18 @@
 *             1. GEOMETRY                                    *
 **************************************************************
 * Brand name
-"Laboratori d'envol"
+"2.6 Laboratori d'envol"
 * Wing name
 "gnuLAB4_previous"
 * Drawing scale
 1.5
-* Wing scale 
+* Wing scale
 1.0
 * Number of cells
 	46
 * Number of ribs
 	47
-* Alpha wingtip, parameter, (alpha center) 
+* Alpha wingtip, parameter, (alpha center)
 	4.5        2         0.0
 * Paraglider type and parameter
 "ds" 0
@@ -51,7 +51,7 @@
 **************************************************************
 *             2. AIRFOILS       	                     *
 **************************************************************
-* Airfoil name. intake in. intake out. open. disp   rweight 
+* Airfoil name. intake in. intake out. open. disp   rweight
 1	gnulab4.txt     1.6     6.3	1	0	1     17
 2	gnulab4.txt     1.6     6.3	1	0	1     17
 3	gnulab4.txt     1.6     6.3	1	0	1     17
@@ -312,10 +312,8 @@ Extrados
 40	40	20
 35	35	20	10
 35	35	15	10	5
-1	0.08	0.2	0.2	
+1	0.08	0.2	0.2
 2	0.08	0.2	0.2
 3	0.08	0.2	0.2
 4	0.08	0.2	0.2
 5	0.08	0.2	0.2
-
-		
