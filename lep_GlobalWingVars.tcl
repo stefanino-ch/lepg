@@ -3,8 +3,8 @@
 #  Global Wing variables used across lep and lepg including explanations
 #
 #  Pere Casellas
-#  http://www.laboratoridenvol.com
 #  Stefan Feuz
+#  http://www.laboratoridenvol.com
 #
 #  General Public License GNU GPL 3.0
 #
@@ -156,3 +156,10 @@ global yarp         # addRipPoY
 global csusl        # loadTot
 global cdis         # loadDistr
 # global missingName  # loadDeform
+
+proc createGlobalWingVars {} {
+puts "create global wing vars"
+    source "lep_GlobalWingVars.tcl"
+    set nribss ""
+    set rib(0,0) ""
+}
