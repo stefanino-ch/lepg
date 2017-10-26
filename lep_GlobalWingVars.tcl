@@ -10,27 +10,29 @@
 #
 #---------------------------------------------------------------------
 
-#   old names       new name
-global bname        # brandName
-global wname        # wingName
-global xkf          # drawScale
-global xwf          # wingScale
-global ncells       # numCells
-global nribst       # NumRibsTot
-global nribss       # NumRibsHalf
-global alpham       # alphaMax
-global kbbb         # washinMode
+#   old names       new name            old name
+global              brandName           # bname
+global              wingName            # wname
+global              drawScale           # xkf
+global              wingScale           # xwf
+global              numCells            # ncells
+global              numRibsTot          # nribst
+global              numRibsHalf         # nribss
+global              alphaMax            # alpham
+global              washinMode          # kbbb
                     # 0: the washin will be done manually
                     # 1: then washin will be done proportinal to the chord,
                     #    being maximun and positive at the tip, using only the first real of the line
                     # 2: automatic washin angles are set from center airfoil to wingtip.
                     #    The first real is the washin in wingtip, then set "2", and the last real
                     #    is the washin in the central airfoil
-global alphac       # alphaCenter
-global atp          # paraType
-global kaaa         # rotLeTriang - Rotate Leading Edge triangle
-global ribg         # ribGeomLine - Rib Geometry Line
-global rib          # ribConfig
+global              alphaCenter         # alphac
+global              paraType            # atp
+global              rotLeTriang         #
+                    # Rotate Leading Edge triangle
+global              ribGeomLine         # ribg
+                    # Rib Geometry Line
+global              ribConfig           # rib
                     # Rib Num Param Desc
                     #     n   1     Rib number
                     #     n   2     rib X coordinate
@@ -60,9 +62,9 @@ global rib          # ribConfig
                     #               Greater than 1.0 is posRibGeomle define and draw trailing edge "miniribs" ("minicabs") in non "ss" paragliders:
                     #               The value, simply define the minirib length (in %).
                     #               "100" activates a new specific programation. Middle unloaded ribs. New plan numbered "1-6"
-global nomair       # airfoilName
-global ndis         # airfConfigNum
-global hol          # holeConfig
+global              airfoilName         # nomair
+global              airfConfigNum       # ndis
+global              holeConfig          # hol
                     #    InitialRib  HoleNum     ParamValue  Desc
                     #       n           x           9           Hole type
                     #                                           1: Ellipse
@@ -90,22 +92,24 @@ global hol          # holeConfig
                     #                                           T2: 0. (not used)
                     #                                           T3: 0. (not used)
                     # The 9th value on each config line is not read and saved, for all hole configuration it is not used
-global nrib1        # holeRibNum1
-global nrib2        # holeRibNum2
-global nhols        # numHoles
-global skin         # skinTension
+global              holeRibNum1         # nrib1
+global              holeRibNum2         # nrib2
+global              numHoles            # nhols
+global              skinTens            # skin
                     #    ConfigLine     ParamNum    Desc
                     #    1...6          1           Distance in% of chord on the leading edge of extrados
                     #                   2           Extrados over-wide corresponding in % of chord
                     #                   3           Distance in% of chord on trailing edge
                     #                   4           Intrados over-wide corresponding in% of chord
-global htens        # strainMiniRibs    # 0.0114
-global ndif         # numStrainPoints
-global xndif        # strainCoef        # Coeficient 0.0 to 1.0
-                                        # Strain: dt Belastung
-global xupp         # seamUp
-global xupple       # seamUpLe
-global xuppte       # seamUpTe
+global              strainMiniRibs      # htens
+                    # 0.0114
+global              numStrainPoints     # ndif
+global              strainCoef          # xndif
+                    # Coeficient 0.0 to 1.0
+                    # Strain: dt Belastung
+global              seamUp              # xupp
+global              seamUpLe            # xupple
+global              seamUpTe            # xuppte
 global xlow         # seamLo
 global xlowle       # seamLoLe
 global xlowte       # seamLoTe

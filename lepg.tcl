@@ -19,6 +19,8 @@ set g_DataFileTypes {
     {{Data files}   {.txt}}
 }
 
+set .tv.c_tv ""
+
 
 set data_le(c0) 10.11
 
@@ -234,10 +236,14 @@ puts "InitGui"
 proc CreateMainWindow {} {
 
     source "lep_GlobalWingVars.tcl"
+    global .tv.c_tv
 
     # create the four quadrants
     # Top view
     ttk::labelframe .tv -text "Top view" -width 400 -height 300
+    canvas .tv.c_tv -width 350 -height 250
+    pack .tv.c_tv
+
     # Front view
     ttk::labelframe .fw -text "Front view" -width 400 -height 300
     # Side view
@@ -252,17 +258,17 @@ proc CreateMainWindow {} {
 
     # put labels in basicData
     ttk::label .bd.brandName -text "Brand Name"
-    ttk::label .bd.brandNameV -textvariable bname
+    ttk::label .bd.brandNameV -textvariable brandName
     ttk::label .bd.wingName -text "Wing Name"
-    ttk::label .bd.wingNameV -textvariable wname
+    ttk::label .bd.wingNameV -textvariable wingName
     ttk::label .bd.drawScale -text "Draw Scale"
-    ttk::label .bd.drawScaleV -textvariable xkf
+    ttk::label .bd.drawScaleV -textvariable drawScale
     ttk::label .bd.wingScale -text "Wing scale"
-    ttk::label .bd.wingScaleV -textvariable xwf
+    ttk::label .bd.wingScaleV -textvariable wingScale
     ttk::label .bd.numCells -text "Number of Cells"
-    ttk::label .bd.numCellsV -textvariable ncells
+    ttk::label .bd.numCellsV -textvariable numCells
     ttk::label .bd.numRibs -text "Number of Ribs"
-    ttk::label .bd.numRibsV -textvariable nribst
+    ttk::label .bd.numRibsV -textvariable numRibsTot
 
     grid .bd.brandName -row 0 -column 0 -sticky w
     grid .bd.brandNameV -row 0 -column 1 -sticky w
@@ -276,6 +282,63 @@ proc CreateMainWindow {} {
     grid .bd.numCellsV  -row 4 -column 1 -sticky w
     grid .bd.numRibs -row 5 -column 0 -sticky w
     grid .bd.numRibsV  -row 5 -column 1 -sticky w
+    # Surface
+    # Span
+    # AlphaCenter
+    # AlphaWingTip
+    # Wing type
+
+    # DrawTopView .tc.c_tv
+}
+
+proc DrawTopView {} {
+
+    source "lep_GlobalWingVars.tcl"
+    global .tv.c_tv
+
+.tv.c_tv create text 40 10 -text "Top view:" -tag texto -fill black -justify left
+
+    set i 1
+    # while {$i <= $numRibsHalf} {
+    #     .tv.c_tv create line [expr $c_c+$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,3)] \
+    #     [expr $c_c+$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,4)] -tag linea2 -fill green
+    #     .tv.c_tv create line [expr $c_c-$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,3)] \
+    #     [expr $c_c-$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,4)] -tag linea2 -fill red
+    #     incr i
+    # }
+
+    # set i 1
+    # while {$i <= [expr $numRibsHalf-1]} {
+    #     .dos.c1 create line [expr $c_c+$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,3)] \
+    #     [expr $c_c+$sf*$ribConfig([expr $i+1],2)] [expr 20+$sf*$ribConfig([expr $i+1],3)] -tag linea2 -fill green
+    #     .dos.c1 create line [expr $c_c-$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,3)] \
+    #     [expr $c_c-$sf*$ribConfig([expr $i+1],2)] [expr 20+$sf*$ribConfig([expr $i+1],3)] -tag linea2 -fill red
+    #     .dos.c1 create line [expr $c_c+$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,4)] \
+    #     [expr $c_c+$sf*$ribConfig([expr $i+1],2)] [expr 20+$sf*$ribConfig([expr $i+1],4)] -tag linea2 -fill green
+    #     .dos.c1 create line [expr $c_c-$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,4)] \
+    #     [expr $c_c-$sf*$ribConfig([expr $i+1],2)] [expr 20+$sf*$ribConfig([expr $i+1],4)] -tag linea2 -fill red
+    #     incr i
+    # }
+
+    # .dos.c1 create line [expr $c_c+$sf*$ribConfig(1,2)] [expr 20+$sf*$ribConfig(1,3)] \
+    # [expr $c_c-$sf*$ribConfig(1,2)] [expr 20+$sf*$ribConfig(1,3)] -tag linea2 -fill blue
+    # .dos.c1 create line [expr $c_c+$sf*$ribConfig(1,2)] [expr 20+$sf*$ribConfig(1,4)] \
+    # [expr $c_c-$sf*$ribConfig(1,2)] [expr 20+$sf*$ribConfig(1,4)] -tag linea2 -fill blue
+
+}
+
+proc DrawFrontView {} {
+    .dos.c2 create text 40 10 -text "Front view:" -tag texto -fill black -justify left
+    # set i 1
+    # while {$i <= [expr $numRibsHalf-1]} {
+    #     .dos.c2 create line [expr $c_c+$sf*$ribConfig($i,6)] [expr 20+$sf*$ribConfig($i,7)] \
+    #     [expr $c_c+$sf*$ribConfig([expr $i+1],6)] [expr 20+$sf*$ribConfig([expr $i+1],7)] -tag linea2 -fill green
+    #     .dos.c2 create line [expr $c_c-$sf*$ribConfig($i,6)] [expr 20+$sf*$ribConfig($i,7)] \
+    #     [expr $c_c-$sf*$ribConfig([expr $i+1],6)] [expr 20+$sf*$ribConfig([expr $i+1],7)] -tag linea2 -fill red
+    #     incr i
+    # }
+    # .dos.c2 create line [expr $c_c+$sf*$ribConfig(1,6)] [expr 20+$sf*$ribConfig(1,7)] \
+    # [expr $c_c-$sf*$ribConfig(1,6)] [expr 20+$sf*$ribConfig(1,7)] -tag linea2 -fill blue
 }
 
 #----------------------------------------------------------------------
@@ -298,7 +361,7 @@ puts "myAppWriteMain"
 
 #    set area 1.0
 
-#    set span [expr 0.01*2*$rib($nribss,2)]
+#    set span [expr 0.01*2*$ribConfig($numRibsHalf,2)]
 
 #----------------------------------------------------------------------
 #
@@ -334,34 +397,34 @@ puts "myAppWriteMain"
 #   Print basic data
 
     .uno.c1 create text 20 10 -tag texto -fill black -anchor w -text "Brand:"
-#    .uno.c1 create text 150 10 -text $bname -tag texto2 -fill red -anchor w
+#    .uno.c1 create text 150 10 -text $brandName -tag texto2 -fill red -anchor w
     .uno.c1 create text 20 30 -text "Model:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 30 -text $wname -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 30 -text $wingName -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 50 -tag texto3 -fill black -anchor w -text "Cells:"
-#    .uno.c1 create text 150 50 -text $ncells -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 50 -text $numCells -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 70 -text "Draw scale:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 70 -text $xkf -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 70 -text $drawScale -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 90 -text "Wing scale:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 90 -text $xwf -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 90 -text $wingScale -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 110 -text "Surface (m2):" -tag texto3 -fill black -anchor w
 #    .uno.c1 create text 150 110 -text $area -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 130 -text "Span (m):" -tag texto3 -fill black -anchor w
 #    .uno.c1 create text 150 130 -text $span -tag texto4 -fill blue -anchor w
 
     .uno.c1 create text 20 150 -text "Ribs:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 150 -text $nribst -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 150 -text $numRibsTot -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 170 -text "Ribs/2:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 170 -text $nribss -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 170 -text $numRibsHalf -tag texto4 -fill blue -anchor w
 
     .uno.c1 create text 20 190 -text "Washin method:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 190 -text $kbbb -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 190 -text $washinMode -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 210 -text "Alpha center (deg):" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 210 -text $alphac -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 210 -text $alphaCenter -tag texto4 -fill blue -anchor w
     .uno.c1 create text 20 230 -text "Alpha wingtip (deg):" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 230 -text $alpham -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 230 -text $alphaMax -tag texto4 -fill blue -anchor w
 
     .uno.c1 create text 20 250 -text "Wing type:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 250 -text $atp -tag texto4 -fill blue -anchor w
+#    .uno.c1 create text 150 250 -text $paraType -tag texto4 -fill blue -anchor w
 
     .uno.c1 create text 20 270 -text "c0_LE:" -tag texto3 -fill black -anchor w
 #    .uno.c1 create text 150 270 -text $data_le(c0) -tag texto4 -fill blue -anchor w
@@ -374,11 +437,11 @@ puts "myAppWriteMain"
 #   Print geometry matrix
     # set i 1
     # set xx 0
-    # while {$i <= $nribss} {
+    # while {$i <= $numRibsHalf} {
     #     foreach j {1 2 3 4 6 7 9 10 51} {
     #         set xx [expr $xx+40]
     #         set yy [expr 10+20*($i-1)]
-    #         .uno.c2 create text $xx $yy -text $rib($i,$j) -tag texto4 -fill black -font {Courier 8}
+    #         .uno.c2 create text $xx $yy -text $ribConfig($i,$j) -tag texto4 -fill black -font {Courier 8}
     #     }
     #     set xx 0
     #     incr i
@@ -398,31 +461,31 @@ puts "myAppWriteMain"
 
     .dos.c1 create text 40 10 -text "Planform:" -tag texto -fill black -justify left
     # set i 1
-    # while {$i <= $nribss} {
-    #     .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    #     [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] -tag linea2 -fill green
-    #     .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    #     [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] -tag linea2 -fill red
+    # while {$i <= $numRibsHalf} {
+    #     .dos.c1 create line [expr $c_c+$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,3)] \
+    #     [expr $c_c+$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,4)] -tag linea2 -fill green
+    #     .dos.c1 create line [expr $c_c-$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,3)] \
+    #     [expr $c_c-$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,4)] -tag linea2 -fill red
     #     incr i
     # }
 
     # set i 1
-    # while {$i <= [expr $nribss-1]} {
-    #     .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    #     [expr $c_c+$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],3)] -tag linea2 -fill green
-    #     .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    #     [expr $c_c-$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],3)] -tag linea2 -fill red
-    #     .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] \
-    #     [expr $c_c+$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],4)] -tag linea2 -fill green
-    #     .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] \
-    #     [expr $c_c-$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],4)] -tag linea2 -fill red
+    # while {$i <= [expr $numRibsHalf-1]} {
+    #     .dos.c1 create line [expr $c_c+$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,3)] \
+    #     [expr $c_c+$sf*$ribConfig([expr $i+1],2)] [expr 20+$sf*$ribConfig([expr $i+1],3)] -tag linea2 -fill green
+    #     .dos.c1 create line [expr $c_c-$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,3)] \
+    #     [expr $c_c-$sf*$ribConfig([expr $i+1],2)] [expr 20+$sf*$ribConfig([expr $i+1],3)] -tag linea2 -fill red
+    #     .dos.c1 create line [expr $c_c+$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,4)] \
+    #     [expr $c_c+$sf*$ribConfig([expr $i+1],2)] [expr 20+$sf*$ribConfig([expr $i+1],4)] -tag linea2 -fill green
+    #     .dos.c1 create line [expr $c_c-$sf*$ribConfig($i,2)] [expr 20+$sf*$ribConfig($i,4)] \
+    #     [expr $c_c-$sf*$ribConfig([expr $i+1],2)] [expr 20+$sf*$ribConfig([expr $i+1],4)] -tag linea2 -fill red
     #     incr i
     # }
 
-    # .dos.c1 create line [expr $c_c+$sf*$rib(1,2)] [expr 20+$sf*$rib(1,3)] \
-    # [expr $c_c-$sf*$rib(1,2)] [expr 20+$sf*$rib(1,3)] -tag linea2 -fill blue
-    # .dos.c1 create line [expr $c_c+$sf*$rib(1,2)] [expr 20+$sf*$rib(1,4)] \
-    # [expr $c_c-$sf*$rib(1,2)] [expr 20+$sf*$rib(1,4)] -tag linea2 -fill blue
+    # .dos.c1 create line [expr $c_c+$sf*$ribConfig(1,2)] [expr 20+$sf*$ribConfig(1,3)] \
+    # [expr $c_c-$sf*$ribConfig(1,2)] [expr 20+$sf*$ribConfig(1,3)] -tag linea2 -fill blue
+    # .dos.c1 create line [expr $c_c+$sf*$ribConfig(1,2)] [expr 20+$sf*$ribConfig(1,4)] \
+    # [expr $c_c-$sf*$ribConfig(1,2)] [expr 20+$sf*$ribConfig(1,4)] -tag linea2 -fill blue
 
 
 #----------------------------------------------------------------------
@@ -432,15 +495,15 @@ puts "myAppWriteMain"
 
     .dos.c2 create text 40 10 -text "Front view:" -tag texto -fill black -justify left
     # set i 1
-    # while {$i <= [expr $nribss-1]} {
-    #     .dos.c2 create line [expr $c_c+$sf*$rib($i,6)] [expr 20+$sf*$rib($i,7)] \
-    #     [expr $c_c+$sf*$rib([expr $i+1],6)] [expr 20+$sf*$rib([expr $i+1],7)] -tag linea2 -fill green
-    #     .dos.c2 create line [expr $c_c-$sf*$rib($i,6)] [expr 20+$sf*$rib($i,7)] \
-    #     [expr $c_c-$sf*$rib([expr $i+1],6)] [expr 20+$sf*$rib([expr $i+1],7)] -tag linea2 -fill red
+    # while {$i <= [expr $numRibsHalf-1]} {
+    #     .dos.c2 create line [expr $c_c+$sf*$ribConfig($i,6)] [expr 20+$sf*$ribConfig($i,7)] \
+    #     [expr $c_c+$sf*$ribConfig([expr $i+1],6)] [expr 20+$sf*$ribConfig([expr $i+1],7)] -tag linea2 -fill green
+    #     .dos.c2 create line [expr $c_c-$sf*$ribConfig($i,6)] [expr 20+$sf*$ribConfig($i,7)] \
+    #     [expr $c_c-$sf*$ribConfig([expr $i+1],6)] [expr 20+$sf*$ribConfig([expr $i+1],7)] -tag linea2 -fill red
     #     incr i
     # }
-    # .dos.c2 create line [expr $c_c+$sf*$rib(1,6)] [expr 20+$sf*$rib(1,7)] \
-    # [expr $c_c-$sf*$rib(1,6)] [expr 20+$sf*$rib(1,7)] -tag linea2 -fill blue
+    # .dos.c2 create line [expr $c_c+$sf*$ribConfig(1,6)] [expr 20+$sf*$ribConfig(1,7)] \
+    # [expr $c_c-$sf*$ribConfig(1,6)] [expr 20+$sf*$ribConfig(1,7)] -tag linea2 -fill blue
 
 #   Draw basic calage
 
@@ -507,6 +570,8 @@ proc OpenLepFile { {FilePathName ""} } {
         # set myAppFileName $filename
         set g_DataChangedFlag 0
     }
+
+    DrawTopView
 }
 
 proc myAppFileClose { } {
@@ -615,14 +680,14 @@ proc VersionInfo { } {
 #----------------------------------------------------------------------
 proc myAppCells { } {
 #   Toplevel
-    toplevel .ncellsdis
+    toplevel .numCellsdis
 
-    wm geometry .ncellsdis +400+300
-    wm title .ncellsdis "Number of cells and distribution"
-    focus .ncellsdis
+    wm geometry .numCellsdis +400+300
+    wm title .numCellsdis "Number of cells and distribution"
+    focus .numCellsdis
 
-    frame .ncellsdis.fr1 -width 400 -height 300 -bd 2
-    pack .ncellsdis.fr1 -side top -padx 2m -pady 2m -ipadx 2c -ipady 2c
+    frame .numCellsdis.fr1 -width 400 -height 300 -bd 2
+    pack .numCellsdis.fr1 -side top -padx 2m -pady 2m -ipadx 2c -ipady 2c
 
 }
 
@@ -657,8 +722,8 @@ proc GeometryMatrixWindow { } {
 
     # Se inserta el texto en el widget
     set i 1
-    while {$i <= $nribss} {
-    $w.f2.text insert $i.0 $ribg($i)\n
+    while {$i <= $numRibsHalf} {
+    $w.f2.text insert $i.0 $ribGeomLine($i)\n
     incr i }
 
     button $w.ok -text " OK " -command {destroy .text}

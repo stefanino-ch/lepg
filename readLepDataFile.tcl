@@ -351,22 +351,22 @@ proc ReadGeometrySectV2_52 {File} {
 
     set DataLine  [gets $File]
     # BrandName
-    set bname  [gets $File]
+    set brandName  [gets $File]
     set DataLine  [gets $File]
     # WingName
-    set wname  [gets $File]
+    set wingName  [gets $File]
     set DataLine  [gets $File]
     # DrawScale
-    set xkf    [gets $File]
+    set drawScale    [gets $File]
     set DataLine  [gets $File]
     # WingScale
-    set xwf    [gets $File]
+    set wingScale    [gets $File]
     set DataLine  [gets $File]
     # NumCells
-    set ncells [expr [gets $File]]
+    set numCells [expr [gets $File]]
     set DataLine  [gets $File]
     # NumRibsTot
-    set nribst [expr [gets $File]]
+    set numRibsTot [expr [gets $File]]
     set DataLine  [gets $File]
 
     # washin = negative Flügelschränkung
@@ -375,16 +375,16 @@ proc ReadGeometrySectV2_52 {File} {
 
     # Extract AlphaMaxParLine line
     # AlphaMax
-    set alpham [lindex $AlphaMaxParLine 0]
+    set alphaMax [lindex $AlphaMaxParLine 0]
 
     # WashinMode
-    set kbbb   [lindex $AlphaMaxParLine 1]
-    if { $kbbb == 2 } {
+    set washinMode   [lindex $AlphaMaxParLine 1]
+    if { $washinMode == 2 } {
         # AlphaCenter
-        set alphac [lindex $AlphaMaxParLine 2]
+        set alphaCenter [lindex $AlphaMaxParLine 2]
     }
-    if { $kbbb == 1 } {
-        set alphac 0.0
+    if { $washinMode == 1 } {
+        set alphaCenter 0.0
     }
 
     set DataLine [gets $File]
@@ -393,48 +393,48 @@ proc ReadGeometrySectV2_52 {File} {
 
     # Extract ParaTypeLine line
     # ParaType
-    set atp  [lindex $ParaTypeLine 0]
+    set paraType  [lindex $ParaTypeLine 0]
 
     # RotLeTriang - Rotate Leading Edge triangle
-    set kaaa [lindex $ParaTypeLine 1]
+    set rotLeTriang [lindex $ParaTypeLine 1]
 
     set DataLine [gets $File]
     set DataLine [gets $File]
 
     # NumRibsHalf
-    set nribss [expr ceil($nribst/2)]
+    set numRibsHalf [expr ceil($numRibsTot/2)]
     # Erase ".0" at the end of string
-    set l [string length $nribss]
+    set l [string length $numRibsHalf]
     # NumberRibs
-    set nribss [string range $nribss 0 [expr $l-3]]
+    set numRibsHalf [string range $numRibsHalf 0 [expr $l-3]]
 
     # Read matrix of geometry
     set i 1
-    while {$i <= $nribss} {
+    while {$i <= $numRibsHalf} {
         # RibGeomLine
-        set ribg($i) [gets $File]
+        set ribGeomLine($i) [gets $File]
         foreach j {0 1 2 3 4 5 6 7 8} {
           # RibGeom
-          set RibGeom($i,$j) [lindex $ribg($i) $j]
+          set RibGeom($i,$j) [lindex $ribGeomLine($i) $j]
         }
 
-        set rib($i,1) $RibGeom($i,0)
-        set rib($i,2) $RibGeom($i,1)
-        set rib($i,3) $RibGeom($i,2)
-        set rib($i,4) $RibGeom($i,3)
-        set rib($i,6) $RibGeom($i,4)
-        set rib($i,7) $RibGeom($i,5)
-        set rib($i,9) $RibGeom($i,6)
-        set rib($i,10) $RibGeom($i,7)
-        set rib($i,51) $RibGeom($i,8)
+        set ribConfig($i,1) $RibGeom($i,0)
+        set ribConfig($i,2) $RibGeom($i,1)
+        set ribConfig($i,3) $RibGeom($i,2)
+        set ribConfig($i,4) $RibGeom($i,3)
+        set ribConfig($i,6) $RibGeom($i,4)
+        set ribConfig($i,7) $RibGeom($i,5)
+        set ribConfig($i,9) $RibGeom($i,6)
+        set ribConfig($i,10) $RibGeom($i,7)
+        set ribConfig($i,51) $RibGeom($i,8)
 
         incr i
     }
 
-    # Set washin parameteres if kbbb=0 => manual washin
-    if { $kbbb == 0 } {
-        set alphac $RibGeom(1,8)
-        set alpham $RibGeom($nribss,8)
+    # Set washin parameteres if washinMode=0 => manual washin
+    if { $washinMode == 0 } {
+        set alphaCenter $RibGeom(1,8)
+        set alphaMax $RibGeom($numRibsHalf,8)
     }
 
     return [list 0 $File]
@@ -457,22 +457,22 @@ proc ReadAirfoilSectV2_52 {File} {
     set DataLine [gets $File]
 
     set i 1
-    while {$i <= $nribss} {
+    while {$i <= $numRibsHalf} {
         set DataLine [gets $File]
         foreach j {0 1 2 3 4 5 6 7} {
             set RibGeom($i,$j) [lindex $DataLine $j]
         }
 
 
-        set rib($i,1)  $RibGeom($i,0)
+        set ribConfig($i,1)  $RibGeom($i,0)
         # airfoilName
-        set nomair($i) $RibGeom($i,1)
-        set rib($i,11) $RibGeom($i,2)
-        set rib($i,12) $RibGeom($i,3)
-        set rib($i,14) $RibGeom($i,4)
-        set rib($i,50) $RibGeom($i,5)
-        set rib($i,55) $RibGeom($i,6)
-        set rib($i,56) $RibGeom($i,7)
+        set airfoilName($i) $RibGeom($i,1)
+        set ribConfig($i,11) $RibGeom($i,2)
+        set ribConfig($i,12) $RibGeom($i,3)
+        set ribConfig($i,14) $RibGeom($i,4)
+        set ribConfig($i,50) $RibGeom($i,5)
+        set ribConfig($i,55) $RibGeom($i,6)
+        set ribConfig($i,56) $RibGeom($i,7)
 
         incr i
     }
@@ -497,20 +497,20 @@ proc ReadAnchorPoSectV2_52 {File} {
     set DataLine [gets $File]
 
     set i 1
-    while {$i <= $nribss} {
+    while {$i <= $numRibsHalf} {
         set DataLine [gets $File]
         foreach j {0 1 2 3 4 5 6 7} {
             set RibGeom($i,$j) [lindex $DataLine $j]
         }
 
-        set rib($i,1)  $RibGeom($i,0)
-        set rib($i,15) $RibGeom($i,1)
-        set rib($i,16) $RibGeom($i,2)
-        set rib($i,17) $RibGeom($i,3)
-        set rib($i,18) $RibGeom($i,4)
-        set rib($i,19) $RibGeom($i,5)
-        set rib($i,20) $RibGeom($i,6)
-        set rib($i,21) $RibGeom($i,7)
+        set ribConfig($i,1)  $RibGeom($i,0)
+        set ribConfig($i,15) $RibGeom($i,1)
+        set ribConfig($i,16) $RibGeom($i,2)
+        set ribConfig($i,17) $RibGeom($i,3)
+        set ribConfig($i,18) $RibGeom($i,4)
+        set ribConfig($i,19) $RibGeom($i,5)
+        set ribConfig($i,20) $RibGeom($i,6)
+        set ribConfig($i,21) $RibGeom($i,7)
 
         incr i
     }
@@ -533,35 +533,35 @@ proc ReadAirfoilHoSectV2_52 {File} {
     source "lep_GlobalWingVars.tcl"
 
     # AirfConfigNum - Number of Airfoil configurations
-    set ndis  [gets $File]
+    set airfConfigNum  [gets $File]
 
     set ConfigIt 1
-    while {$ConfigIt <= $ndis} {
+    while {$ConfigIt <= $airfConfigNum} {
         # Initial rib for first lightening configuration
         # holeRibNum1
-        set nrib1($ConfigIt) [gets $File]
+        set holeRibNum1($ConfigIt) [gets $File]
         # Final rib for first lightening configuration
         # holeRibNum2
-        set nrib2($ConfigIt) [gets $File]
+        set holeRibNum2($ConfigIt) [gets $File]
         # Number of holes for the first lightening configuration
         # numHoles
-        set nhols($ConfigIt) [gets $File]
+        set numHoles($ConfigIt) [gets $File]
 
         set HoleIt 1
-        while {$HoleIt <= $nhols($ConfigIt)} {
+        while {$HoleIt <= $numHoles($ConfigIt)} {
             set DataLine [gets $File]
             foreach j {0 1 2 3 4 5 6 7} {
                 set HoleGeom($HoleIt,$j) [lindex $DataLine $j]
             }
 
-            set hol($nrib1($ConfigIt),$HoleIt,9) $HoleGeom($HoleIt,0)
-            set hol($nrib1($ConfigIt),$HoleIt,2) $HoleGeom($HoleIt,1)
-            set hol($nrib1($ConfigIt),$HoleIt,3) $HoleGeom($HoleIt,2)
-            set hol($nrib1($ConfigIt),$HoleIt,4) $HoleGeom($HoleIt,3)
-            set hol($nrib1($ConfigIt),$HoleIt,5) $HoleGeom($HoleIt,4)
-            set hol($nrib1($ConfigIt),$HoleIt,6) $HoleGeom($HoleIt,5)
-            set hol($nrib1($ConfigIt),$HoleIt,7) $HoleGeom($HoleIt,6)
-            set hol($nrib1($ConfigIt),$HoleIt,8) $HoleGeom($HoleIt,7)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,9) $HoleGeom($HoleIt,0)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,2) $HoleGeom($HoleIt,1)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,3) $HoleGeom($HoleIt,2)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,4) $HoleGeom($HoleIt,3)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,5) $HoleGeom($HoleIt,4)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,6) $HoleGeom($HoleIt,5)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,7) $HoleGeom($HoleIt,6)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,8) $HoleGeom($HoleIt,7)
 
             incr HoleIt
         }
@@ -593,18 +593,18 @@ proc ReadSkinTensSectV2_52 {File} {
         set DataLine [gets $File]
         foreach j {0 1 2 3} {
             # skinTension
-            set skin($i,[expr $j+1]) [lindex $DataLine $j]
+            set skinTens($i,[expr $j+1]) [lindex $DataLine $j]
         }
         incr i
     }
 
     # strainMiniRibs
-    set htens [gets $File]
+    set strainMiniRibs [gets $File]
     set DataLine [gets $File]
     # numStrainPoints
-    set ndif  [lindex $DataLine 0]
+    set numStrainPoints  [lindex $DataLine 0]
     # strainCoef
-    set xndif [lindex $DataLine 1]
+    set strainCoef [lindex $DataLine 1]
 
     return [list 0 $File]
 }
@@ -625,11 +625,11 @@ proc ReadSewingSectV2_52 {File} {
 
     set DataLine  [gets $File]
     # seamUp
-    set xupp   [lindex $DataLine 0]
+    set seamUp   [lindex $DataLine 0]
     # seamUpLe
-    set xupple [lindex $DataLine 1]
+    set seamUpLe [lindex $DataLine 1]
     # seamUpTe
-    set xuppte [lindex $DataLine 2]
+    set seamUpTe [lindex $DataLine 2]
 
     set DataLine  [gets $File]
     # seamLo
@@ -1084,22 +1084,22 @@ proc myApp_lep_r { } {
         incr i
     }
     # BrandName
-    set bname  [gets $file]
+    set brandName  [gets $file]
     set DataLine  [gets $file]
     # WingName
-    set wname  [gets $file]
+    set wingName  [gets $file]
     set DataLine  [gets $file]
     # DrawScale
-    set xkf    [gets $file]
+    set drawScale    [gets $file]
     set DataLine  [gets $file]
     # WingScale
-    set xwf    [gets $file]
+    set wingScale    [gets $file]
     set DataLine  [gets $file]
     # NumCells
-    set ncells [expr [gets $file]]
+    set numCells [expr [gets $file]]
     set DataLine  [gets $file]
     # NumRibsTot
-    set nribst [expr [gets $file]]
+    set numRibsTot [expr [gets $file]]
     set DataLine  [gets $file]
 
     # washin = negative Flügelschränkung
@@ -1108,16 +1108,16 @@ proc myApp_lep_r { } {
 
     # Extract AlphaMaxParLine line
     # AlphaMax
-    set alpham [lindex $AlphaMaxParLine 0]
+    set alphaMax [lindex $AlphaMaxParLine 0]
 
     # WashinMode
-    set kbbb   [lindex $AlphaMaxParLine 1]
-    if { $kbbb == 2 } {
+    set washinMode   [lindex $AlphaMaxParLine 1]
+    if { $washinMode == 2 } {
         # AlphaCenter
-        set alphac [lindex $AlphaMaxParLine 2]
+        set alphaCenter [lindex $AlphaMaxParLine 2]
     }
-    if { $kbbb == 1 } {
-        set alphac 0.0
+    if { $washinMode == 1 } {
+        set alphaCenter 0.0
     }
 
     set DataLine [gets $file]
@@ -1126,48 +1126,48 @@ proc myApp_lep_r { } {
 
     # Extract ParaTypeLine line
     # ParaType
-    set atp  [lindex $ParaTypeLine 0]
+    set paraType  [lindex $ParaTypeLine 0]
 
     # RotLeTriang - Rotate Leading Edge triangle
-    set kaaa [lindex $ParaTypeLine 1]
+    set rotLeTriang [lindex $ParaTypeLine 1]
 
     set DataLine [gets $file]
     set DataLine [gets $file]
 
     # NumRibsHalf
-    set nribss [expr ceil($nribst/2)]
+    set numRibsHalf [expr ceil($numRibsTot/2)]
     # Erase ".0" at the end of string
-    set l [string length $nribss]
+    set l [string length $numRibsHalf]
     # NumberRibs
-    set nribss [string range $nribss 0 [expr $l-3]]
+    set numRibsHalf [string range $numRibsHalf 0 [expr $l-3]]
 
     # Read matrix of geometry
     set i 1
-    while {$i <= $nribss} {
+    while {$i <= $numRibsHalf} {
         # RibGeomLine
-        set ribg($i) [gets $file]
+        set ribGeomLine($i) [gets $file]
         foreach j {0 1 2 3 4 5 6 7 8} {
           # RibGeom
-          set RibGeom($i,$j) [lindex $ribg($i) $j]
+          set RibGeom($i,$j) [lindex $ribGeomLine($i) $j]
         }
 
-        set rib($i,1) $RibGeom($i,0)
-        set rib($i,2) $RibGeom($i,1)
-        set rib($i,3) $RibGeom($i,2)
-        set rib($i,4) $RibGeom($i,3)
-        set rib($i,6) $RibGeom($i,4)
-        set rib($i,7) $RibGeom($i,5)
-        set rib($i,9) $RibGeom($i,6)
-        set rib($i,10) $RibGeom($i,7)
-        set rib($i,51) $RibGeom($i,8)
+        set ribConfig($i,1) $RibGeom($i,0)
+        set ribConfig($i,2) $RibGeom($i,1)
+        set ribConfig($i,3) $RibGeom($i,2)
+        set ribConfig($i,4) $RibGeom($i,3)
+        set ribConfig($i,6) $RibGeom($i,4)
+        set ribConfig($i,7) $RibGeom($i,5)
+        set ribConfig($i,9) $RibGeom($i,6)
+        set ribConfig($i,10) $RibGeom($i,7)
+        set ribConfig($i,51) $RibGeom($i,8)
 
         incr i
     }
 
-    # Set washin parameteres if kbbb=0 => manual washin
-    if { $kbbb == 0 } {
-        set alphac $RibGeom(1,8)
-        set alpham $RibGeom($nribss,8)
+    # Set washin parameteres if washinMode=0 => manual washin
+    if { $washinMode == 0 } {
+        set alphaCenter $RibGeom(1,8)
+        set alphaMax $RibGeom($numRibsHalf,8)
     }
     # end of Geometry Section
 
@@ -1179,22 +1179,22 @@ proc myApp_lep_r { } {
 
     # Read airfoil data
     set i 1
-    while {$i <= $nribss} {
+    while {$i <= $numRibsHalf} {
         set DataLine [gets $file]
         foreach j {0 1 2 3 4 5 6 7} {
             set RibGeom($i,$j) [lindex $DataLine $j]
         }
 
 
-        set rib($i,1)  $RibGeom($i,0)
+        set ribConfig($i,1)  $RibGeom($i,0)
         # airfoilName
-        set nomair($i) $RibGeom($i,1)
-        set rib($i,11) $RibGeom($i,2)
-        set rib($i,12) $RibGeom($i,3)
-        set rib($i,14) $RibGeom($i,4)
-        set rib($i,50) $RibGeom($i,5)
-        set rib($i,55) $RibGeom($i,6)
-        set rib($i,56) $RibGeom($i,7)
+        set airfoilName($i) $RibGeom($i,1)
+        set ribConfig($i,11) $RibGeom($i,2)
+        set ribConfig($i,12) $RibGeom($i,3)
+        set ribConfig($i,14) $RibGeom($i,4)
+        set ribConfig($i,50) $RibGeom($i,5)
+        set ribConfig($i,55) $RibGeom($i,6)
+        set ribConfig($i,56) $RibGeom($i,7)
 
         incr i
     }
@@ -1206,20 +1206,20 @@ proc myApp_lep_r { } {
 
     # Read anchors A,B,C,D,E,F location
     set i 1
-    while {$i <= $nribss} {
+    while {$i <= $numRibsHalf} {
         set DataLine [gets $file]
         foreach j {0 1 2 3 4 5 6 7} {
             set RibGeom($i,$j) [lindex $DataLine $j]
         }
 
-        set rib($i,1)  $RibGeom($i,0)
-        set rib($i,15) $RibGeom($i,1)
-        set rib($i,16) $RibGeom($i,2)
-        set rib($i,17) $RibGeom($i,3)
-        set rib($i,18) $RibGeom($i,4)
-        set rib($i,19) $RibGeom($i,5)
-        set rib($i,20) $RibGeom($i,6)
-        set rib($i,21) $RibGeom($i,7)
+        set ribConfig($i,1)  $RibGeom($i,0)
+        set ribConfig($i,15) $RibGeom($i,1)
+        set ribConfig($i,16) $RibGeom($i,2)
+        set ribConfig($i,17) $RibGeom($i,3)
+        set ribConfig($i,18) $RibGeom($i,4)
+        set ribConfig($i,19) $RibGeom($i,5)
+        set ribConfig($i,20) $RibGeom($i,6)
+        set ribConfig($i,21) $RibGeom($i,7)
 
         incr i
     }
@@ -1229,35 +1229,35 @@ proc myApp_lep_r { } {
     set DataLine [gets $file]
     set DataLine [gets $file]
     # AirfConfigNum - Number of Airfoil configurations
-    set ndis  [gets $file]
+    set airfConfigNum  [gets $file]
 
     set ConfigIt 1
-    while {$ConfigIt <= $ndis} {
+    while {$ConfigIt <= $airfConfigNum} {
         # Initial rib for first lightening configuration
         # holeRibNum1
-        set nrib1($ConfigIt) [gets $file]
+        set holeRibNum1($ConfigIt) [gets $file]
         # Final rib for first lightening configuration
         # holeRibNum2
-        set nrib2($ConfigIt) [gets $file]
+        set holeRibNum2($ConfigIt) [gets $file]
         # Number of holes for the first lightening configuration
         # numHoles
-        set nhols($ConfigIt) [gets $file]
+        set numHoles($ConfigIt) [gets $file]
 
         set HoleIt 1
-        while {$HoleIt <= $nhols($ConfigIt)} {
+        while {$HoleIt <= $numHoles($ConfigIt)} {
             set DataLine [gets $file]
             foreach j {0 1 2 3 4 5 6 7} {
                 set HoleGeom($HoleIt,$j) [lindex $DataLine $j]
             }
 
-            set hol($nrib1($ConfigIt),$HoleIt,9) $HoleGeom($HoleIt,0)
-            set hol($nrib1($ConfigIt),$HoleIt,2) $HoleGeom($HoleIt,1)
-            set hol($nrib1($ConfigIt),$HoleIt,3) $HoleGeom($HoleIt,2)
-            set hol($nrib1($ConfigIt),$HoleIt,4) $HoleGeom($HoleIt,3)
-            set hol($nrib1($ConfigIt),$HoleIt,5) $HoleGeom($HoleIt,4)
-            set hol($nrib1($ConfigIt),$HoleIt,6) $HoleGeom($HoleIt,5)
-            set hol($nrib1($ConfigIt),$HoleIt,7) $HoleGeom($HoleIt,6)
-            set hol($nrib1($ConfigIt),$HoleIt,8) $HoleGeom($HoleIt,7)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,9) $HoleGeom($HoleIt,0)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,2) $HoleGeom($HoleIt,1)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,3) $HoleGeom($HoleIt,2)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,4) $HoleGeom($HoleIt,3)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,5) $HoleGeom($HoleIt,4)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,6) $HoleGeom($HoleIt,5)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,7) $HoleGeom($HoleIt,6)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,8) $HoleGeom($HoleIt,7)
 
             incr HoleIt
         }
@@ -1265,7 +1265,7 @@ proc myApp_lep_r { } {
         incr ConfigIt
     }
 
-    # Read skin tension
+    # Read skinTens tension
     set DataLine [gets $file]
     set DataLine [gets $file]
     set DataLine [gets $file]
@@ -1276,18 +1276,18 @@ proc myApp_lep_r { } {
         set DataLine [gets $file]
         foreach j {0 1 2 3} {
             # skinTension
-            set skin($i,[expr $j+1]) [lindex $DataLine $j]
+            set skinTens($i,[expr $j+1]) [lindex $DataLine $j]
         }
         incr i
     }
 
     # strainMiniRibs
-    set htens [gets $file]
+    set strainMiniRibs [gets $file]
     set DataLine [gets $file]
     # numStrainPoints
-    set ndif  [lindex $DataLine 0]
+    set numStrainPoints  [lindex $DataLine 0]
     # strainCoef
-    set xndif [lindex $DataLine 1]
+    set strainCoef [lindex $DataLine 1]
 
     # Read sewing allowances
     set DataLine  [gets $file]
@@ -1296,11 +1296,11 @@ proc myApp_lep_r { } {
 
     set DataLine  [gets $file]
     # seamUp
-    set xupp   [lindex $DataLine 0]
+    set seamUp   [lindex $DataLine 0]
     # seamUpLe
-    set xupple [lindex $DataLine 1]
+    set seamUpLe [lindex $DataLine 1]
     # seamUpTe
-    set xuppte [lindex $DataLine 2]
+    set seamUpTe [lindex $DataLine 2]
 
     set DataLine  [gets $file]
     # seamLo
