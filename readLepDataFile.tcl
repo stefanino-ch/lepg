@@ -67,21 +67,33 @@ proc DetectFileVersion {FilePathName} {
 #  OUT: File        File pointer
 #----------------------------------------------------------------------
 proc JumpToSection {SectionId Offset File} {
-    # Set file pointer to the start of the file
-    seek $File 0 start
 
-    while { [gets $File DataLine] >= 0 } {
-        if { [string first $SectionId $DataLine] >= 0 } {
-            # section id found and read
-            # file pointer stays on first data line
+    set IterationNum 1
 
-            if {$Offset == 1} {
-                # read an additional data line in old files
-                gets $File DataLine
+    # Seek from the current position until file end. If data file is read in
+    # sequencially only a fer reads should be needed
+
+    while {$IterationNum <= 2} {
+        while { [gets $File DataLine] >= 0 } {
+            if { [string first $SectionId $DataLine] >= 0 } {
+                # section id found and read
+                # file pointer stays on first data line
+
+                if {$Offset == 1} {
+                    # read an additional data line in old files
+                    gets $File DataLine
+                }
+
+                return [list 0 $File]
             }
-
-            return [list 0 $File]
         }
+
+        # If we arrive here File is potentially not read in the regular
+        # sequence. Reset file pointer and read again from start
+
+        # Set file pointer to the start of the file
+        seek $File 0 start
+        inc IterationNum
     }
 
     # SectionId not found
