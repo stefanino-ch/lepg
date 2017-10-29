@@ -69,4 +69,17 @@
 
 "lbl_LangChanged"               "Sprache geändert"
 "txt_PlsRestart"                "Bitte starten Sie neu um die änderung zu übernehmen."
+
+"##### Main Window"             "##### Haupfenster"
+"Tail view"                     "Hinteransicht"
+"Top view"                      "Grundriss"
+"Side view"                     "Seitenansicht"
+"Basic data"                    "Grunddaten"
+
+"Brand Name"                    "Herstellername"
+"Wing Name"                     "Flügelname"
+"Draw Scale"                    "Zeichnungsmasstab"
+"Wing scale"                    "Flügelmasstab"
+"Number of Cells"               "Anzahl Zellen"
+"Number of Ribs"                "Anzahl Rippen"
 }

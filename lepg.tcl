@@ -231,22 +231,22 @@ proc CreateMainWindow {} {
 
     # create the four quadrants
     # Top view
-    ttk::labelframe .topv -text "Top view" -width 400 -height 300
+    ttk::labelframe .topv -text [::msgcat::mc "Top view"] -width 400 -height 300
     canvas .topv.c_topv
     pack .topv.c_topv
 
     # Tail view
-    ttk::labelframe .tailv -text "Tail view" -width 400 -height 300
+    ttk::labelframe .tailv -text [::msgcat::mc "Tail view"] -width 400 -height 300
     canvas .tailv.c_tailv
     pack .tailv.c_tailv
 
     # Side view
-    ttk::labelframe .sidev -text "Side view" -width 400 -height 300
+    ttk::labelframe .sidev -text [::msgcat::mc "Side view"] -width 400 -height 300
     canvas .sidev.c_sidev
     pack .sidev.c_sidev
 
     # Basic data
-    ttk::labelframe .bd -text "Basic data" -width 400 -height 300
+    ttk::labelframe .bd -text [::msgcat::mc "Basic data"] -width 400 -height 300
 
     grid .tailv -row 0 -column 0
     grid .sidev -row 0 -column 1
@@ -254,17 +254,17 @@ proc CreateMainWindow {} {
     grid .bd -row 1 -column 1 -sticky nw
 
     # put labels in basicData
-    ttk::label .bd.brandName -text "Brand Name"
+    ttk::label .bd.brandName -text [::msgcat::mc "Brand Name"]
     ttk::label .bd.brandNameV -textvariable brandName
-    ttk::label .bd.wingName -text "Wing Name"
+    ttk::label .bd.wingName -text [::msgcat::mc "Wing Name"]
     ttk::label .bd.wingNameV -textvariable wingName
-    ttk::label .bd.drawScale -text "Draw Scale"
+    ttk::label .bd.drawScale -text [::msgcat::mc "Draw Scale"]
     ttk::label .bd.drawScaleV -textvariable drawScale
-    ttk::label .bd.wingScale -text "Wing scale"
+    ttk::label .bd.wingScale -text [::msgcat::mc "Wing scale"]
     ttk::label .bd.wingScaleV -textvariable wingScale
-    ttk::label .bd.numCells -text "Number of Cells"
+    ttk::label .bd.numCells -text [::msgcat::mc "Number of Cells"]
     ttk::label .bd.numCellsV -textvariable numCells
-    ttk::label .bd.numRibs -text "Number of Ribs"
+    ttk::label .bd.numRibs -text [::msgcat::mc "Number of Ribs"]
     ttk::label .bd.numRibsV -textvariable numRibsTot
 
     grid .bd.brandName -row 0 -column 0 -sticky w
