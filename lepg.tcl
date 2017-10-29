@@ -19,6 +19,10 @@ set g_DataFileTypes {
     {{Data files}   {.txt}}
 }
 
+set .topv.c_topv ""
+set .tailv.c_tailv ""
+set .sidev.c_sidev ""
+
 
 set data_le(c0) 10.11
 
@@ -219,50 +223,49 @@ puts "InitGui"
 
 #    End InitGui
 
-
-#----------------------------------------------------------------------
-#    Procedures for read and write data files
-#---------------------------------------------------------------------
-#    proc myApp_lep_r
-#    source "d_lep_r.tcl"
-
-#    proc myAp_lep_w
-    #source "d_lep_w.tcl"
-
-
-
 proc CreateMainWindow {} {
 
     source "lep_GlobalWingVars.tcl"
+    global .topv.c_topv
+    global .tailv.c_tailv
 
     # create the four quadrants
     # Top view
-    ttk::labelframe .tv -text "Top view" -width 400 -height 300
-    # Front view
-    ttk::labelframe .fw -text "Front view" -width 400 -height 300
+    ttk::labelframe .topv -text "Top view" -width 400 -height 300
+    canvas .topv.c_topv
+    pack .topv.c_topv
+
+    # Tail view
+    ttk::labelframe .tailv -text "Tail view" -width 400 -height 300
+    canvas .tailv.c_tailv
+    pack .tailv.c_tailv
+
     # Side view
-    ttk::labelframe .sv -text "Side view" -width 400 -height 300
+    ttk::labelframe .sidev -text "Side view" -width 400 -height 300
+    canvas .sidev.c_sidev
+    pack .sidev.c_sidev
+
     # Basic data
     ttk::labelframe .bd -text "Basic data" -width 400 -height 300
 
-    grid .fw -row 0 -column 0
-    grid .sv -row 0 -column 1
-    grid .tv -row 1 -column 0
+    grid .tailv -row 0 -column 0
+    grid .sidev -row 0 -column 1
+    grid .topv -row 1 -column 0
     grid .bd -row 1 -column 1 -sticky nw
 
     # put labels in basicData
     ttk::label .bd.brandName -text "Brand Name"
-    ttk::label .bd.brandNameV -textvariable bname
+    ttk::label .bd.brandNameV -textvariable brandName
     ttk::label .bd.wingName -text "Wing Name"
-    ttk::label .bd.wingNameV -textvariable wname
+    ttk::label .bd.wingNameV -textvariable wingName
     ttk::label .bd.drawScale -text "Draw Scale"
-    ttk::label .bd.drawScaleV -textvariable xkf
+    ttk::label .bd.drawScaleV -textvariable drawScale
     ttk::label .bd.wingScale -text "Wing scale"
-    ttk::label .bd.wingScaleV -textvariable xwf
+    ttk::label .bd.wingScaleV -textvariable wingScale
     ttk::label .bd.numCells -text "Number of Cells"
-    ttk::label .bd.numCellsV -textvariable ncells
+    ttk::label .bd.numCellsV -textvariable numCells
     ttk::label .bd.numRibs -text "Number of Ribs"
-    ttk::label .bd.numRibsV -textvariable nribst
+    ttk::label .bd.numRibsV -textvariable numRibsTot
 
     grid .bd.brandName -row 0 -column 0 -sticky w
     grid .bd.brandNameV -row 0 -column 1 -sticky w
@@ -276,180 +279,152 @@ proc CreateMainWindow {} {
     grid .bd.numCellsV  -row 4 -column 1 -sticky w
     grid .bd.numRibs -row 5 -column 0 -sticky w
     grid .bd.numRibsV  -row 5 -column 1 -sticky w
+
+    #ToDo: add missing parameters
+    # Surface
+    # Span
+    # AlphaCenter
+    # AlphaWingTip
+    # Wing type
+
+    # DrawTopView .tc.c_topv
 }
 
 #----------------------------------------------------------------------
-#    proc main window
-#----------------------------------------------------------------------
-proc myAppWriteMain { } {
-
-puts "myAppWriteMain"
-
-    # source "lep_GlobalWingVars.tcl"
-    # createGlobalWingVars
-
-    global data_le
-
-#   Read lep data file
-#    myApp_lep_r
-
-#   Write lep data
-#    myApp_lep_w
-
-#    set area 1.0
-
-#    set span [expr 0.01*2*$rib($nribss,2)]
-
-#----------------------------------------------------------------------
+#  proc CalcScaleFactor
+#  Calculates the scale factor for drawing on the GUI based on Span
+#  and width of Top View canvas
 #
-#   4. Adding some widgets, data, and schemes in main frame "."
-#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: Scale Factor
 #----------------------------------------------------------------------
+proc CalcScaleFactor {} {
 
-#----------------------------------------------------------------------
-#   Create frames
-#----------------------------------------------------------------------
+    source "lep_GlobalWingVars.tcl"
+    global .topv.c_topv
 
-    frame .uno -width 400 -height 800 -bd 2 -relief groove
-    frame .dos -width 400 -height 800  -bd 2 -relief groove
-    frame .tres -width 10 -height 800  -bd 2 -relief groove
-    pack .uno .dos -side left
+    # midX half the way on the x coordinate in the canvas
+    set MidX [expr [.topv.c_topv cget -width] /2]
+    set Span [expr 2*$ribConfig($numRibsHalf,6)]
 
-#----------------------------------------------------------------------
-#   Main canvas
-#----------------------------------------------------------------------
-    canvas .uno.c1 -width 400 -height 400
-    canvas .uno.c2 -width 400 -height 400
-    pack .uno.c1 .uno.c2 -side top
+    # scale factor
+    set SF [expr (2* $MidX )/($Span)]
+    # use only 90% of canvas
+    set SF [expr $SF * 0.9]
 
-    canvas .dos.c1 -width 600 -height 200 -bg white
-    canvas .dos.c2 -width 600 -height 400 -bg white
-    canvas .dos.c3 -width 600 -height 200 -bg white
+    return $SF
+}
 
-    pack .dos.c1 .dos.c2 .dos.c3 -side top
+proc DrawTopView {} {
+    source "lep_GlobalWingVars.tcl"
+    global .topv.c_topv
 
-    canvas .tres.c1 -width 100 -height 800 -bg white
-    pack .tres.c1 -side right
+    .topv.c_topv delete "all"
 
-#   Print basic data
+    # midX half the way on the x coordinate in the canvas
+    set MidX [expr [.topv.c_topv cget -width] /2]
+    set SF [CalcScaleFactor]
 
-    .uno.c1 create text 20 10 -tag texto -fill black -anchor w -text "Brand:"
-#    .uno.c1 create text 150 10 -text $bname -tag texto2 -fill red -anchor w
-    .uno.c1 create text 20 30 -text "Model:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 30 -text $wname -tag texto4 -fill blue -anchor w
-    .uno.c1 create text 20 50 -tag texto3 -fill black -anchor w -text "Cells:"
-#    .uno.c1 create text 150 50 -text $ncells -tag texto4 -fill blue -anchor w
-    .uno.c1 create text 20 70 -text "Draw scale:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 70 -text $xkf -tag texto4 -fill blue -anchor w
-    .uno.c1 create text 20 90 -text "Wing scale:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 90 -text $xwf -tag texto4 -fill blue -anchor w
-    .uno.c1 create text 20 110 -text "Surface (m2):" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 110 -text $area -tag texto4 -fill blue -anchor w
-    .uno.c1 create text 20 130 -text "Span (m):" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 130 -text $span -tag texto4 -fill blue -anchor w
+    set Chord [expr $ribConfig(1,4) - $ribConfig(1,3)]
+    set MaxY [.topv.c_topv cget -height]
+    set DeltaY [expr ($MaxY - ( $Chord * $SF )) /2 ]
+    set StartY [expr ($MaxY /2) - $DeltaY]
 
-    .uno.c1 create text 20 150 -text "Ribs:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 150 -text $nribst -tag texto4 -fill blue -anchor w
-    .uno.c1 create text 20 170 -text "Ribs/2:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 170 -text $nribss -tag texto4 -fill blue -anchor w
+    set i 1
+    while {$i <= $numRibsHalf} {
+        #                                     X                              Y Le                              X                              Y Te
+        # right
+        .topv.c_topv create line [expr $MidX+$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,3)] [expr $MidX+$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,4)] -tag linea2 -fill green
+        # left
+        .topv.c_topv create line [expr $MidX-$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,3)] [expr $MidX-$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,4)] -tag linea2 -fill red
+        incr i
+    }
 
-    .uno.c1 create text 20 190 -text "Washin method:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 190 -text $kbbb -tag texto4 -fill blue -anchor w
-    .uno.c1 create text 20 210 -text "Alpha center (deg):" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 210 -text $alphac -tag texto4 -fill blue -anchor w
-    .uno.c1 create text 20 230 -text "Alpha wingtip (deg):" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 230 -text $alpham -tag texto4 -fill blue -anchor w
+    set i 1
+    while {$i <= [expr $numRibsHalf-1]} {
+        .topv.c_topv create line [expr $MidX+$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,3)] [expr $MidX+$SF*$ribConfig([expr $i+1],6)] [expr $StartY+$SF*$ribConfig([expr $i+1],3)] -tag linea2 -fill green
+        .topv.c_topv create line [expr $MidX-$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,3)] [expr $MidX-$SF*$ribConfig([expr $i+1],6)] [expr $StartY+$SF*$ribConfig([expr $i+1],3)] -tag linea2 -fill red
+        .topv.c_topv create line [expr $MidX+$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,4)] [expr $MidX+$SF*$ribConfig([expr $i+1],6)] [expr $StartY+$SF*$ribConfig([expr $i+1],4)] -tag linea2 -fill green
+        .topv.c_topv create line [expr $MidX-$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,4)] [expr $MidX-$SF*$ribConfig([expr $i+1],6)] [expr $StartY+$SF*$ribConfig([expr $i+1],4)] -tag linea2 -fill red
+        incr i
+    }
 
-    .uno.c1 create text 20 250 -text "Wing type:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 250 -text $atp -tag texto4 -fill blue -anchor w
+    .topv.c_topv create line [expr $MidX+$SF*$ribConfig(1,6)] [expr $StartY+$SF*$ribConfig(1,3)] [expr $MidX-$SF*$ribConfig(1,6)] [expr $StartY+$SF*$ribConfig(1,3)] -tag linea2 -fill blue
+    .topv.c_topv create line [expr $MidX+$SF*$ribConfig(1,6)] [expr $StartY+$SF*$ribConfig(1,4)] [expr $MidX-$SF*$ribConfig(1,6)] [expr $StartY+$SF*$ribConfig(1,4)] -tag linea2 -fill blue
+}
 
-    .uno.c1 create text 20 270 -text "c0_LE:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 270 -text $data_le(c0) -tag texto4 -fill blue -anchor w
+proc DrawTailView {} {
+    source "lep_GlobalWingVars.tcl"
+    global .tailv.c_tailv
 
-    .uno.c1 create text 20 290 -text "xdes:" -tag texto3 -fill black -anchor w
-#    .uno.c1 create text 150 290 -text $xdes -tag texto4 -fill blue -anchor w
+    .tailv.c_tailv delete "all"
 
+    set SF [CalcScaleFactor]
 
+    # Derive X coordinate to start the drawing
+    set MaxX [.tailv.c_tailv cget -width]
+    set MidX [expr $MaxX /2]
+
+    # Derive y coordinate to start the draw
+    set MaxY [.tailv.c_tailv cget -height]
+    set Height [expr $ribConfig($numRibsHalf,7) - $ribConfig(1,7)]
+    set StartY [expr ($MaxY - ( $Height * $SF )) /2 ]
+
+    set i 1
+    while {$i <= [expr $numRibsHalf-1]} {
+        .tailv.c_tailv create line [expr $MidX+$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,7)] [expr $MidX+$SF*$ribConfig([expr $i+1],6)] [expr $StartY+$SF*$ribConfig([expr $i+1],7)] -tag linea2 -fill green
+        .tailv.c_tailv create line [expr $MidX-$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,7)] [expr $MidX-$SF*$ribConfig([expr $i+1],6)] [expr $StartY+$SF*$ribConfig([expr $i+1],7)] -tag linea2 -fill red
+        incr i
+    }
+    .tailv.c_tailv create line [expr $MidX+$SF*$ribConfig(1,6)] [expr $StartY+$SF*$ribConfig(1,7)] [expr $MidX-$SF*$ribConfig(1,6)] [expr $StartY+$SF*$ribConfig(1,7)] -tag linea2 -fill blue
+}
+
+proc DrawSideView {} {
+    source "lep_GlobalWingVars.tcl"
+    global .sidev.c_sidev
+
+    .sidev.c_sidev delete "all"
+
+    set SF [CalcScaleFactor]
+
+    # Derive X coordinate to start the drawing
+    set MaxX [.sidev.c_sidev cget -width]
+
+    set Chord [expr $ribConfig(1,4) - $ribConfig(1,3)]
+    set StartX  [expr ($MaxX - ( $Chord * $SF )) /2 ]
+
+    # Derive y coordinate to start the draw
+    set MaxY [.sidev.c_sidev cget -height]
+    set Height [expr $ribConfig($numRibsHalf,7) - $ribConfig(1,7)]
+    set StartY [expr ($MaxY - ( $Height * $SF )) /2 ]
+
+    set i 1
+    while {$i <= [expr $numRibsHalf]} {
+        .sidev.c_sidev create line [expr $StartX+$SF*$ribConfig($i,3)] [expr $StartY+$SF*$ribConfig($i,7)] [expr $StartX+$SF*$ribConfig($i,4)] [expr $StartY+$SF*$ribConfig($i,7)] -fill red
+        incr i
+    }
+
+    set i 1
+    while {$i <= [expr $numRibsHalf-1]} {
+        .sidev.c_sidev create line [expr $StartX+$SF*$ribConfig($i,3)] [expr $StartY+$SF*$ribConfig($i,7)] [expr $StartX+$SF*$ribConfig([expr $i+1],3)] [expr $StartY+$SF*$ribConfig([expr $i+1],7)] -fill red
+        .sidev.c_sidev create line [expr $StartX+$SF*$ribConfig($i,4)] [expr $StartY+$SF*$ribConfig($i,7)] [expr $StartX+$SF*$ribConfig([expr $i+1],4)] [expr $StartY+$SF*$ribConfig([expr $i+1],7)] -fill red
+        incr i
+    }
+}
 
 #   Print geometry matrix
     # set i 1
     # set xx 0
-    # while {$i <= $nribss} {
+    # while {$i <= $numRibsHalf} {
     #     foreach j {1 2 3 4 6 7 9 10 51} {
     #         set xx [expr $xx+40]
     #         set yy [expr 10+20*($i-1)]
-    #         .uno.c2 create text $xx $yy -text $rib($i,$j) -tag texto4 -fill black -font {Courier 8}
+    #         .uno.c2 create text $xx $yy -text $ribConfig($i,$j) -tag texto4 -fill black -font {Courier 8}
     #     }
     #     set xx 0
     #     incr i
     # }
-
-#   Set some canvas and scale parameters
-#   Canvas planform 600x200    .dos.c1
-#   Canvas front view 600x400  .dos.c2
-#   Canvas airfoil 600x200     .dos.c3
-#    set c_c 300
-#    set sf [expr 2*(300*0.9)/(100*$span)]
-
-#----------------------------------------------------------------------
-#   Draw basic planform
-# Grundriss
-#----------------------------------------------------------------------
-
-    .dos.c1 create text 40 10 -text "Planform:" -tag texto -fill black -justify left
-    # set i 1
-    # while {$i <= $nribss} {
-    #     .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    #     [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] -tag linea2 -fill green
-    #     .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    #     [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] -tag linea2 -fill red
-    #     incr i
-    # }
-
-    # set i 1
-    # while {$i <= [expr $nribss-1]} {
-    #     .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    #     [expr $c_c+$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],3)] -tag linea2 -fill green
-    #     .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,3)] \
-    #     [expr $c_c-$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],3)] -tag linea2 -fill red
-    #     .dos.c1 create line [expr $c_c+$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] \
-    #     [expr $c_c+$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],4)] -tag linea2 -fill green
-    #     .dos.c1 create line [expr $c_c-$sf*$rib($i,2)] [expr 20+$sf*$rib($i,4)] \
-    #     [expr $c_c-$sf*$rib([expr $i+1],2)] [expr 20+$sf*$rib([expr $i+1],4)] -tag linea2 -fill red
-    #     incr i
-    # }
-
-    # .dos.c1 create line [expr $c_c+$sf*$rib(1,2)] [expr 20+$sf*$rib(1,3)] \
-    # [expr $c_c-$sf*$rib(1,2)] [expr 20+$sf*$rib(1,3)] -tag linea2 -fill blue
-    # .dos.c1 create line [expr $c_c+$sf*$rib(1,2)] [expr 20+$sf*$rib(1,4)] \
-    # [expr $c_c-$sf*$rib(1,2)] [expr 20+$sf*$rib(1,4)] -tag linea2 -fill blue
-
-
-#----------------------------------------------------------------------
-#   Draw basic front view
-# Aufriss
-#----------------------------------------------------------------------
-
-    .dos.c2 create text 40 10 -text "Front view:" -tag texto -fill black -justify left
-    # set i 1
-    # while {$i <= [expr $nribss-1]} {
-    #     .dos.c2 create line [expr $c_c+$sf*$rib($i,6)] [expr 20+$sf*$rib($i,7)] \
-    #     [expr $c_c+$sf*$rib([expr $i+1],6)] [expr 20+$sf*$rib([expr $i+1],7)] -tag linea2 -fill green
-    #     .dos.c2 create line [expr $c_c-$sf*$rib($i,6)] [expr 20+$sf*$rib($i,7)] \
-    #     [expr $c_c-$sf*$rib([expr $i+1],6)] [expr 20+$sf*$rib([expr $i+1],7)] -tag linea2 -fill red
-    #     incr i
-    # }
-    # .dos.c2 create line [expr $c_c+$sf*$rib(1,6)] [expr 20+$sf*$rib(1,7)] \
-    # [expr $c_c-$sf*$rib(1,6)] [expr 20+$sf*$rib(1,7)] -tag linea2 -fill blue
-
-#   Draw basic calage
-
-    .tres.c1 create text 40 10 -text "Calage:" -tag texto -fill black -justify left
-
-
-}
-#   End of myAppWriteMain
-
 
 
 
@@ -507,6 +482,10 @@ proc OpenLepFile { {FilePathName ""} } {
         # set myAppFileName $filename
         set g_DataChangedFlag 0
     }
+
+    DrawTopView
+    DrawTailView
+    DrawSideView
 }
 
 proc myAppFileClose { } {
@@ -615,14 +594,14 @@ proc VersionInfo { } {
 #----------------------------------------------------------------------
 proc myAppCells { } {
 #   Toplevel
-    toplevel .ncellsdis
+    toplevel .numCellsdis
 
-    wm geometry .ncellsdis +400+300
-    wm title .ncellsdis "Number of cells and distribution"
-    focus .ncellsdis
+    wm geometry .numCellsdis +400+300
+    wm title .numCellsdis "Number of cells and distribution"
+    focus .numCellsdis
 
-    frame .ncellsdis.fr1 -width 400 -height 300 -bd 2
-    pack .ncellsdis.fr1 -side top -padx 2m -pady 2m -ipadx 2c -ipady 2c
+    frame .numCellsdis.fr1 -width 400 -height 300 -bd 2
+    pack .numCellsdis.fr1 -side top -padx 2m -pady 2m -ipadx 2c -ipady 2c
 
 }
 
@@ -657,8 +636,8 @@ proc GeometryMatrixWindow { } {
 
     # Se inserta el texto en el widget
     set i 1
-    while {$i <= $nribss} {
-    $w.f2.text insert $i.0 $ribg($i)\n
+    while {$i <= $numRibsHalf} {
+    $w.f2.text insert $i.0 $ribGeomLine($i)\n
     incr i }
 
     button $w.ok -text " OK " -command {destroy .text}
