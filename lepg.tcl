@@ -29,8 +29,8 @@ set data_le(c0) 10.11
 #---------------------------------------------------------------------
 #
 #  LEparagliding GUI
-set VersionNumber "V0.2.1"
-set VersionDate   "2016-08-20"
+set VersionNumber "V0.3.0"
+set VersionDate   "2016-10-29"
 #
 #  Pere Casellas
 #  http://www.laboratoridenvol.com
