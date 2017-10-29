@@ -110,60 +110,72 @@ global              strainCoef          # xndif
 global              seamUp              # xupp
 global              seamUpLe            # xupple
 global              seamUpTe            # xuppte
-global xlow         # seamLo
-global xlowle       # seamLoLe
-global xlowte       # seamLoTe
-global xrib         # seamRib
-global xvrib        # seamVRib
-global xmark        # markSpace
-global xcir         # markRad
-global xdes         # markDisp
-global finesse      # finesse           # Finesse goal, according to the general proportions of the wing
-global cpress       # posCOP            # Position of the wing center of pressure estimated as % of central cord
-global calage       # calage            # Calage in% (distance from the leading edge point to the perpendicular to the central chord from the pilot position)
-global clengr       # riserLength       # Riser basic length in cm
-global clengl       # lineLength        # Basic length of lines (maillons - sail) in cm
-global clengk       # distTowP          # Separation between main carabiners in cm
-global zcontrol     # lineMode          # 0 = lower branches lined only by geometric mean of the anchor points
-                                        # 1 = lower branches lined by weighting type 1 (not fully implemented yet)
-                                        # 2 = lower branches lined by weighting type 2 (not fully implemented yet)
-global slp          # numLinePlan       # Number of line plans
-global cam          # numLinePath       # Paths number for plan
-global mc           # linePath
-global clengb       # brakeLength
-global bd           # brakeDistr
-global brake        # brake
-global raml         # ramLength
-global nhvr         # numMiniRibs
-global xrsep        # miniRibXSep
-global yrsep        # miniRibYSep
-global hvr          # miniRib
+global              seamLo              # xlow
+global              seamLoLe            # xlowle
+global              seamLoTe            # xlowte
+global              seamRib             # xrib
+global              seamVRib            # xvrib
+global              markSpace           # xmark
+global              markRad             # xcir
+global              markDisp            # xdes
+global              finesse             # finesse
+                    # Finesse goal, according to the general proportions of the wing
+global              posCop              # cpress
+                    # Position of the wing center of pressure estimated as % of central cord
+global              calage              # calage
+                    # Calage in% (distance from the leading edge point to the perpendicular to the central chord from the pilot position)
+global              riserLength         # clengr
+                    # Riser basic length in cm
+global              lineLength          # clengl
+                    # Basic length of lines (maillons - sail) in cm
+global              distTowP            # clengk
+                    # Separation between main carabiners in cm
+global              lineMode            # zcontrol
+                    # 0 = lower branches lined only by geometric mean of the anchor points
+                    # 1 = lower branches lined by weighting type 1 (not fully implemented yet)
+                    # 2 = lower branches lined by weighting type 2 (not fully implemented yet)
+global              numLinePlan         # slp
+                    # Number of line plans
+global              numLinePath         # cam
+                    # Paths number for plan
+global              linePath            # mc
+        # really used somewhere?
+global              brakeLength         # clengb
+global              brakeDistr          # bd
+        # really used somewhere?
+global              brake               # brake
+global              ramLength           # raml
+global              numMiniRibs         # nhvr
+global              miniRibXSep         # xrsep
+global              miniRibYSep         # yrsep
+global              miniRib             # hvr
 
-global npce         # numTeCol          # number of ribs with marks
-global npc1e        # teColRibNum
-global npc2e        # numTeColMarks     #
-global npc3e        # teColMarkNum
-global xpc1e        # teColMarkYDist
-global xpc2e        # teColMarkXDist
+global              numTeCol            # npce
+                    # number of ribs with marks
+global              teColRibNum         # npc1e
+global              numTeColMarks       # npc2e
+global              teColMarkNum        # npc3e
+global              teColMarkYDist      # xpc1e
+global              teColMarkXDist      # xpc2e
 
-global npci         # numLeCol
-global npc1i        # leColRibNum
-global npc2i        # numleColMarks     #
-global npc3i        # leColMarkNum
-global xpc1i        # leColMarkYDist
-global xpc2i        # leColMarkXDist
+global              numLeCol            # npci
+global              leColRibNum         # npc1i
+global              numleColMarks       # npc2i
+global              leColMarkNum        # npc3i
+global              leColMarkYDist      # xpc1i
+global              leColMarkXDist      # xpc2i
 
-global narp         # numAddRipPo
-global xarp         # addRipPoX
-global yarp         # addRipPoY
+global              numAddRipPo         # narp
+global              addRipPoX           # xarp
+global              addRipPoY           # yarp
 
-global csusl        # loadTot
-global cdis         # loadDistr
+global              loadTot             # csusl
+global              loadDistr           # cdis
 # global missingName  # loadDeform
 
 proc createGlobalWingVars {} {
 puts "create global wing vars"
     source "lep_GlobalWingVars.tcl"
-    set nribss ""
-    set rib(0,0) ""
+    set numRibsHalf ""
+    set ribConfig(0,0) ""
 }
