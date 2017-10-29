@@ -29,7 +29,7 @@ set data_le(c0) 10.11
 #---------------------------------------------------------------------
 #
 #  LEparagliding GUI
-set VersionNumber "V0.3.0"
+set VersionNumber "V0.3.1"
 set VersionDate   "2016-10-29"
 #
 #  Pere Casellas
@@ -51,8 +51,12 @@ puts "myAppMain"
     #-----------------------------------------------------------------
     #  Global program configuration
     #-----------------------------------------------------------------
-    #First setup hardcoded defaults
+    # First setup hardcoded defaults
+    # Make sure all config file values are listed here.
     dict set ::GlobalConfig Language "en"
+    dict set ::GlobalConfig PreProcDirectory ""
+    dict set ::GlobalConfig LepDirectory ""
+
     # Hardcoded defaults will be overwritten by config file values
     set ::GlobalConfig [::lepConfigFile::loadFile $::GlobalConfig]
 
@@ -116,6 +120,7 @@ puts "InitGui"
     menu $base.menu.parameters -tearoff 0
     menu $base.menu.dxf -tearoff 0
     menu $base.menu.txt -tearoff 0
+    menu $base.menu.run -tearoff 0
     menu $base.menu.settings -tearoff 0
     menu $base.menu.settings.language -tearoff 0
     menu $base.menu.help -tearoff 0
@@ -187,6 +192,14 @@ puts "InitGui"
     # txt menu
     $base.menu add cascade -label [::msgcat::mc "txt"] -underline 0 -menu $base.menu.txt
 
+
+    # Run menu
+    $base.menu add cascade -label [::msgcat::mc "Run"] -underline 0 -menu $base.menu.run
+
+    $base.menu.run add cascade -label [::msgcat::mc "pre-Processor"] -underline 0 -command {RunLep "0"}
+    $base.menu.run add cascade -label [::msgcat::mc "lep"] -underline 0 -command {RunLep "1"}
+    $base.menu.run add cascade -label [::msgcat::mc "Both"] -underline 0 -command {RunLep "2"}
+
     # Settings menu
     $base.menu add cascade -label [::msgcat::mc "Settings"] -underline 0 -menu $base.menu.settings
 
@@ -195,6 +208,8 @@ puts "InitGui"
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "English"] -command {SetLanguage "en"}
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "German"] -command {SetLanguage "de"}
 
+    $base.menu.settings add cascade -label [::msgcat::mc "pre-Processor Directory"] -underline 0 -command PreProcDirSelect
+    $base.menu.settings add cascade -label [::msgcat::mc "lep Directory"] -underline 0 -command LepDirSelect
 
     # Help menu
     $base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
@@ -727,6 +742,31 @@ proc HelpAbout { } {
 proc SetLanguage {Lang} {
     dict set ::GlobalConfig Language $Lang
     tk_messageBox -title [::msgcat::mc "lbl_LangChanged"] -message [::msgcat::mc "txt_PlsRestart"] -icon info -type ok -default ok
+}
+
+#---------------------------------------------------------------------
+#  Lep Directory selection
+#---------------------------------------------------------------------
+proc LepDirSelect {} {
+	dict set ::GlobalConfig LepDirectory [tk_chooseDirectory -title [::msgcat::mc "title_SelectLepDirectory"] ]
+}
+
+#---------------------------------------------------------------------
+#  pre-Processsor Directory selection
+#---------------------------------------------------------------------
+proc PreProcDirSelect {} {
+	dict set ::GlobalConfig PreProcDirectory [tk_chooseDirectory -title [::msgcat::mc "title_SelectPreProcDirectory"] ]
+}
+
+
+proc RunLep {RunLevel} {
+
+	# RunLevel 0: pre-Processor
+	# RunLevel 1: lep
+	# RunLevel 2: both
+
+	puts "RunLep level $RunLevel"
+
 }
 
 #---------------------------------------------------------------------

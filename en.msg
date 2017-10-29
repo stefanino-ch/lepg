@@ -17,6 +17,13 @@
 "##### Planform Menu"   "##### Planform Menu"
 "Planform"              "Planform"
 
+
 "lbl_LangChanged"       "Language selection changed"
+
+"title_SelectPreProcDirectory" "Select pre-Processor installation directory"
+"title_SelectLepDirectory" "Select lep installation directory"
+
 "txt_PlsRestart"        "Please restart the application to update the user interface."
+
+
 }

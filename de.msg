@@ -58,9 +58,17 @@
 "##### txt Menu"                "##### txt Menu"
 "txt"                           "txt"
 
+"##### Run Menu"           		"##### Ausführen Menu"
+"Run"							"Ausführen"
+"pre-Processor"					"pre-Prozessor"
+"Both"							"Beide"
+
+
 "##### Settings Menu"           "##### Einstellungen Menu"
 "Settings"                      "Einstellungen"
 "Language"                      "Sprache"
+"pre-Processor Directory"		"pre-Prozessor Installationsverzeichnis"
+"lep Directory"					"lep Installationsverzeichnis"
 
 "##### Help Menu"               "##### Hilfe Menu"
 "Help"                          "Hilfe"
@@ -68,6 +76,10 @@
 "About"                         "über"
 
 "lbl_LangChanged"               "Sprache geändert"
+
+"title_SelectPreProcDirectory"  "pre-Prozessor Installationsverzeichnis auswählen"
+"title_SelectLepDirectory" 		"lep Installationsverzeichnis auswählen"
+
 "txt_PlsRestart"                "Bitte starten Sie neu um die änderung zu übernehmen."
 
 "##### Main Window"             "##### Haupfenster"
