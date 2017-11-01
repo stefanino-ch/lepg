@@ -47,7 +47,6 @@ set VersionDate   "2016-10-29"
 #
 #---------------------------------------------------------------------
 proc myAppMain { argc argv } {
-puts "myAppMain"
     #-----------------------------------------------------------------
     #  Global program configuration
     #-----------------------------------------------------------------
@@ -85,7 +84,6 @@ puts "myAppMain"
 #
 #---------------------------------------------------------------------
 proc InitGui { root } {
-puts "InitGui"
 	global VersionNumber
 
     #-----------------------------------------------------------------
@@ -243,30 +241,36 @@ proc CreateMainWindow {} {
     source "lep_GlobalWingVars.tcl"
     global .topv.c_topv
     global .tailv.c_tailv
+    global .sidev.c_sidev
 
     # create the four quadrants
     # Top view
-    ttk::labelframe .topv -text [::msgcat::mc "Top view"] -width 400 -height 300
-    canvas .topv.c_topv
-    pack .topv.c_topv
+    ttk::labelframe .topv -text [::msgcat::mc "Top view"]
+    canvas .topv.c_topv -width 500 -height 300 -bg white
+    pack .topv.c_topv -expand yes -fill both
 
     # Tail view
-    ttk::labelframe .tailv -text [::msgcat::mc "Tail view"] -width 400 -height 300
-    canvas .tailv.c_tailv
-    pack .tailv.c_tailv
+    ttk::labelframe .tailv -text [::msgcat::mc "Tail view"]
+    canvas .tailv.c_tailv -width 500 -height 300 -bg white
+    pack .tailv.c_tailv -expand yes -fill both
 
     # Side view
-    ttk::labelframe .sidev -text [::msgcat::mc "Side view"] -width 400 -height 300
-    canvas .sidev.c_sidev
-    pack .sidev.c_sidev
+    ttk::labelframe .sidev -text [::msgcat::mc "Side view"]
+    canvas .sidev.c_sidev -width 500 -height 300 -bg white
+    pack .sidev.c_sidev -expand yes -fill both
 
     # Basic data
-    ttk::labelframe .bd -text [::msgcat::mc "Basic data"] -width 400 -height 300
+    ttk::labelframe .bd -text [::msgcat::mc "Basic data"]
 
-    grid .tailv -row 0 -column 0
-    grid .sidev -row 0 -column 1
-    grid .topv -row 1 -column 0
-    grid .bd -row 1 -column 1 -sticky nw
+    grid .tailv -row 0 -column 0 -sticky nesw
+    grid .sidev -row 0 -column 1 -sticky nesw
+    grid .topv -row 1 -column 0 -sticky nesw
+    grid .bd -row 1 -column 1 -sticky new
+
+    grid columnconfigure . 0 -weight 1
+    grid columnconfigure . 1 -weight 1
+    grid rowconfigure . 0 -weight 1
+    grid rowconfigure . 1 -weight 1
 
     # put labels in basicData
     ttk::label .bd.brandName -text [::msgcat::mc "Brand Name"]
@@ -320,7 +324,7 @@ proc CalcScaleFactor {} {
     global .topv.c_topv
 
     # midX half the way on the x coordinate in the canvas
-    set MidX [expr [.topv.c_topv cget -width] /2]
+    set MidX [expr [winfo width .topv.c_topv] /2]
     set Span [expr 2*$ribConfig($numRibsHalf,6)]
 
     # scale factor
@@ -338,11 +342,12 @@ proc DrawTopView {} {
     .topv.c_topv delete "all"
 
     # midX half the way on the x coordinate in the canvas
-    set MidX [expr [.topv.c_topv cget -width] /2]
+    set MidX [expr [winfo width .topv.c_topv] /2]
+
     set SF [CalcScaleFactor]
 
     set Chord [expr $ribConfig(1,4) - $ribConfig(1,3)]
-    set MaxY [.topv.c_topv cget -height]
+    set MaxY [winfo height .topv.c_topv]
     set DeltaY [expr ($MaxY - ( $Chord * $SF )) /2 ]
     set StartY [expr ($MaxY /2) - $DeltaY]
 
@@ -378,11 +383,11 @@ proc DrawTailView {} {
     set SF [CalcScaleFactor]
 
     # Derive X coordinate to start the drawing
-    set MaxX [.tailv.c_tailv cget -width]
+    set MaxX [winfo width .tailv.c_tailv]
     set MidX [expr $MaxX /2]
 
     # Derive y coordinate to start the draw
-    set MaxY [.tailv.c_tailv cget -height]
+    set MaxY [winfo height .tailv.c_tailv]
     set Height [expr $ribConfig($numRibsHalf,7) - $ribConfig(1,7)]
     set StartY [expr ($MaxY - ( $Height * $SF )) /2 ]
 
@@ -404,13 +409,13 @@ proc DrawSideView {} {
     set SF [CalcScaleFactor]
 
     # Derive X coordinate to start the drawing
-    set MaxX [.sidev.c_sidev cget -width]
+    set MaxX [winfo width .sidev.c_sidev]
 
     set Chord [expr $ribConfig(1,4) - $ribConfig(1,3)]
     set StartX  [expr ($MaxX - ( $Chord * $SF )) /2 ]
 
     # Derive y coordinate to start the draw
-    set MaxY [.sidev.c_sidev cget -height]
+    set MaxY [winfo height .sidev.c_sidev]
     set Height [expr $ribConfig($numRibsHalf,7) - $ribConfig(1,7)]
     set StartY [expr ($MaxY - ( $Height * $SF )) /2 ]
 
@@ -533,7 +538,7 @@ proc myAppFileClose { } {
          #-------------------------------------------------------------
          # insert code for "save" operation
          #-------------------------------------------------------------
-         ### puts -nonewline $fp [.t get 1.0 end] #BMA
+         ###  -nonewline $fp [.t get 1.0 end] #BMA
 
          close $fp
          set myAppFileName $filename
