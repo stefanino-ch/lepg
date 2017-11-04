@@ -14,7 +14,13 @@ package require lepConfigFile
 #  Globals
 #---------------------------------------------------------------------
 set myAppFileName ""
-set g_DataChangedFlag 0
+set g_PreProcDataChanged 0
+set g_PreProcDataAvailable 0
+set g_LepDataChanged 0
+
+set g_PreProcFileTypes {
+    {{Geometry files}   {.txt}}
+}
 set g_DataFileTypes {
     {{Data files}   {.txt}}
 }
@@ -29,10 +35,12 @@ set data_le(c0) 10.11
 #---------------------------------------------------------------------
 #
 #  LEparagliding GUI
-set VersionNumber "V0.3.1"
+set LepVersioNumber "2.52"
+set LepgNumber "V0.3.1"
 set VersionDate   "2016-10-29"
 #
 #  Pere Casellas
+#  Stefan Feuz
 #  http://www.laboratoridenvol.com
 #
 #  General Public License GNU GPL 3.0
@@ -59,6 +67,13 @@ proc myAppMain { argc argv } {
     # Hardcoded defaults will be overwritten by config file values
     set ::GlobalConfig [::lepConfigFile::loadFile $::GlobalConfig]
 
+    # make sure preproc and wing vars exist
+    source "globalPreProcVars.tcl"
+    initGlobalPreProcVars
+
+    source "globalWingVars.tcl"
+    #initGlobalWingVars
+
     #-----------------------------------------------------------------
     #  Construct the UI
     #-----------------------------------------------------------------
@@ -84,7 +99,9 @@ proc myAppMain { argc argv } {
 #
 #---------------------------------------------------------------------
 proc InitGui { root } {
-	global VersionNumber
+    global LepVersioNumber
+    global LepgNumber
+    source "EditPreProcData.tcl"
 
     #-----------------------------------------------------------------
     # setup translation framework
@@ -106,6 +123,9 @@ proc InitGui { root } {
     #-----------------------------------------------------------------
     menu $base.menu
     menu $base.menu.file -tearoff 0
+    menu $base.menu.geometry -tearoff 0
+    menu $base.menu.wing -tearoff 0
+
     menu $base.menu.edit -tearoff 0
     menu $base.menu.planform -tearoff 0
     menu $base.menu.vault -tearoff 0
@@ -127,15 +147,26 @@ proc InitGui { root } {
 
     # File menu
     $base.menu add cascade -label [::msgcat::mc "File"] -underline 0 -menu $base.menu.file
-
-    $base.menu.file add command -underline 0 -label [::msgcat::mc "New"] -command myAppFileNew
-    $base.menu.file add command -underline 0 -label [::msgcat::mc "Open..."] -command OpenLepFile
-    $base.menu.file add command -underline 0 -label [::msgcat::mc "Close"] -command myAppFileClose
-    $base.menu.file add separator
-    $base.menu.file add command -underline 0 -label [::msgcat::mc "Save"] -command myAppFileSave
-    $base.menu.file add command -underline 5 -label [::msgcat::mc "Save As"] -command myAppFileSaveAs
-    $base.menu.file add separator
     $base.menu.file add command -underline 1 -label [::msgcat::mc "Exit"] -command myAppExit
+
+    # Geometry menu
+    $base.menu add cascade -label [::msgcat::mc "Geometry"] -underline 0 -menu $base.menu.geometry
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "New Geometry"] -state disabled
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Open Geometry..."] -command OpenPreProcFile
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Edit Geometry"] -command EditPreProcData
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc Geometry"] -state disabled
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc& read back Geometry"] -state disabled
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Save Geometry"] -command SavePreProcFile
+
+    $base.menu.geometry add command -underline 5 -label [::msgcat::mc "Save Geometry As"] -state disabled
+
+    # Wing menu
+    $base.menu add cascade -label [::msgcat::mc "Wing"] -underline 0 -menu $base.menu.wing
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "New Wing"] -command myAppFileNew -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Geometry"] -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Open Wing..."] -command OpenLepFile
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing"] -command myAppFileSave -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Save Wing As"] -command myAppFileSaveAs -state disabled
 
     # Edit menu
     $base.menu add cascade -label [::msgcat::mc "Edit"] -underline 0 -menu $base.menu.edit
@@ -224,13 +255,13 @@ proc InitGui { root } {
     #-----------------------------------------------------------------
     wm protocol $root WM_DELETE_WINDOW { myAppExit }
     wm geometry . +100+100
-    wm title $root "Laboratori d'envol Paragliding Design Program 2.52 gui-$VersionNumber "
+    wm title $root "Laboratori d'envol Paragliding Design Program $LepVersioNumber GUI-$LepgNumber "
 
     #-----------------------------------------------------------------
     #  insert code defining myApp main window
     #-----------------------------------------------------------------
     ### text .t
-    ### bind .t <Key> {set g_DataChangedFlag 1}
+    ### bind .t <Key> {set g_LepDataChanged 1}
     ### pack .t
 }
 
@@ -238,7 +269,7 @@ proc InitGui { root } {
 
 proc CreateMainWindow {} {
 
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
     global .topv.c_topv
     global .tailv.c_tailv
     global .sidev.c_sidev
@@ -320,7 +351,7 @@ proc CreateMainWindow {} {
 #----------------------------------------------------------------------
 proc CalcScaleFactor {} {
 
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
     global .topv.c_topv
 
     # midX half the way on the x coordinate in the canvas
@@ -336,7 +367,7 @@ proc CalcScaleFactor {} {
 }
 
 proc DrawTopView {} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
     global .topv.c_topv
 
     .topv.c_topv delete "all"
@@ -375,7 +406,7 @@ proc DrawTopView {} {
 }
 
 proc DrawTailView {} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
     global .tailv.c_tailv
 
     .tailv.c_tailv delete "all"
@@ -401,7 +432,7 @@ proc DrawTailView {} {
 }
 
 proc DrawSideView {} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
     global .sidev.c_sidev
 
     .sidev.c_sidev delete "all"
@@ -452,9 +483,9 @@ proc DrawSideView {} {
 
 proc myAppFileNew { } {
     global myAppFileName
-    global g_DataChangedFlag
-    if { $g_DataChangedFlag } {
-        myAppPromptForSave
+    global g_LepDataChanged
+    if { $g_LepDataChanged } {
+        PromptForWingSave
     }
 
     #-----------------------------------------------------------------
@@ -463,16 +494,43 @@ proc myAppFileNew { } {
     ### .t delete 1.0 end
 
     set myAppFileName ""
-    set g_DataChangedFlag 0
+    set g_LepDataChanged 0
  }
+
+proc OpenPreProcFile { {FilePathName ""} } {
+    global g_PreProcDataChanged
+    global g_PreProcFileTypes
+
+
+    if { $g_PreProcDataChanged } {
+        PromptForPreProcSave
+    }
+
+    source "readPreProcDataFile.tcl"
+
+    if {$FilePathName == ""} {
+        set FilePathName [tk_getOpenFile -filetypes $g_PreProcFileTypes]
+    }
+
+    if {$FilePathName != ""} {
+        set ReturnValue [ readPreProcDataFile $FilePathName ]
+
+        if { $ReturnValue != 0 } {
+            error "Cannot Open File $FilePathName for Reading"
+        }
+
+        set g_PreProcDataChanged 0
+        set g_PreProcDataAvailable 1
+    }
+}
 
 proc OpenLepFile { {FilePathName ""} } {
     # global myAppFileName
-    global g_DataChangedFlag
+    global g_LepDataChanged
     global g_DataFileTypes
 
-    if { $g_DataChangedFlag } {
-        myAppPromptForSave
+    if { $g_LepDataChanged } {
+        PromptForWingSave
     }
 
     source "readLepDataFile.tcl"
@@ -488,19 +546,7 @@ proc OpenLepFile { {FilePathName ""} } {
             error "Cannot Open File $FilePathName for Reading"
         }
 
-
-        # if { [catch {open $filename r} fp] } {
-        #     error "Cannot Open File $filename for Reading"
-        # }
-
-        #-------------------------------------------------------------
-        # insert code for "open" operation
-        #-------------------------------------------------------------
-        ### .t insert end [read $fp [file size $filename]]
-
-        # close $fp
-        # set myAppFileName $filename
-        set g_DataChangedFlag 0
+        set g_LepDataChanged 0
     }
 
     DrawTopView
@@ -508,25 +554,32 @@ proc OpenLepFile { {FilePathName ""} } {
     DrawSideView
 }
 
-proc myAppFileClose { } {
-    global myAppFileName
-    global g_DataChangedFlag
-    if { $g_DataChangedFlag } {
-        myAppPromptForSave
-    }
+proc SavePreProcFile { {filename ""} } {
+   global myAppFileName
+   global g_LepDataChanged #BMA
+   if { $filename == "" } {
+       set filename $myAppFileName
+   }
+   if { $filename != "" } {
+       if { [catch {open $filename w} fp] } {
+            error "Cannot write to $filename"
+       }
 
-    #-----------------------------------------------------------------
-    # insert code for "close" operation
-    #-----------------------------------------------------------------
-    ### .t delete 1.0 end
+        #-------------------------------------------------------------
+        # insert code for "save" operation
+        #-------------------------------------------------------------
+        ###  -nonewline $fp [.t get 1.0 end] #BMA
 
-    set myAppFileName ""
-    set g_DataChangedFlag 0
- }
+        close $fp
+        set myAppFileName $filename
+        set g_LepDataChanged 0
+   }
+}
+
 
  proc myAppFileSave { {filename ""} } {
     global myAppFileName
-    global g_DataChangedFlag #BMA
+    global g_LepDataChanged #BMA
     if { $filename == "" } {
         set filename $myAppFileName
     }
@@ -542,7 +595,16 @@ proc myAppFileClose { } {
 
          close $fp
          set myAppFileName $filename
-         set g_DataChangedFlag 0
+         set g_LepDataChanged 0
+    }
+}
+
+proc PreProcFileSaveAs { } {
+    global g_PreProcFileTypes
+
+    set filename [tk_getSaveFile -filetypes $g_PreProcFileTypes]
+    if { $filename != "" } {
+        SavePreProcFile $filename
     }
 }
 
@@ -554,7 +616,16 @@ proc myAppFileSaveAs { } {
     }
 }
 
-proc myAppPromptForSave { } {
+proc PromptForPreProcSave { } {
+    set answer [tk_messageBox -title "Geometry file: Do you want to save?" \
+        -type yesno -icon question \
+        -message "Do you want to save the Geometry data?"]
+    if { $answer == "yes" } {
+        PreProcFileSaveAs
+    }
+}
+
+proc PromptForWingSave { } {
     set answer [tk_messageBox -title "myApp:  Do you want to save?" \
         -type yesno -icon question \
         -message "Do you want to save the changes?"]
@@ -564,11 +635,12 @@ proc myAppPromptForSave { } {
 }
 
 proc myAppExit { } {
-    myAppFileClose
+
+    # make sure there's no unsaved data
+
     ::lepConfigFile::saveFile $::GlobalConfig
     exit
 }
-
 
 #----------------------------------------------------------------------
 #   proc VersionInfo
@@ -576,7 +648,8 @@ proc myAppExit { } {
 #   Set version and license note
 #----------------------------------------------------------------------
 proc VersionInfo { } {
-	global VersionNumber
+    global LepVersioNumber
+    global LepgNumber
 	global VersionDate
 #   Toplevel
 
@@ -594,7 +667,7 @@ proc VersionInfo { } {
     pack  .helplep.fr1.lb1 -side  top
 
     label .helplep.fr1.lb2 -text " "
-    label .helplep.fr1.lb3 -text "LEparagliding 2.52 gui-$VersionNumber ($VersionDate)"
+    label .helplep.fr1.lb3 -text "LEparagliding $LepVersioNumber GUI-$LepgNumber ($VersionDate)"
     label .helplep.fr1.lb4 -text "General Public License GNU GPL3.0"
     label .helplep.fr1.lb5 -text "Pere Casellas"
     label .helplep.fr1.lb6 -text "http://www.laboratoridenvol.com"
@@ -632,9 +705,9 @@ proc myAppCells { } {
 #----------------------------------------------------------------------
 proc GeometryMatrixWindow { } {
 
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
-    myApp_lep_r
+    #myApp_lep_r
 
     set w .text
     catch {destroy $w}
@@ -736,8 +809,9 @@ proc myAppConfigEditMenu {menu bindtags} {
 #---------------------------------------------------------------------
 
 proc HelpAbout { } {
-	global VersionNumber
-    tk_messageBox -message "LE Paragliding GUI $VersionNumber"
+	global LepVersioNumber
+    global LepgNumber
+    tk_messageBox -message "LE Paragliding $LepVersioNumber GUI $LepgNumber"
 }
 
 #---------------------------------------------------------------------
@@ -773,6 +847,8 @@ proc RunLep {RunLevel} {
 	puts "RunLep level $RunLevel"
 
 }
+
+
 
 #---------------------------------------------------------------------
 #  Execute the main procedure

@@ -4,7 +4,7 @@
 #  Determines version of the lep data file to be read.
 #----------------------------------------------------------------------
 proc DetectFileVersion {FilePathName} {
-    source "lep_ConstantValues.tcl"
+    source "lepFileConstants.tcl"
 
     # return values
     #  -1 : file not available or not readable
@@ -35,6 +35,8 @@ proc DetectFileVersion {FilePathName} {
     }
 
     # Check for data files >2.6
+    # First ten lines are read, start from scratch
+    seek $file 0 start
     set i 1
     while {$i <= 20} {
         set DataLine [gets $file]
@@ -115,7 +117,7 @@ proc readLepDataFile {FilePathName} {
     # Check what file version to be read
     set FileVersion [DetectFileVersion $FilePathName]
 
-    source "lep_ConstantValues.tcl"
+    source "lepFileConstants.tcl"
     # open data file
     # as we know the version number=> file is there and readable=> we don't need to do error handling anymore
     set File [open $FilePathName r+]
@@ -359,7 +361,7 @@ proc readLepDataFile {FilePathName} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadGeometrySectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     set DataLine  [gets $File]
     # BrandName
@@ -464,7 +466,7 @@ proc ReadGeometrySectV2_52 {File} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadAirfoilSectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     set DataLine [gets $File]
 
@@ -504,7 +506,7 @@ proc ReadAirfoilSectV2_52 {File} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadAnchorPoSectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     set DataLine [gets $File]
 
@@ -542,7 +544,7 @@ proc ReadAnchorPoSectV2_52 {File} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadAirfoilHoSectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     # AirfConfigNum - Number of Airfoil configurations
     set airfConfigNum  [gets $File]
@@ -596,7 +598,7 @@ proc ReadAirfoilHoSectV2_52 {File} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadSkinTensSectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     set DataLine [gets $File]
 
@@ -633,7 +635,7 @@ proc ReadSkinTensSectV2_52 {File} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadSewingSectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     set DataLine  [gets $File]
     # seamUp
@@ -671,7 +673,7 @@ proc ReadSewingSectV2_52 {File} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadMarksSectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     set DataLine  [gets $File]
     # markSpace
@@ -696,7 +698,7 @@ proc ReadMarksSectV2_52 {File} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadGlobalAoASectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     set DataLine   [gets $File]
 
@@ -734,7 +736,7 @@ proc ReadGlobalAoASectV2_52 {File} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadSuspLinesSectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     # Line Control Parameter
     # lineMode
@@ -785,7 +787,7 @@ proc ReadSuspLinesSectV2_52 {File} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadBrakesSectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     # be careful: works only if Suspension lines was read before!
     set LinePlanIt [expr $lineMode+1]
@@ -845,7 +847,7 @@ proc ReadBrakesSectV2_52 {File} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadRamLengthSectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     set DataLine [gets $File]
     # ramLength
@@ -881,7 +883,7 @@ proc ReadRamLengthSectV2_52 {File} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadMiniRibSectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     # numMiniRibs
     set numMiniRibs  [gets $File]
@@ -924,7 +926,7 @@ proc ReadMiniRibSectV2_52 {File} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadTeColSectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     # numTeCol
     set numTeCol  [gets $File]
@@ -967,7 +969,7 @@ proc ReadTeColSectV2_52 {File} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadLeColSectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     # numLeCol
     set numLeCol  [gets $File]
@@ -1009,7 +1011,7 @@ proc ReadLeColSectV2_52 {File} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadAddRibPoSectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     # numAddRipPo
     set numAddRipPo [gets $File]
@@ -1039,7 +1041,7 @@ proc ReadAddRibPoSectV2_52 {File} {
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
 proc ReadElLinesCorrSectV2_52 {File} {
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     # loadTot
     set loadTot [gets $File]
@@ -1080,7 +1082,7 @@ proc ReadElLinesCorrSectV2_52 {File} {
 #----------------------------------------------------------------------
 proc myApp_lep_r { } {
 
-    source "lep_GlobalWingVars.tcl"
+    source "globalWingVars.tcl"
 
     set file [open "lep/leparagliding.txt" r+]
 

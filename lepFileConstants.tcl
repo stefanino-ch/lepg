@@ -1,6 +1,6 @@
 #---------------------------------------------------------------------
 #
-#  Constant values used across lep and lepg
+#  Constant values used for Pre Processor file handling
 #
 #  Pere Casellas
 #  Stefan Feuz
