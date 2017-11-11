@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	lep-gui Documentation
+	Pere Casellas (www.laboratoridenvol.com), Stefan Feuz
+	General Public License GNU GPL3.0
+-->
+
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "../../dtd/technicalContent/dtd/concept.dtd">
+
+<concept id="en-main" xml:lang="en-us">
+	<title>English manual</title>
+	<shortdesc>Know the general principles is need...</shortdesc>
+	<conbody>
+		<p>3 Main components are used to created a complete glider plan:</p>
+		<ul>
+			<li>GUI: allows all data management in a user friendly way</li>
+			<li>Geometry-Processor: does in the background the main calculations for the outile geometry of the wing</li>
+			<li>Wing-Processor: does then at the final end all the detailed calculations and creates all plans</li>
+		</ul>
+		<p>The manual does just explain the GUI and how to start both processors.</p>
+		<p>More explanations you can find on the developer website: <xref href="http://www.laboratoridenvol.com/index.html"> Laboratory d'envol </xref> </p>
+		<p>Steps from the idea to the final glider plan:</p>
+		<ol>
+			<li>Define the wing outline in the Geometry window</li>
+			<li>Run the Geometry-Processor</li>
+			<li>Continue with the detailed definition of the wing</li>
+			<li>Run the Wing-Processor</li>
+			<li>Start to build your wing</li>
+		</ol>
+	</conbody>
+</concept>

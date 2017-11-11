@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	lep-gui documentation
+	Pere Casellas (www.laboratoridenvol.com), Stefan Feuz
+	General Public License GNU GPL3.0
+-->
+
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "../../dtd/technicalContent/dtd/concept.dtd">
+<concept id="en-Edit-Window-Introduction" xml:lang="en-us">
+	<title>Main working principles in edit windows</title>
+	<shortdesc>An introduction to the main function principles of the edit windows.</shortdesc>
+	<conbody>
+		<p>Descriptions</p>
+
+	</conbody>
+</concept>

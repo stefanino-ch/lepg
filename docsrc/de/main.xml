@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	lep-gui documentation
+	Pere Casellas (www.laboratoridenvol.com), Stefan Feuz
+	General Public License GNU GPL3.0
+-->
+
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "../../dtd/technicalContent/dtd/concept.dtd">
+<concept id="de-main" xml:lang="de-de">
+	<title>Deutsches Handbuch</title>
+	<shortdesc>Ein paar generelle Prinzipien sollte man kennen...</shortdesc>
+	<conbody>
+		<p>3 Hauptkompontenten werden benutzt für die Erstellung eines kompletten Plans:</p>
+		<ul>
+			<li>Hauptprogramm: erlaubt das Editieren aller notwendigen Daten</li>
+			<li>Geometrie-Processor: macht im Hintergrund die Berechnungen zur genauen Definition der Aussenmasse und Geometrie</li>
+			<li>Wing-Processor: macht ganz zum Schluss alle Detailberechnungnen und erstellt die Zeichnungen</li>
+		</ul>
+		<p>Das Handbuch erklärt nur wie das Hauptprogramm und die beiden Prozessoren funktionieren.</p>
+		<p>Wer es genau wissen will findet zusätzliche Informationen auf der Entwikler-Webseite <xref href="http://www.laboratoridenvol.com/index.html"> Laboratory d'envol </xref> </p>
+		<p>Hauptschritte von der Idee zum fertigen Plan:</p>
+		<ol>
+			<li>Defintion der Aussenmasse und Geometrie im Geometrie Fenster</li>
+			<li>Geometrie-Processor laufen lassen</li>
+			<li>Fortfahren mit der Detaillierung der Flügeleigenschaften</li>
+			<li>Wing-Processor laufen lassen</li>
+			<li>Jetzt können sie mit dem Bau des Flügels starten</li>
+		</ol>
+	</conbody>
+</concept>

@@ -22,8 +22,13 @@ proc EditPreProcData {} {
     source "globalPreProcVars.tcl"
 
     global .epcw
+    global .epcw.c_le
+    global .epcw.c_te
+    global .epcw.vault
+
     global VaultMode1
     global VaultMode2
+    global HelpText
 
     foreach {e} $AllPreProcVars {
         global lcl_$e
@@ -37,7 +42,7 @@ proc EditPreProcData {} {
 
     wm protocol .epcw WM_DELETE_WINDOW { CancelButtonPress }
 
-    wm title .epcw "Edit Geometry data"
+    wm title .epcw [::msgcat::mc "Edit Geometry data"]
 
     ttk::labelframe .epcw.name -text [::msgcat::mc "Wing name"]
 
@@ -52,6 +57,8 @@ proc EditPreProcData {} {
 
     ttk::labelframe .epcw.cells -text [::msgcat::mc "Cell distribution"]
 
+    ttk::labelframe .epcw.help -text [::msgcat::mc "Explanations"]
+
     ttk::frame .epcw.btn
 
     grid .epcw.name         -row 0 -column 0 -sticky e
@@ -62,6 +69,7 @@ proc EditPreProcData {} {
     grid .epcw.vault        -row 3 -column 0 -sticky e
     grid .epcw.c_vault      -row 3 -column 1 -sticky nesw
     grid .epcw.cells        -row 4 -column 0 -sticky e
+    grid .epcw.help         -row 5 -column 0 -sticky nesw
     grid .epcw.btn          -row 5 -column 1 -sticky e
 
     grid columnconfigure .epcw 0    -weight 0
@@ -77,6 +85,8 @@ proc EditPreProcData {} {
     # Wing name
     ttk::label .epcw.name.wname -text [::msgcat::mc "Wing name"] -width 12
     ttk::entry .epcw.name.e_wname -width 16 -textvariable lcl_wingNamePreProc
+
+    SetHelpBind .epcw.name.e_wname wingNamePreProc
 
     grid .epcw.name.wname -row 0 -column 0 -sticky e
     grid .epcw.name.e_wname -row 0 -column 1 -sticky w
@@ -95,6 +105,13 @@ proc EditPreProcData {} {
     ttk::entry .epcw.le.e_xmLE -width 8 -textvariable lcl_xmLE
     ttk::entry .epcw.le.e_c0LE -width 8 -textvariable lcl_c0LE
 
+    SetHelpBind .epcw.le.e_a1LE a1LE
+    SetHelpBind .epcw.le.e_b1LE b1LE
+    SetHelpBind .epcw.le.e_x1LE x1LE
+    SetHelpBind .epcw.le.e_xmLE xmLE
+    SetHelpBind .epcw.le.e_c0LE c0LE
+
+
     grid .epcw.le.a1LE -row 0 -column 0 -sticky e
     grid .epcw.le.e_a1LE -row 0 -column 1 -sticky w
     grid .epcw.le.b1LE -row 1 -column 0 -sticky e
@@ -107,13 +124,13 @@ proc EditPreProcData {} {
     grid .epcw.le.e_c0LE -row 4 -column 1 -sticky w
 
     #-------------
-    # Leading edge
+    # Trailing edge
     ttk::label .epcw.te.a1TE -text [::msgcat::mc "a1 \[cm\]"] -width 20
     ttk::label .epcw.te.b1TE -text [::msgcat::mc "b1 \[cm\]"] -width 20
     ttk::label .epcw.te.x1TE -text [::msgcat::mc "x1 \[cm\]"] -width 20
     ttk::label .epcw.te.xmTE -text [::msgcat::mc "xm \[cm\]"] -width 20
     ttk::label .epcw.te.c0TE -text [::msgcat::mc "c0 \[cm\]"] -width 20
-    ttk::label .epcw.te.y0TE -text [::msgcat::mc "c0 \[cm\]"] -width 20
+    ttk::label .epcw.te.y0TE -text [::msgcat::mc "y0 \[cm\]"] -width 20
 
     ttk::entry .epcw.te.e_a1TE -width 8 -textvariable lcl_a1TE
     ttk::entry .epcw.te.e_b1TE -width 8 -textvariable lcl_b1TE
@@ -121,6 +138,13 @@ proc EditPreProcData {} {
     ttk::entry .epcw.te.e_xmTE -width 8 -textvariable lcl_xmTE
     ttk::entry .epcw.te.e_c0TE -width 8 -textvariable lcl_c0TE
     ttk::entry .epcw.te.e_y0TE -width 8 -textvariable lcl_y0TE
+
+    SetHelpBind .epcw.te.e_a1TE a1TE
+    SetHelpBind .epcw.te.e_b1TE b1TE
+    SetHelpBind .epcw.te.e_x1TE x1TE
+    SetHelpBind .epcw.te.e_xmTE xmTE
+    SetHelpBind .epcw.te.e_c0TE c0TE
+    SetHelpBind .epcw.te.e_y0TE y0TE
 
     grid .epcw.te.a1TE -row 0 -column 0 -sticky e
     grid .epcw.te.e_a1TE -row 0 -column 1 -sticky w
@@ -132,13 +156,13 @@ proc EditPreProcData {} {
     grid .epcw.te.e_xmTE -row 3 -column 1 -sticky w
     grid .epcw.te.c0TE -row 4 -column 0 -sticky e
     grid .epcw.te.e_c0TE -row 4 -column 1 -sticky w
-    grid .epcw.te.y0TE -row 4 -column 0 -sticky e
-    grid .epcw.te.e_y0TE -row 4 -column 1 -sticky w
+    grid .epcw.te.y0TE -row 5 -column 0 -sticky e
+    grid .epcw.te.e_y0TE -row 5 -column 1 -sticky w
 
     #-------------
     # Vault
-    ttk::radiobutton .epcw.vault.ra -variable vaultType -value 1 -text "Sin-Cos modif"
-    ttk::radiobutton .epcw.vault.rb -variable vaultType -value 2 -text "Radius/ Angle"
+    ttk::radiobutton .epcw.vault.ra -variable vaultType -value 1 -text [::msgcat::mc "Sin-Cos modif"]
+    ttk::radiobutton .epcw.vault.rb -variable vaultType -value 2 -text [::msgcat::mc "Radius/ Angle"]
 
     bind .epcw.vault.ra <ButtonPress> { SetVaultType 1 }
     bind .epcw.vault.rb <ButtonPress> { SetVaultType 2 }
@@ -153,21 +177,32 @@ proc EditPreProcData {} {
     ttk::entry .epcw.vault.e_x1Vault -width 8 -state $VaultMode1 -textvariable lcl_x1Vault
     ttk::entry .epcw.vault.e_xmVault -width 8 -state $VaultMode1 -textvariable lcl_xmVault
 
+    SetHelpBind .epcw.vault.e_a1Vault a1Vault
+    SetHelpBind .epcw.vault.e_b1Vault b1Vault
+    SetHelpBind .epcw.vault.e_x1Vault x1Vault
+    SetHelpBind .epcw.vault.e_xmVault xmVault
+
     foreach i {1 2 3 4} {
         # radius
         ttk::label .epcw.vault.rVault$i -text [::msgcat::mc "R$i \[cm\]"]  -state $VaultMode2
         ttk::entry .epcw.vault.e_rVault$i -width 8 -state $VaultMode2 -textvariable lcl_radVault($i)
 
+        SetHelpBind .epcw.vault.e_rVault$i radVault
+
         # ang
         ttk::label .epcw.vault.angVault$i -text [::msgcat::mc "Angle$i \[deg\]"]   -state $VaultMode2
         ttk::entry .epcw.vault.e_angVault$i -width 8   -state $VaultMode2  -textvariable lcl_angVault($i)
+
+        SetHelpBind .epcw.vault.e_angVault$i angVault
+
+
     }
 
-    grid .epcw.vault.ra -row 0 -column 0 -columnspan 2 -sticky w
-    grid .epcw.vault.rb -row 1 -column 0 -columnspan 2 -sticky w
+    grid .epcw.vault.ra -row 0 -column 0 -columnspan 3 -sticky w
+    grid .epcw.vault.rb -row 1 -column 0 -columnspan 3 -sticky w
 
     grid .epcw.vault.a1Vault    -row 2 -column 0 -sticky e
-    grid .epcw.vault.e_a1Vault  -row 2 -column 1 -sticky w
+    grid .epcw.vault.e_a1Vault  -row 2 -column 1 -sticky e
     grid .epcw.vault.b1Vault    -row 3 -column 0 -sticky e
     grid .epcw.vault.e_b1Vault  -row 3 -column 1 -sticky e
     grid .epcw.vault.x1Vault    -row 4 -column 0 -sticky e
@@ -188,8 +223,8 @@ proc EditPreProcData {} {
 
     #-------------
     # Cell distribution
-    ttk::radiobutton .epcw.cells.ra -variable cellDistrType -value 3 -text "Cell width proportional to chord"
-    ttk::radiobutton .epcw.cells.rb -variable cellDistrType -value 4 -text "Explicit width of each cell"
+    ttk::radiobutton .epcw.cells.ra -variable cellDistrType -value 3 -text [::msgcat::mc "Cell width proportional to chord"]
+    ttk::radiobutton .epcw.cells.rb -variable cellDistrType -value 4 -text [::msgcat::mc "Explicit width of each cell"]
 
     bind .epcw.cells.ra <ButtonPress> { SetCellType 3 }
     bind .epcw.cells.rb <ButtonPress> { SetCellType 4 }
@@ -200,6 +235,9 @@ proc EditPreProcData {} {
     ttk::entry .epcw.cells.e_cellDistrCoeff -width 8 -textvariable lcl_cellDistrCoeff
     ttk::entry .epcw.cells.e_numCellsPreProc -width 8 -textvariable lcl_numCellsPreProc
 
+    SetHelpBind .epcw.cells.e_cellDistrCoeff cellDistrCoeff
+    SetHelpBind .epcw.cells.e_numCellsPreProc numCellsPreProc
+
     grid .epcw.cells.ra -row 0 -column 0 -columnspan 2 -sticky w
     grid .epcw.cells.rb -row 1 -column 0 -columnspan 2 -sticky w
 
@@ -209,11 +247,16 @@ proc EditPreProcData {} {
     grid .epcw.cells.e_numCellsPreProc -row 3 -column 1 -sticky w
 
     #-------------
+    # explanations
+    label .epcw.help.e_help -width 40 -height 3 -background LightYellow -textvariable HelpText
+    grid .epcw.help.e_help -row 0 -column 0 -sticky nesw -padx 10 -pady 10
+
+    #-------------
     # buttons
     button .epcw.btn.apply -width 10 -text "Apply" -command ApplyButtonPress
     button .epcw.btn.ok -width 10 -text "OK" -command OkButtonPress
     button .epcw.btn.cancel -width 10 -text "Cancel" -command CancelButtonPress
-    button .epcw.btn.help -width 10  -text "Help" -command HelpButtonPress -state disabled
+    button .epcw.btn.help -width 10  -text "Help" -command HelpButtonPress
 
     grid .epcw.btn.apply -row 0 -column 0 -sticky e -padx 10 -pady 0
     grid .epcw.btn.ok -row 0 -column 1 -sticky e -padx 10 -pady 0
@@ -335,11 +378,180 @@ proc UnsetLclVarTrace {} {
 }
 
 proc SetLclChangeFlag { a e op } {
+    # maybe helpful for debug
     # puts "  a=$a e=$e op=$op ax=[info exists ::$a] ex=[info exists ::${a}($e)]"
 
     global g_PreProcDataChanged
     set g_PreProcDataChanged 1
 }
+
+#----------------------------------------------------------------------
+#  proc SetHelpBind
+#  Initial setup of the bind functions for the input fields
+#
+#  IN:      Element for which the bind must be setup
+#           VarName name of the field
+#  OUT:     N/A
+#----------------------------------------------------------------------
+proc SetHelpBind { Element VarName } {
+    bind $Element <Enter> [list SetHelpText 1 $VarName]
+    bind $Element <Leave> [list SetHelpText 0 $VarName]
+}
+
+#----------------------------------------------------------------------
+#  proc SetHelpText
+#  Controls the help text display in the Explanations window
+#
+#  IN:      Focus   The value indicating if the field has currently the focus or note
+#           Var     Name of the Field
+#  OUT:     N/A
+#----------------------------------------------------------------------
+proc SetHelpText { Focus Var } {
+    global HelpText
+
+    if { $Focus == 1} {
+        # display a help text
+        set HelpText [::msgcat::mc $Var]
+    } else {
+        set HelpText ""
+    }
+}
+
+#----------------------------------------------------------------------
+#  proc CalcPreProcScaleFactor
+#  Calculates the scale factor for drawing on the GUI based on Span
+#  and width of the drawing canvas
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: Scale Factor
+#----------------------------------------------------------------------
+proc CalcPreProcScaleFactor {} {
+
+    source "globalPreProcVars.tcl"
+    global .epcw.c_le
+    # global .epcw.c_te
+    # global .epcw.vault
+    global VaultMode1
+
+    # midX half the way on the x coordinate in the canvas
+    set MidX [expr [winfo width .epcw.c_le] /2]
+
+    # find biggest span
+    set Span  $a1LE
+    if { $Span < $a1TE} {
+        set Span $a1TE
+    }
+    if { $VaultMode1 == "enabled" } {
+        if { $Span < $a1Vault } {
+            set Span $a1Vault
+        }
+    }
+
+    # scale factor
+    set SF [expr (2* $MidX )/($Span)]
+    # use only 90% of canvas
+    set SF [expr $SF * 0.9]
+
+    return $SF
+}
+
+#----------------------------------------------------------------------
+#  proc CalcY-LE-low
+#  Calculates the LE Y value
+#
+#  IN:      B   b1 parameter of the LE
+#           A   a1 parameter of the LE
+#           X   x value for which y must be calculated
+#           X1  x1 parameter of the LE
+#           C0  c0 parameter of the LE
+#  OUT:     N/A
+#  Returns: Y value
+#----------------------------------------------------------------------
+proc CalcY-LE { B A X X1 C0 } {
+
+    # first do the calculation for X < X1
+    set YVal [expr $B* sqrt( 1-($X*$X)/($A*$A) ) ]
+
+    # check if the advanced calc is needed
+    if { $X > $X1 } {
+
+        # here in I need help to get the calculation done
+    }
+
+    return $YVal
+}
+
+proc DrawLeadingEdge {} {
+    source "globalPreProcVars.tcl"
+    global .epcw.c_le
+
+    foreach e {a1LE b1LE x1LE xmLE c0LE} {
+        global lcl_$e
+    }
+
+    .epcw.c_le delete "all"
+
+    # midX half the way on the x coordinate in the canvas
+    set MidX [expr [winfo width .epcw.c_le] /2]
+    set MidY [expr [winfo height .epcw.c_le] /2]
+
+    set SF [CalcPreProcScaleFactor]
+puts $SF
+
+    set SF [expr $SF / 2]
+
+    # draw axes
+    .epcw.c_le create line $MidX    $MidY 1                     $MidY               -fill red
+    .epcw.c_le create line $MidX    $MidY [expr (2*$MidX)-1]    $MidY               -fill green
+    .epcw.c_le create line $MidX    1     $MidX                 [expr (2*$MidY)-1]  -fill black
+
+    # draw the LE
+    set i 1
+    while {$i <= $lcl_x1LE} {
+        #           x       y
+        set YVal [CalcY-LE $lcl_b1LE $lcl_a1LE $i $lcl_x1LE $lcl_c0LE]
+puts "$i $YVal"
+
+        .epcw.c_le create line [expr $MidX + $SF*$i] [expr $MidY - $SF*$YVal] [expr $MidX + $SF*$i] [expr $MidY-1 - $SF*$YVal] -fill green
+        .epcw.c_le create line [expr $MidX - $SF*$i] [expr $MidY - $SF*$YVal] [expr $MidX - $SF*$i] [expr $MidY-1 - $SF*$YVal] -fill red
+
+        incr i
+    }
+
+
+
+    # set Chord [expr $ribConfig(1,4) - $ribConfig(1,3)]
+    # set MaxY [winfo height .topv.c_topv]
+    # set DeltaY [expr ($MaxY - ( $Chord * $SF )) /2 ]
+    # set StartY [expr ($MaxY /2) - $DeltaY]
+    #
+    # set i 1
+    # while {$i <= $numRibsHalf} {
+    #     #                                     X                              Y Le                              X                              Y Te
+    #     # right
+    #     .topv.c_topv create line [expr $MidX+$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,3)] [expr $MidX+$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,4)] -tag linea2 -fill green
+    #     # left
+    #     .topv.c_topv create line [expr $MidX-$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,3)] [expr $MidX-$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,4)] -tag linea2 -fill red
+    #     incr i
+    # }
+    #
+    # set i 1
+    # while {$i <= [expr $numRibsHalf-1]} {
+    #     .topv.c_topv create line [expr $MidX+$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,3)] [expr $MidX+$SF*$ribConfig([expr $i+1],6)] [expr $StartY+$SF*$ribConfig([expr $i+1],3)] -tag linea2 -fill green
+    #     .topv.c_topv create line [expr $MidX-$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,3)] [expr $MidX-$SF*$ribConfig([expr $i+1],6)] [expr $StartY+$SF*$ribConfig([expr $i+1],3)] -tag linea2 -fill red
+    #     .topv.c_topv create line [expr $MidX+$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,4)] [expr $MidX+$SF*$ribConfig([expr $i+1],6)] [expr $StartY+$SF*$ribConfig([expr $i+1],4)] -tag linea2 -fill green
+    #     .topv.c_topv create line [expr $MidX-$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,4)] [expr $MidX-$SF*$ribConfig([expr $i+1],6)] [expr $StartY+$SF*$ribConfig([expr $i+1],4)] -tag linea2 -fill red
+    #     incr i
+    # }
+    #
+    # .topv.c_topv create line [expr $MidX+$SF*$ribConfig(1,6)] [expr $StartY+$SF*$ribConfig(1,3)] [expr $MidX-$SF*$ribConfig(1,6)] [expr $StartY+$SF*$ribConfig(1,3)] -tag linea2 -fill blue
+    # .topv.c_topv create line [expr $MidX+$SF*$ribConfig(1,6)] [expr $StartY+$SF*$ribConfig(1,4)] [expr $MidX-$SF*$ribConfig(1,6)] [expr $StartY+$SF*$ribConfig(1,4)] -tag linea2 -fill blue
+}
+
+
+
+
 
 
 proc ApplyButtonPress {} {
@@ -347,6 +559,8 @@ proc ApplyButtonPress {} {
 
     ExportLclVars
     set g_PreProcDataChanged 0
+
+    DrawLeadingEdge
 
     # todo draw the views
 }
@@ -388,5 +602,8 @@ proc CancelButtonPress {} {
 }
 
 proc HelpButtonPress {} {
+    source "userHelp.tcl"
+
+    displayHelpfile "geometry-window"
 
 }

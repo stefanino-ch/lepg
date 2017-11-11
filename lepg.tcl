@@ -37,7 +37,7 @@ set data_le(c0) 10.11
 #  LEparagliding GUI
 set LepVersioNumber "2.52"
 set LepgNumber "V0.3.1"
-set VersionDate   "2016-10-29"
+set VersionDate   "2017-12-01"
 #
 #  Pere Casellas
 #  Stefan Feuz
@@ -102,6 +102,7 @@ proc InitGui { root } {
     global LepVersioNumber
     global LepgNumber
     source "EditPreProcData.tcl"
+    source "userHelp.tcl"
 
     #-----------------------------------------------------------------
     # setup translation framework
@@ -178,8 +179,6 @@ proc InitGui { root } {
     # Planform menu
     $base.menu add cascade -label [::msgcat::mc "Planform"] -underline 0 -menu $base.menu.planform
 
-    $base.menu.planform add command -underline 0 -label [::msgcat::mc "Leading edge"] -command myAppLeadingEdge
-    $base.menu.planform add command -underline 1 -label [::msgcat::mc "Trailing edge"]
     $base.menu.planform add command -underline 2 -label [::msgcat::mc "Cells number and distribution"] -command myAppCells
     $base.menu.planform add command -underline 0 -label [::msgcat::mc "Geometry matrix inspection"] -command GeometryMatrixWindow
 
@@ -243,7 +242,7 @@ proc InitGui { root } {
     # Help menu
     $base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
 
-    $base.menu.help add command -underline 0 -label [::msgcat::mc "Version"] -command VersionInfo
+    $base.menu.help add command -underline 0 -label [::msgcat::mc "User Manual"] -command {displayHelpfile "index"}
     $base.menu.help add command -underline 0 -label [::msgcat::mc "About"] -command HelpAbout
 
     # Test if focus returns a valid window before calling
@@ -643,11 +642,11 @@ proc myAppExit { } {
 }
 
 #----------------------------------------------------------------------
-#   proc VersionInfo
+#   proc HelpAbout
 #
-#   Set version and license note
+#   Displays version and license note
 #----------------------------------------------------------------------
-proc VersionInfo { } {
+proc HelpAbout { } {
     global LepVersioNumber
     global LepgNumber
 	global VersionDate
@@ -740,22 +739,6 @@ proc GeometryMatrixWindow { } {
 
 
 #----------------------------------------------------------------------
-#   proc myAppLeadingEdge
-#
-#   Define an analytical leading edge
-#----------------------------------------------------------------------
-    source "p_le.tcl"
-#----------------------------------------------------------------------
-
-#----------------------------------------------------------------------
-#   proc myAppTrailingEdge
-#
-#   Define an analytical leading edge
-#----------------------------------------------------------------------
-#    source "p_te.tcl"
-#----------------------------------------------------------------------
-
-#----------------------------------------------------------------------
 #   proc myAppVault
 #
 #   Define an analytical leading edge
@@ -802,16 +785,6 @@ proc myAppConfigEditMenu {menu bindtags} {
             $menu entryconfigure $index -state normal
         }
     }
-}
-
-#---------------------------------------------------------------------
-#  Help Operations
-#---------------------------------------------------------------------
-
-proc HelpAbout { } {
-	global LepVersioNumber
-    global LepgNumber
-    tk_messageBox -message "LE Paragliding $LepVersioNumber GUI $LepgNumber"
 }
 
 #---------------------------------------------------------------------

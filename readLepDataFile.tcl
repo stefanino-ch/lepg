@@ -95,7 +95,7 @@ proc JumpToSection {SectionId Offset File} {
 
         # Set file pointer to the start of the file
         seek $File 0 start
-        inc IterationNum
+        incr IterationNum
     }
 
     # SectionId not found

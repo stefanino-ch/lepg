@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	lep-gui documentation
+	Pere Casellas (www.laboratoridenvol.com), Stefan Feuz
+	General Public License GNU GPL3.0
+-->
+
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "../../dtd/technicalContent/dtd/concept.dtd">
+<concept id="conceptconcept" xml:lang="en-us">
+	<title>Introducion to lep and lep-gui</title>
+	<shortdesc>Know the general principles is need.</shortdesc>
+	<conbody></conbody>
+</concept>
