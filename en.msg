@@ -25,5 +25,24 @@
 
 "txt_PlsRestart"        "Please restart the application to update the user interface."
 
-
+"wingNamePreProc"       "Wing name"
+"a1LE"                  "a axis ellipse"
+"b1LE"                  "a"
+"x1LE"                  "b"
+"xmLE"                  "c"
+"c0LE"                  "d"
+"a1TE"                  "e"
+"b1TE"                  "f"
+"x1TE"                  "g"
+"xmTE"                  "h"
+"c0TE"                  "i"
+"y0TE"                  "k"
+"a1Vault"               "l"
+"b1Vault"               "m"
+"x1Vault"               "n"
+"xmVault"               "o"
+"radVault"              "p"
+"angVault"              "q"
+"cellDistrCoeff"        "0.0 ... 1.0"
+"numCellsPreProc"       "s"
 }

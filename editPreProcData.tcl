@@ -24,6 +24,7 @@ proc EditPreProcData {} {
     global .epcw
     global VaultMode1
     global VaultMode2
+    global HelpText
 
     foreach {e} $AllPreProcVars {
         global lcl_$e
@@ -37,7 +38,7 @@ proc EditPreProcData {} {
 
     wm protocol .epcw WM_DELETE_WINDOW { CancelButtonPress }
 
-    wm title .epcw "Edit Geometry data"
+    wm title .epcw [::msgcat::mc "Edit Geometry data"]
 
     ttk::labelframe .epcw.name -text [::msgcat::mc "Wing name"]
 
@@ -52,6 +53,8 @@ proc EditPreProcData {} {
 
     ttk::labelframe .epcw.cells -text [::msgcat::mc "Cell distribution"]
 
+    ttk::labelframe .epcw.help -text [::msgcat::mc "Explanations"]
+
     ttk::frame .epcw.btn
 
     grid .epcw.name         -row 0 -column 0 -sticky e
@@ -62,6 +65,7 @@ proc EditPreProcData {} {
     grid .epcw.vault        -row 3 -column 0 -sticky e
     grid .epcw.c_vault      -row 3 -column 1 -sticky nesw
     grid .epcw.cells        -row 4 -column 0 -sticky e
+    grid .epcw.help         -row 5 -column 0 -sticky nesw
     grid .epcw.btn          -row 5 -column 1 -sticky e
 
     grid columnconfigure .epcw 0    -weight 0
@@ -77,6 +81,8 @@ proc EditPreProcData {} {
     # Wing name
     ttk::label .epcw.name.wname -text [::msgcat::mc "Wing name"] -width 12
     ttk::entry .epcw.name.e_wname -width 16 -textvariable lcl_wingNamePreProc
+
+    SetHelpBind .epcw.name.e_wname wingNamePreProc
 
     grid .epcw.name.wname -row 0 -column 0 -sticky e
     grid .epcw.name.e_wname -row 0 -column 1 -sticky w
@@ -94,6 +100,13 @@ proc EditPreProcData {} {
     ttk::entry .epcw.le.e_x1LE -width 8 -textvariable lcl_x1LE
     ttk::entry .epcw.le.e_xmLE -width 8 -textvariable lcl_xmLE
     ttk::entry .epcw.le.e_c0LE -width 8 -textvariable lcl_c0LE
+
+    SetHelpBind .epcw.le.e_a1LE a1LE
+    SetHelpBind .epcw.le.e_b1LE b1LE
+    SetHelpBind .epcw.le.e_x1LE x1LE
+    SetHelpBind .epcw.le.e_xmLE xmLE
+    SetHelpBind .epcw.le.e_c0LE c0LE
+
 
     grid .epcw.le.a1LE -row 0 -column 0 -sticky e
     grid .epcw.le.e_a1LE -row 0 -column 1 -sticky w
@@ -122,6 +135,13 @@ proc EditPreProcData {} {
     ttk::entry .epcw.te.e_c0TE -width 8 -textvariable lcl_c0TE
     ttk::entry .epcw.te.e_y0TE -width 8 -textvariable lcl_y0TE
 
+    SetHelpBind .epcw.te.e_a1TE a1TE
+    SetHelpBind .epcw.te.e_b1TE b1TE
+    SetHelpBind .epcw.te.e_x1TE x1TE
+    SetHelpBind .epcw.te.e_xmTE xmTE
+    SetHelpBind .epcw.te.e_c0TE c0TE
+    SetHelpBind .epcw.te.e_y0TE y0TE
+
     grid .epcw.te.a1TE -row 0 -column 0 -sticky e
     grid .epcw.te.e_a1TE -row 0 -column 1 -sticky w
     grid .epcw.te.b1TE -row 1 -column 0 -sticky e
@@ -137,8 +157,8 @@ proc EditPreProcData {} {
 
     #-------------
     # Vault
-    ttk::radiobutton .epcw.vault.ra -variable vaultType -value 1 -text "Sin-Cos modif"
-    ttk::radiobutton .epcw.vault.rb -variable vaultType -value 2 -text "Radius/ Angle"
+    ttk::radiobutton .epcw.vault.ra -variable vaultType -value 1 -text [::msgcat::mc "Sin-Cos modif"]
+    ttk::radiobutton .epcw.vault.rb -variable vaultType -value 2 -text [::msgcat::mc "Radius/ Angle"]
 
     bind .epcw.vault.ra <ButtonPress> { SetVaultType 1 }
     bind .epcw.vault.rb <ButtonPress> { SetVaultType 2 }
@@ -153,21 +173,32 @@ proc EditPreProcData {} {
     ttk::entry .epcw.vault.e_x1Vault -width 8 -state $VaultMode1 -textvariable lcl_x1Vault
     ttk::entry .epcw.vault.e_xmVault -width 8 -state $VaultMode1 -textvariable lcl_xmVault
 
+    SetHelpBind .epcw.vault.e_a1Vault a1Vault
+    SetHelpBind .epcw.vault.e_b1Vault b1Vault
+    SetHelpBind .epcw.vault.e_x1Vault x1Vault
+    SetHelpBind .epcw.vault.e_xmVault xmVault
+
     foreach i {1 2 3 4} {
         # radius
         ttk::label .epcw.vault.rVault$i -text [::msgcat::mc "R$i \[cm\]"]  -state $VaultMode2
         ttk::entry .epcw.vault.e_rVault$i -width 8 -state $VaultMode2 -textvariable lcl_radVault($i)
 
+        SetHelpBind .epcw.vault.e_rVault$i radVault
+
         # ang
         ttk::label .epcw.vault.angVault$i -text [::msgcat::mc "Angle$i \[deg\]"]   -state $VaultMode2
         ttk::entry .epcw.vault.e_angVault$i -width 8   -state $VaultMode2  -textvariable lcl_angVault($i)
+
+        SetHelpBind .epcw.vault.e_angVault$i angVault
+
+
     }
 
-    grid .epcw.vault.ra -row 0 -column 0 -columnspan 2 -sticky w
-    grid .epcw.vault.rb -row 1 -column 0 -columnspan 2 -sticky w
+    grid .epcw.vault.ra -row 0 -column 0 -columnspan 3 -sticky w
+    grid .epcw.vault.rb -row 1 -column 0 -columnspan 3 -sticky w
 
     grid .epcw.vault.a1Vault    -row 2 -column 0 -sticky e
-    grid .epcw.vault.e_a1Vault  -row 2 -column 1 -sticky w
+    grid .epcw.vault.e_a1Vault  -row 2 -column 1 -sticky e
     grid .epcw.vault.b1Vault    -row 3 -column 0 -sticky e
     grid .epcw.vault.e_b1Vault  -row 3 -column 1 -sticky e
     grid .epcw.vault.x1Vault    -row 4 -column 0 -sticky e
@@ -188,8 +219,8 @@ proc EditPreProcData {} {
 
     #-------------
     # Cell distribution
-    ttk::radiobutton .epcw.cells.ra -variable cellDistrType -value 3 -text "Cell width proportional to chord"
-    ttk::radiobutton .epcw.cells.rb -variable cellDistrType -value 4 -text "Explicit width of each cell"
+    ttk::radiobutton .epcw.cells.ra -variable cellDistrType -value 3 -text [::msgcat::mc "Cell width proportional to chord"]
+    ttk::radiobutton .epcw.cells.rb -variable cellDistrType -value 4 -text [::msgcat::mc "Explicit width of each cell"]
 
     bind .epcw.cells.ra <ButtonPress> { SetCellType 3 }
     bind .epcw.cells.rb <ButtonPress> { SetCellType 4 }
@@ -200,6 +231,9 @@ proc EditPreProcData {} {
     ttk::entry .epcw.cells.e_cellDistrCoeff -width 8 -textvariable lcl_cellDistrCoeff
     ttk::entry .epcw.cells.e_numCellsPreProc -width 8 -textvariable lcl_numCellsPreProc
 
+    SetHelpBind .epcw.cells.e_cellDistrCoeff cellDistrCoeff
+    SetHelpBind .epcw.cells.e_numCellsPreProc numCellsPreProc
+
     grid .epcw.cells.ra -row 0 -column 0 -columnspan 2 -sticky w
     grid .epcw.cells.rb -row 1 -column 0 -columnspan 2 -sticky w
 
@@ -207,6 +241,11 @@ proc EditPreProcData {} {
     grid .epcw.cells.e_cellDistrCoeff -row 2 -column 1 -sticky w
     grid .epcw.cells.numCellsPreProc -row 3 -column 0 -sticky e
     grid .epcw.cells.e_numCellsPreProc -row 3 -column 1 -sticky w
+
+    #-------------
+    # explanations
+    label .epcw.help.e_help -width 40 -height 3 -background LightYellow -textvariable HelpText
+    grid .epcw.help.e_help -row 0 -column 0 -sticky nesw -padx 10 -pady 10
 
     #-------------
     # buttons
@@ -335,12 +374,28 @@ proc UnsetLclVarTrace {} {
 }
 
 proc SetLclChangeFlag { a e op } {
+    # maybe helpful for debug
     # puts "  a=$a e=$e op=$op ax=[info exists ::$a] ex=[info exists ::${a}($e)]"
 
     global g_PreProcDataChanged
     set g_PreProcDataChanged 1
 }
 
+proc SetHelpBind { Element VarName } {
+    bind $Element <Enter> [list SetHelpText 1 $VarName]
+    bind $Element <Leave> [list SetHelpText 0 $VarName]
+}
+
+proc SetHelpText { Focus Var } {
+    global HelpText
+
+    if { $Focus == 1} {
+        # display a help text
+        set HelpText [::msgcat::mc $Var]
+    } else {
+        set HelpText ""
+    }
+}
 
 proc ApplyButtonPress {} {
     global g_PreProcDataChanged
