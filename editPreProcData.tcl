@@ -497,7 +497,6 @@ proc DrawLeadingEdge {} {
     set MidY [expr [winfo height .epcw.c_le] /2]
 
     set SF [CalcPreProcScaleFactor]
-puts $SF
 
     set SF [expr $SF / 2]
 
@@ -511,7 +510,6 @@ puts $SF
     while {$i <= $lcl_x1LE} {
         #           x       y
         set YVal [CalcY-LE $lcl_b1LE $lcl_a1LE $i $lcl_x1LE $lcl_c0LE]
-puts "$i $YVal"
 
         .epcw.c_le create line [expr $MidX + $SF*$i] [expr $MidY - $SF*$YVal] [expr $MidX + $SF*$i] [expr $MidY-1 - $SF*$YVal] -fill green
         .epcw.c_le create line [expr $MidX - $SF*$i] [expr $MidY - $SF*$YVal] [expr $MidX - $SF*$i] [expr $MidY-1 - $SF*$YVal] -fill red
