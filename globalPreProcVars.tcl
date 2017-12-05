@@ -66,7 +66,7 @@ global              y0TE
 
 #--------------
 # Vault edge
-global              vaultType
+global vaultType
 # "1": vault using ellipse and cosinus modification, indicate parameters a1, b1,
 # "2": vault using four tangent circles. In four rows indicate radious and angle (deg).
 # Type 1 params

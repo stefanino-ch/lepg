@@ -14,8 +14,20 @@ package require lepConfigFile
 #  Globals
 #---------------------------------------------------------------------
 set myAppFileName ""
-set g_PreProcDataChanged 0
+
+# PreProcessor related values
+set g_GlobPreProcDataChanged 0
+                                    # set to 1 if PreProc data in main window
+                                    # has been changed
+set g_LclPreProcDataChanged 0
+                                    # set to 1 if PreProc data in Edit PreProc
+                                    # window has been changed
+set g_LclPreProcDataNotApplied 0
+                                    # set to 1 if PreProc data in Edit PreProc
+                                    # window has been changed and not applied
 set g_PreProcDataAvailable 0
+                                    # set to 1 if data in main window is available
+
 set g_LepDataChanged 0
 
 set g_PreProcFileTypes {
@@ -55,6 +67,9 @@ set VersionDate   "2017-12-01"
 #
 #---------------------------------------------------------------------
 proc myAppMain { argc argv } {
+
+    SetGlobalVarTrace
+
     #-----------------------------------------------------------------
     #  Global program configuration
     #-----------------------------------------------------------------
@@ -497,15 +512,25 @@ proc myAppFileNew { } {
  }
 
 proc OpenPreProcFile { {FilePathName ""} } {
-    global g_PreProcDataChanged
+    source "readPreProcDataFile.tcl"
+
+    global g_GlobPreProcDataChanged
+    global g_LclPreProcDataChanged
+    global g_LclPreProcDataNotApplied
+
+    global g_PreProcDataAvailable
     global g_PreProcFileTypes
 
+    if { $g_GlobPreProcDataChanged   == 1 ||
+         $g_LclPreProcDataChanged    == 1 ||
+         $g_LclPreProcDataNotApplied == 1 } {
 
-    if { $g_PreProcDataChanged } {
-        PromptForPreProcSave
+             set Answer [PromptForPreProcFileOpenCancel]
+
+             if { $Answer == 1 } {
+                 return 0
+        }
     }
-
-    source "readPreProcDataFile.tcl"
 
     if {$FilePathName == ""} {
         set FilePathName [tk_getOpenFile -filetypes $g_PreProcFileTypes]
@@ -518,8 +543,10 @@ proc OpenPreProcFile { {FilePathName ""} } {
             error "Cannot Open File $FilePathName for Reading"
         }
 
-        set g_PreProcDataChanged 0
-        set g_PreProcDataAvailable 1
+        set g_GlobPreProcDataChanged    0
+        set g_LclPreProcDataChanged     0
+        set g_LclPreProcDataNotApplied  0
+        set g_PreProcDataAvailable      1
     }
 }
 
@@ -615,12 +642,23 @@ proc myAppFileSaveAs { } {
     }
 }
 
-proc PromptForPreProcSave { } {
-    set answer [tk_messageBox -title "Geometry file: Do you want to save?" \
+#----------------------------------------------------------------------
+#  PromptForPreProcFileOpenCancel
+#  Asks the user if he really wants to loose all unsaved PreProc data
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: 1   if user has selected yes => I wann loose the data
+#           0   if user want to abort
+#----------------------------------------------------------------------
+proc PromptForPreProcFileOpenCancel { } {
+    set answer [tk_messageBox -title "Geometry: you have unsaved data!" \
         -type yesno -icon question \
-        -message "Do you want to save the Geometry data?"]
+        -message "You have unsaved Geometry data. \n Do you want to continue and loose your data?"]
     if { $answer == "yes" } {
-        PreProcFileSaveAs
+        return 0
+    } else {
+        return 1
     }
 }
 
@@ -819,6 +857,34 @@ proc RunLep {RunLevel} {
 
 	puts "RunLep level $RunLevel"
 
+}
+
+proc SetGlobalVarTrace {} {
+    global g_GlobPreProcDataChanged
+    trace variable g_GlobPreProcDataChanged w { GlobalVarTrace }
+    global g_LclPreProcDataChanged
+    trace variable g_LclPreProcDataChanged w { GlobalVarTrace }
+    global g_LclPreProcDataNotApplied
+    trace variable g_LclPreProcDataNotApplied w { GlobalVarTrace }
+    global g_PreProcDataAvailable
+    trace variable g_PreProcDataAvailable w { GlobalVarTrace }
+}
+
+proc GlobalVarTrace {a e op } {
+        # maybe helpful for debug
+        puts "  a=$a e=$e op=$op ax=[info exists ::$a] ex=[info exists ::${a}($e)]"
+
+        set systemTime [clock seconds]
+        puts "***** [clock format $systemTime -format %H:%M:%S]"
+
+        global g_GlobPreProcDataChanged
+        global g_LclPreProcDataChanged
+        global g_LclPreProcDataNotApplied
+        global g_PreProcDataAvailable
+        puts "g_GlobPreProcDataChanged    $g_GlobPreProcDataChanged"
+        puts "g_LclPreProcDataChanged     $g_LclPreProcDataChanged"
+        puts "g_LclPreProcDataNotApplied  $g_LclPreProcDataNotApplied"
+        puts "g_PreProcDataAvailable      $g_PreProcDataAvailable"
 }
 
 

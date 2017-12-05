@@ -11,13 +11,13 @@ global CellMode3
 set CellMode3 ""
 
 #----------------------------------------------------------------------
-#  proc EditPreProcData
-#  The window to edit the pre processor data
+#  EditPreProcData
+#  Does the initial window creation
 #
-#  IN:
-#  OUT:
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
 #----------------------------------------------------------------------
-
 proc EditPreProcData {} {
     source "globalPreProcVars.tcl"
 
@@ -30,12 +30,14 @@ proc EditPreProcData {} {
     global VaultMode2
     global HelpText
 
+    global g_PreProcDataAvailable
+
     foreach {e} $AllPreProcVars {
         global lcl_$e
     }
 
     SetLclVars
-    SetLclVarTrace
+
 
     toplevel .epcw
     focus .epcw
@@ -175,7 +177,7 @@ proc EditPreProcData {} {
     ttk::entry .epcw.vault.e_a1Vault -width 8 -state $VaultMode1 -textvariable lcl_a1Vault
     ttk::entry .epcw.vault.e_b1Vault -width 8 -state $VaultMode1 -textvariable lcl_b1Vault
     ttk::entry .epcw.vault.e_x1Vault -width 8 -state $VaultMode1 -textvariable lcl_x1Vault
-    ttk::entry .epcw.vault.e_xmVault -width 8 -state $VaultMode1 -textvariable lcl_xmVault
+    ttk::entry .epcw.vault.e_xmVault -width 8 -state $VaultMode1 -textvariable lcl_c1Vault
 
     SetHelpBind .epcw.vault.e_a1Vault a1Vault
     SetHelpBind .epcw.vault.e_b1Vault b1Vault
@@ -194,8 +196,6 @@ proc EditPreProcData {} {
         ttk::entry .epcw.vault.e_angVault$i -width 8   -state $VaultMode2  -textvariable lcl_angVault($i)
 
         SetHelpBind .epcw.vault.e_angVault$i angVault
-
-
     }
 
     grid .epcw.vault.ra -row 0 -column 0 -columnspan 3 -sticky w
@@ -265,21 +265,37 @@ proc EditPreProcData {} {
 
     SetVaultType $vaultType
     SetCellType $cellDistrType
+
+    SetLclVarTrace
+    SetGlobalPreProcVarTrace
+
+    # TODO: add code to draw
 }
 
+#----------------------------------------------------------------------
+#  SetVaultType
+#  Setup of vault radio box and connected labels and input fields
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
 proc SetVaultType { Mode } {
 
     global VaultMode1
     global VaultMode2
+    global lcl_vaultType
 
     if { $Mode == 1 } {
         # vault using ellipse and cosinus modification
         set VaultMode1 "enabled"
         set VaultMode2 "disabled"
+        set lcl_vaultType 1
 
     } else {
         set VaultMode1 "disabled"
         set VaultMode2 "enabled"
+        set lcl_vaultType 2
     }
 
     .epcw.vault.a1Vault configure -state $VaultMode1
@@ -302,22 +318,43 @@ proc SetVaultType { Mode } {
     }
 }
 
+#----------------------------------------------------------------------
+#  SetCellType
+#  Setup of cell type radio box and connected labels and input fields
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
 proc SetCellType { Mode } {
     global CellMode3
+    global lcl_cellDistrType
 
     if { $Mode == 3 } {
         # proportional cell width
         set CellMode3 "enabled"
+        set lcl_cellDistrType 3
     } else {
         set CellMode3 "disabled"
+        set lcl_cellDistrType 4
     }
 
     .epcw.cells.cellDistrCoeff configure -state $CellMode3
     .epcw.cells.e_cellDistrCoeff configure -state $CellMode3
 }
 
+#----------------------------------------------------------------------
+#  SetLclVars
+#  Reads the global application values into the lcl ones
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
 proc SetLclVars {} {
     source "globalPreProcVars.tcl"
+    global g_LclPreProcDataChanged
+    global g_LclPreProcDataNotApplied
 
     # make sure lcl_ variables are known
     foreach {e} $AllPreProcVars {
@@ -335,21 +372,37 @@ proc SetLclVars {} {
         set lcl_angVault($i) $angVault($i)
     }
 
-    set g_PreProcDataChanged 0
+    set g_LclPreProcDataChanged     0
+    set g_LclPreProcDataNotApplied  0
 }
 
-proc SetLclVarTrace {} {
-    source "globalPreProcVars.tcl"
-
-    # make sure lcl_ variables are known
-    foreach {e} $AllPreProcVars {
-        global lcl_$e
-        trace variable lcl_$e w { SetLclChangeFlag }
-    }
+#----------------------------------------------------------------------
+#  SetLclVarsAndDraw
+#  Called if window is already open and a new data file is opened
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc SetLclVarsAndDraw { a e op } {
+    SetLclVars
+    DrawLeadingEdge
+    DrawTrailingEdge
+    DrawVault
 }
 
+#----------------------------------------------------------------------
+#  ExportLclVars
+#  Writes back values of lcl values into the global application ones
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
 proc ExportLclVars {} {
     source "globalPreProcVars.tcl"
+
+    global g_GlobPreProcDataChanged
 
     foreach {e} $AllPreProcVars {
         global lcl_$e
@@ -365,8 +418,36 @@ proc ExportLclVars {} {
         set radVault($i) $lcl_radVault($i)
         set angVault($i) $lcl_angVault($i)
     }
+
+    set g_GlobPreProcDataChanged 1
 }
 
+#----------------------------------------------------------------------
+#  SetLclVarTrace
+#  Starts tracing the changes of relevant local variables
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc SetLclVarTrace {} {
+    source "globalPreProcVars.tcl"
+
+    # make sure lcl_ variables are known
+    foreach {e} $AllPreProcVars {
+        global lcl_$e
+        trace variable lcl_$e w { SetLclChangeFlag }
+    }
+}
+
+#----------------------------------------------------------------------
+#  UnsetLclVarTrace
+#  Stops tracing the changes of relevant local variables
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
 proc UnsetLclVarTrace {} {
     source "globalPreProcVars.tcl"
 
@@ -377,13 +458,54 @@ proc UnsetLclVarTrace {} {
     }
 }
 
+#----------------------------------------------------------------------
+#  SetLclChangeFlag
+#  Setup local change flags upon edit
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
 proc SetLclChangeFlag { a e op } {
     # maybe helpful for debug
-    # puts "  a=$a e=$e op=$op ax=[info exists ::$a] ex=[info exists ::${a}($e)]"
+    # puts "SetLclChangeFlag: a=$a e=$e op=$op ax=[info exists ::$a] ex=[info exists ::${a}($e)]"
 
-    global g_PreProcDataChanged
-    set g_PreProcDataChanged 1
+    global g_LclPreProcDataChanged
+    global g_LclPreProcDataNotApplied
+
+    set g_LclPreProcDataChanged     1
+    set g_LclPreProcDataNotApplied  1
 }
+
+#----------------------------------------------------------------------
+#  SetGlobalVarTrace
+#  Starts tracing changes in relevant global variables
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc SetGlobalPreProcVarTrace {} {
+    global g_PreProcDataAvailable
+
+    trace variable g_PreProcDataAvailable w { SetLclVarsAndDraw }
+}
+
+#----------------------------------------------------------------------
+#  UnsetGlobalPreProcVarTrace
+#  Stops tracing the changes of relevant global variables
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc UnsetGlobalPreProcVarTrace {} {
+    global g_PreProcDataAvailable
+
+    trace remove variable g_PreProcDataAvailable write { SetLclVarsAndDraw }
+}
+
+
 
 #----------------------------------------------------------------------
 #  proc SetHelpBind
@@ -399,7 +521,7 @@ proc SetHelpBind { Element VarName } {
 }
 
 #----------------------------------------------------------------------
-#  proc SetHelpText
+#  SetHelpText
 #  Controls the help text display in the Explanations window
 #
 #  IN:      Focus   The value indicating if the field has currently the focus or note
@@ -418,38 +540,56 @@ proc SetHelpText { Focus Var } {
 }
 
 #----------------------------------------------------------------------
-#  proc CalcPreProcScaleFactor
-#  Calculates the scale factor for drawing on the GUI based on Span
-#  and width of the drawing canvas
+#  CalcPreProcScaleFactor
+#  Calculates the scale factor for drawing on the GUI based on wing params
+#  and drawing canvas
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: Scale Factor
 #----------------------------------------------------------------------
-proc CalcPreProcScaleFactor {} {
+proc CalcPreProcScaleFactor { A1LE A1TE A1Vault B1LE B1TE B1Vault VaultMode1} {
 
     source "globalPreProcVars.tcl"
+    # drawing canvas has always the same size!
     global .epcw.c_le
     # global .epcw.c_te
     # global .epcw.vault
-    global VaultMode1
 
-    # midX half the way on the x coordinate in the canvas
+    # Do scale factor calc for x axis
+    # midX half the way on the x axis in the canvas
     set MidX [expr [winfo width .epcw.c_le] /2]
-
-    # find biggest span
-    set Span  $a1LE
-    if { $Span < $a1TE} {
-        set Span $a1TE
+    if {$A1Vault == "" } {
+        set A1Vault 0
     }
+
     if { $VaultMode1 == "enabled" } {
-        if { $Span < $a1Vault } {
-            set Span $a1Vault
-        }
+        set Span [ ::tcl::mathfunc::max $A1LE $A1TE $A1Vault ]
+    } else {
+#TODO: add here something clever for Vault
+        set Span [ ::tcl::mathfunc::max $A1LE $A1TE  ]
+    }
+    # scale factor
+    set XSF [expr $MidX/ [::tcl::mathfunc::double $Span] ]
+
+    # Do scale factor calc for y axis
+    # midy half the way on the y axis in the canvas
+    set MidY [expr [winfo height .epcw.c_le] /2]
+    if {$B1Vault == "" } {
+        set B1Vault 0
+    }
+
+    if { $VaultMode1 == "enabled" } {
+        set Height [ ::tcl::mathfunc::max $B1LE $B1TE $B1Vault ]
+    } else {
+#TODO: add here something clever for Vault
+        set Height [ ::tcl::mathfunc::max $B1LE $B1TE ]
     }
 
     # scale factor
-    set SF [expr (2* $MidX )/($Span)]
+    set YSF [expr ($MidY )/($Height)]
+    set SF [ ::tcl::mathfunc::min $XSF $YSF ]
+
     # use only 90% of canvas
     set SF [expr $SF * 0.9]
 
@@ -457,36 +597,48 @@ proc CalcPreProcScaleFactor {} {
 }
 
 #----------------------------------------------------------------------
-#  proc CalcY-LE-low
+#  proc CalcY-LE
 #  Calculates the LE Y value
 #
-#  IN:      B   b1 parameter of the LE
-#           A   a1 parameter of the LE
+#  IN:      A   a1 parameter of the LE
+#           B   b1 parameter of the LE
 #           X   x value for which y must be calculated
 #           X1  x1 parameter of the LE
+#           XM  Xm wing half span
 #           C0  c0 parameter of the LE
 #  OUT:     N/A
 #  Returns: Y value
 #----------------------------------------------------------------------
-proc CalcY-LE { B A X X1 C0 } {
+proc CalcY-LE { A B X X1 XM C0 } {
 
     # first do the calculation for X < X1
-    set YVal [expr $B* sqrt( 1-($X*$X)/($A*$A) ) ]
+    set YVal [expr $B* sqrt( 1-($X**2.)/($A**2.) ) ]
 
     # check if the advanced calc is needed
     if { $X > $X1 } {
 
-        # here in I need help to get the calculation done
+        set XKVal [expr $C0/(($XM-$X1)**2.)]
+
+        set YVal [expr $YVal-$XKVal* ( ($X-$X1)**2. )]
     }
 
     return $YVal
 }
 
+#----------------------------------------------------------------------
+#  DrawLeadingEdge
+#  Draws the Leading Edge
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
 proc DrawLeadingEdge {} {
     source "globalPreProcVars.tcl"
     global .epcw.c_le
+    global VaultMode1
 
-    foreach e {a1LE b1LE x1LE xmLE c0LE} {
+    foreach e {a1LE a1TE b1LE b1TE x1LE xmLE c0LE a1TE a1Vault b1Vault } {
         global lcl_$e
     }
 
@@ -496,9 +648,7 @@ proc DrawLeadingEdge {} {
     set MidX [expr [winfo width .epcw.c_le] /2]
     set MidY [expr [winfo height .epcw.c_le] /2]
 
-    set SF [CalcPreProcScaleFactor]
-
-    set SF [expr $SF / 2]
+    set SF [CalcPreProcScaleFactor $lcl_a1LE $lcl_a1TE $lcl_a1Vault $lcl_b1LE $lcl_b1TE $lcl_b1Vault $VaultMode1 ]
 
     # draw axes
     .epcw.c_le create line $MidX    $MidY 1                     $MidY               -fill red
@@ -507,79 +657,229 @@ proc DrawLeadingEdge {} {
 
     # draw the LE
     set i 1
-    while {$i <= $lcl_x1LE} {
+    while {$i <= $lcl_xmLE} {
         #           x       y
-        set YVal [CalcY-LE $lcl_b1LE $lcl_a1LE $i $lcl_x1LE $lcl_c0LE]
+        set YVal [CalcY-LE $lcl_a1LE $lcl_b1LE  $i $lcl_x1LE $lcl_xmLE $lcl_c0LE]
 
         .epcw.c_le create line [expr $MidX + $SF*$i] [expr $MidY - $SF*$YVal] [expr $MidX + $SF*$i] [expr $MidY-1 - $SF*$YVal] -fill green
         .epcw.c_le create line [expr $MidX - $SF*$i] [expr $MidY - $SF*$YVal] [expr $MidX - $SF*$i] [expr $MidY-1 - $SF*$YVal] -fill red
 
         incr i
     }
-
-
-
-    # set Chord [expr $ribConfig(1,4) - $ribConfig(1,3)]
-    # set MaxY [winfo height .topv.c_topv]
-    # set DeltaY [expr ($MaxY - ( $Chord * $SF )) /2 ]
-    # set StartY [expr ($MaxY /2) - $DeltaY]
-    #
-    # set i 1
-    # while {$i <= $numRibsHalf} {
-    #     #                                     X                              Y Le                              X                              Y Te
-    #     # right
-    #     .topv.c_topv create line [expr $MidX+$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,3)] [expr $MidX+$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,4)] -tag linea2 -fill green
-    #     # left
-    #     .topv.c_topv create line [expr $MidX-$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,3)] [expr $MidX-$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,4)] -tag linea2 -fill red
-    #     incr i
-    # }
-    #
-    # set i 1
-    # while {$i <= [expr $numRibsHalf-1]} {
-    #     .topv.c_topv create line [expr $MidX+$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,3)] [expr $MidX+$SF*$ribConfig([expr $i+1],6)] [expr $StartY+$SF*$ribConfig([expr $i+1],3)] -tag linea2 -fill green
-    #     .topv.c_topv create line [expr $MidX-$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,3)] [expr $MidX-$SF*$ribConfig([expr $i+1],6)] [expr $StartY+$SF*$ribConfig([expr $i+1],3)] -tag linea2 -fill red
-    #     .topv.c_topv create line [expr $MidX+$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,4)] [expr $MidX+$SF*$ribConfig([expr $i+1],6)] [expr $StartY+$SF*$ribConfig([expr $i+1],4)] -tag linea2 -fill green
-    #     .topv.c_topv create line [expr $MidX-$SF*$ribConfig($i,6)] [expr $StartY+$SF*$ribConfig($i,4)] [expr $MidX-$SF*$ribConfig([expr $i+1],6)] [expr $StartY+$SF*$ribConfig([expr $i+1],4)] -tag linea2 -fill red
-    #     incr i
-    # }
-    #
-    # .topv.c_topv create line [expr $MidX+$SF*$ribConfig(1,6)] [expr $StartY+$SF*$ribConfig(1,3)] [expr $MidX-$SF*$ribConfig(1,6)] [expr $StartY+$SF*$ribConfig(1,3)] -tag linea2 -fill blue
-    # .topv.c_topv create line [expr $MidX+$SF*$ribConfig(1,6)] [expr $StartY+$SF*$ribConfig(1,4)] [expr $MidX-$SF*$ribConfig(1,6)] [expr $StartY+$SF*$ribConfig(1,4)] -tag linea2 -fill blue
 }
 
+#----------------------------------------------------------------------
+#  proc CalcY-TE
+#  Calculates the TE Y value
+#
+#  IN:      A   a1 parameter of the TE
+#           B   b1 parameter of the TE
+#           X   x value for which y must be calculated
+#           X1  x1 parameter of the TE
+#           XM  Xm wing half span
+#           C0  c0 parameter of the TE
+#           Y0  y0 parameter of the TE
+#  OUT:     N/A
+#  Returns: Y value
+#----------------------------------------------------------------------
+proc CalcY-TE { A B X X1 XM C0 Y0 } {
+
+    # first do the calculation for X < X1
+    set YVal [expr $Y0 - $B* sqrt( 1-($X**2.)/($A**2.) ) ]
+
+    # check if the advanced calc is needed
+    if { $X > $X1 } {
+
+        set XKVal [expr $C0/(($XM-$X1)**2.)]
+
+        set YVal [expr $YVal+$XKVal* ( ($X-$X1)**2. ) ]
+    }
+
+    return $YVal
+}
+
+#----------------------------------------------------------------------
+#  DrawTrailingEdge
+#  Draws the Trailing Edge
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc DrawTrailingEdge {} {
+    source "globalPreProcVars.tcl"
+    global .epcw.c_te
+    global VaultMode1
+
+    foreach e { a1LE a1TE b1LE b1TE x1TE xmTE c0TE y0TE a1Vault b1Vault } {
+        global lcl_$e
+    }
+
+    .epcw.c_te delete "all"
+
+    # midX half the way on the x coordinate in the canvas
+    set MidX [expr [winfo width .epcw.c_te] /2]
+    set MidY [expr [winfo height .epcw.c_te] /2]
+
+    set SF [CalcPreProcScaleFactor $lcl_a1LE $lcl_a1TE $lcl_a1Vault $lcl_b1LE $lcl_b1TE $lcl_b1Vault $VaultMode1 ]
+
+    # draw axes
+    .epcw.c_te create line $MidX    $MidY 1                     $MidY               -fill red
+    .epcw.c_te create line $MidX    $MidY [expr (2*$MidX)-1]    $MidY               -fill green
+    .epcw.c_te create line $MidX    1     $MidX                 [expr (2*$MidY)-1]  -fill black
+
+    # draw the te
+    set i 1
+    while {$i <= $lcl_xmTE} {
+        #           x       y
+        set YVal [CalcY-TE $lcl_a1TE $lcl_b1TE  $i $lcl_x1TE $lcl_xmTE $lcl_c0TE $y0TE]
+
+        .epcw.c_te create line [expr $MidX + $SF*$i] [expr $MidY - $SF*$YVal] [expr $MidX + $SF*$i] [expr $MidY-1 - $SF*$YVal] -fill green
+        .epcw.c_te create line [expr $MidX - $SF*$i] [expr $MidY - $SF*$YVal] [expr $MidX - $SF*$i] [expr $MidY-1 - $SF*$YVal] -fill red
+
+        incr i
+    }
+}
+
+#----------------------------------------------------------------------
+#  proc CalcX-Vault
+#  Calculates the Vault X value
+#
+#  IN:      A   a1 parameter of the TE
+#           B   b1 parameter of the TE
+#           X1  x1 parameter of the TE
+#           C1  c0 parameter of the TE
+#           Y   y value for which x must be calculated
+#  OUT:     N/A
+#  Returns: X value
+#----------------------------------------------------------------------
+proc CalcX-Vault { A B X1 C1 Y VaultMode1 } {
+
+    if { $VaultMode1 == "enabled" } {
+        # first do the calc for the y treshold
+        set Y1 [expr $B* sqrt( 1 - ($X1**2.) / ($A**2.) ) ]
+
+        set XVal [expr $A * ( sqrt( 1 - ($Y**2.) / ($B**2.) )) ]
+
+        if { $Y <= $Y1 } {
+            # acos(-1) returns Pi
+            # set HalfPi [expr acos(-1)/2 ]
+            set HalfPi [expr 3.1415926 / 2. ]
+
+            set Rho [expr (1 - cos( ($Y1 - $Y)/$Y1 * $HalfPi ) ) * $C1 ]
+
+            set XVal [expr $XVal + $Rho ]
+        }
+    } else {
+# TODO add here calc for radius calc
+        set XVal 0
+    }
 
 
+    return $XVal
+}
 
+#----------------------------------------------------------------------
+#  DrawVault
+#  Draws the vault
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc DrawVault {} {
+    source "globalPreProcVars.tcl"
+    global .epcw.c_vault
+    global VaultMode1
 
+    foreach e { a1LE a1TE b1LE b1TE x1TE xmTE c0TE y0TE a1Vault b1Vault x1Vault c1Vault} {
+        global lcl_$e
+    }
 
+    .epcw.c_vault delete "all"
+
+    # midX half the way on the x coordinate in the canvas
+    set MidX [expr [winfo width .epcw.c_vault] /2]
+    set MidY [expr [winfo height .epcw.c_vault] /2]
+    #
+    set SF [CalcPreProcScaleFactor $lcl_a1LE $lcl_a1TE $lcl_a1Vault $lcl_b1LE $lcl_b1TE $lcl_b1Vault $VaultMode1 ]
+
+    # draw axes
+    .epcw.c_vault create line $MidX    $MidY 1                     $MidY               -fill red
+    .epcw.c_vault create line $MidX    $MidY [expr (2*$MidX)-1]    $MidY               -fill green
+    .epcw.c_vault create line $MidX    1     $MidX                 [expr (2*$MidY)-1]  -fill black
+
+    # draw the vault
+    set i 1
+    while {$i <= $lcl_b1Vault} {
+
+        set XVal [CalcX-Vault $lcl_a1Vault $lcl_b1Vault $lcl_x1Vault $lcl_c1Vault $i $VaultMode1]
+        #                          x                     y                        x                     y
+        .epcw.c_vault create line [expr $MidX + $SF*$XVal] [expr $MidY - $SF*$i] [expr $MidX + $SF*$XVal] [expr $MidY-1 - $SF*$i] -fill green
+        .epcw.c_vault create line [expr $MidX - $SF*$XVal] [expr $MidY - $SF*$i] [expr $MidX - $SF*$XVal] [expr $MidY-1 - $SF*$i] -fill red
+
+        incr i
+    }
+}
+
+#----------------------------------------------------------------------
+#  ApplyButtonPress
+#  All action after the Apply button was pressed
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
 proc ApplyButtonPress {} {
-    global g_PreProcDataChanged
+    global g_LclPreProcDataNotApplied
 
     ExportLclVars
-    set g_PreProcDataChanged 0
+    set g_LclPreProcDataNotApplied 0
 
     DrawLeadingEdge
-
-    # todo draw the views
+    DrawTrailingEdge
+    DrawVault
 }
 
+#----------------------------------------------------------------------
+#  OkButtonPress
+#  All action after the Ok button was pressed
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
 proc OkButtonPress {} {
+    global g_LclPreProcDataChanged
+    global g_LclPreProcDataNotApplied
 
     ExportLclVars
     UnsetLclVarTrace
+    UnsetGlobalPreProcVarTrace
 
-    set g_PreProcDataChanged 0
+    set g_LclPreProcDataChanged     0
+    set g_LclPreProcDataNotApplied  0
 
     global .epcw
     destroy .epcw
 }
 
+#----------------------------------------------------------------------
+#  CancelButtonPress
+#  All action after the Cancel button was pressed
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
 proc CancelButtonPress {} {
 
     source "globalPreProcVars.tcl"
     global .epcw
+    global g_LclPreProcDataChanged
+    global g_LclPreProcDataNotApplied
 
-    if { $g_PreProcDataChanged == 1} {
+    if { $g_LclPreProcDataNotApplied == 1} {
         # there is changed data
 
         # do warning dialog
@@ -587,9 +887,11 @@ proc CancelButtonPress {} {
             -type yesno -icon warning \
             -message "All changed data will be lost.\nDo you really want to close the window"]
         if { $answer == "yes" } {
-
             UnsetLclVarTrace
-            set g_PreProcDataChanged 0
+            UnsetGlobalPreProcVarTrace
+            set g_LclPreProcDataChanged     0
+            set g_LclPreProcDataNotApplied  0
+
         } else {
             focus .epcw
             return 0
@@ -599,9 +901,16 @@ proc CancelButtonPress {} {
     return 0
 }
 
+#----------------------------------------------------------------------
+#  HelpButtonPress
+#  Opens the helpfile for the current window
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
 proc HelpButtonPress {} {
     source "userHelp.tcl"
 
     displayHelpfile "geometry-window"
-
 }
