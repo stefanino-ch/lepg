@@ -1,3 +1,0 @@
-Variable translation table
-
-linea       dataline

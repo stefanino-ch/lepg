@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- 
+ <!-- 
 	lep-gui documentation
 	Pere Casellas (www.laboratoridenvol.com), Stefan Feuz
 	General Public License GNU GPL3.0
@@ -7,11 +7,31 @@
 
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "../../dtd/technicalContent/dtd/concept.dtd">
-<concept id="de-Edit-Window-Introduction" xml:lang="de-de">
-	<title>Wie funktionieren die Bearbeitungsfenster</title>
-	<shortdesc>Einführung zur Funktionalität der einzelnen Bearbeitungsfenster. </shortdesc>
+<concept id="de-Edit-Window-Introduction" xml:lang="en-us">
+	<title>Prinzipielle Funktionen in den Eingabefenstern</title>
+	<shortdesc>Eine Einführung zu den prinzipiellen Funktionen der Eingabefenster.</shortdesc>
 	<conbody>
-		<p>Erklärungen </p>
-
+		<p>Ein Eingabefenster wird prinzipiell über 3 Schaltflächen gesteuert: </p>
+		<p></p>
+		<ul>
+			<li>[Apply]</li>
+			<li>[OK]</li>
+			<li>[Cancel]</li>
+		</ul>
+		<image href="../image/window-buttons.jpg" alt="Edit Geometry Window" height="201" width="400"/>
+		<p></p>
+		<p>Wird <b>[Apply]</b> angeklickt passieren 2 Dinge:</p>
+		<ul>
+			<li>Alle Elemente des Fensters werden aktualisiert.</li>
+			<li>Die aktuellen Daten werden in das Hauptfenster zurück synchronisiert. Das bedeutet dass auch das Hauptfenster und weitere abhängige Eingabefenster ebenfalls aktualisiert werden.</li>
+		</ul>
+		<p></p>
+		<p>Auch <b>[OK]</b> löst zwei Aktionen aus:</p>
+		<ul>
+			<li>Die aktuellen Daten werden in das Hauptfenster zurück synchronisiert. Das bedeutet dass auch das Hauptfenster und weitere abhängige Eingabefenster ebenfalls aktualisiert werden.</li>
+			<li>Danach wird das Eingabefenster geschlossen. </li>
+		</ul>
+		<p><b>[Cancel]</b> schliesst das Eingabefenster. Alle Datenänderungen seit dem letzten clicken von <b>[Apply]</b> sind verloren!</p>
+		<p></p>
 	</conbody>
 </concept>

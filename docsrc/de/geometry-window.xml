@@ -4,15 +4,25 @@
 	Pere Casellas (www.laboratoridenvol.com), Stefan Feuz
 	General Public License GNU GPL3.0
 -->
-
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "../../dtd/technicalContent/dtd/concept.dtd">
-<concept id="de-geometry-window" xml:lang="de-de">
+<concept id="de-geometry-window" xml:lang="en-us">
 	<title>Geometrie Fenster</title>
-	<shortdesc>Detaillierte Erklärungen zum Geometrie Fenster.</shortdesc>
+	<shortdesc>Detaillierte Erklärungen zum Geometrie Fenster. </shortdesc>
 	<conbody>
-		<p>Erklärungen </p>
-
+		<p>Das Geometrie Fenster ist in 5 Abschnitte unterteilt:</p>
+		<ul>
+			<li>Flügelname</li>
+			<li>Eintrittskante</li>
+			<li>Austrittskante</li>
+			<li>Wölbung</li>
+			<li>Zellenverteilung</li>
+		</ul>
+		<image href="../image/edit-geometry-data-window-de.jpg" alt="Edit Geometry Window" height="365" width="317"/>
+		<p>Die Parameter für Eintritts- und Austrittskante sowie Wölbung können jeweils in den Eingabefeldern auf der linken Seite verändert werden.</p>
+		<p>Mit [Apply] werden die Eingaben bestätigt und die Grafiken auf der rechten Fensterseite aktualisiert.</p>
+		<p>ACHTUNG: Die eingegebenen Werte werden aktuell nicht überprüft! Es besteht die Möglichkeit dass nicht immer eine gültige Geometrie berechnet werden kann. </p>
+		<p></p>
 	</conbody>
 	<related-links>
 		<link href="editWindowIntroduction.xml" format="dita" type="concept"></link>

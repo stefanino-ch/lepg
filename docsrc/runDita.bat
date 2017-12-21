@@ -7,7 +7,7 @@ Set CurrWorkDir=%~dp0
 
 dita ^
 --input=%CurrWorkDir%/lepg.ditamap ^
---output=%CurrWorkDir%/../doc ^
+--output=%CurrWorkDir%/../lepg/doc ^
 --format=html5 ^
 --propertyfile=%CurrWorkDir%/properties/lepg-html.properties ^
 --args.input.dir=%CurrWorkDir%

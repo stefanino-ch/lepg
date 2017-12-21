@@ -4,14 +4,25 @@
 	Pere Casellas (www.laboratoridenvol.com), Stefan Feuz
 	General Public License GNU GPL3.0
 -->
-
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "../../dtd/technicalContent/dtd/concept.dtd">
 <concept id="en-geometry-window" xml:lang="en-us">
 	<title>Geometry window</title>
 	<shortdesc>Detailed explanation about how to work with the geometry window.</shortdesc>
 	<conbody>
-		<p>Explanations</p>
+		<p>The Geometry Edit window can be split into 5 sections</p>
+		<ul>
+			<li>Wing Name</li>
+			<li>Leading Edge Section</li>
+			<li>Trailing Edge Section</li>
+			<li>Vault Section</li>
+			<li>Cell distribution section</li>
+		</ul>
+		<image href="../image/edit-geometry-data-window-en.jpg" alt="Edit Geometry Window" height="365" width="317"/>
+		<p>Leading, Trailing Edge and Vault parameters can be edit on the left side of the individual sections.</p>
+		<p>Upon pressing [Apply] the individual Graphics on the right will be updated.</p>
+		<p>PLEASE NOTE: No parameter checks are implemented currently! There's a chance that the geometry will not be valid.</p>
+		<p></p>
 	</conbody>
 	<related-links>
 		<link href="editWindowIntroduction.xml" format="dita" type="concept"></link>

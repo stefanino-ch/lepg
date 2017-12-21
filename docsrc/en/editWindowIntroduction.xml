@@ -11,7 +11,27 @@
 	<title>Main working principles in edit windows</title>
 	<shortdesc>An introduction to the main function principles of the edit windows.</shortdesc>
 	<conbody>
-		<p>Descriptions</p>
-
+		<p>Three buttons do control the window:</p>
+		<p></p>
+		<ul>
+			<li>[Apply]</li>
+			<li>[OK]</li>
+			<li>[Cancel]</li>
+		</ul>
+		<image href="../image/window-buttons.jpg" alt="Edit Geometry Window" height="201" width="400"/>
+		<p></p>
+		<p>By pressing <b>[Apply]</b> two things happen:</p>
+		<ul>
+			<li>The edit window itself is updated.</li>
+			<li>The data is "sent back" to the main application. This means the main applcation and other edit windows will be updated as well. </li>
+		</ul>
+		<p></p>
+		<p>If you press <b>[OK]</b> two things happen as well:</p>
+		<ul>
+			<li>The data is "sent back" to the main application. This means the main applcation and other edit windows will be updated.</li>
+			<li>The edit window itself will be closed afterwards.</li>
+		</ul>
+		<p><b>[Cancel]</b> does just close the Edit window. All changes since the last <b>[Apply]</b> button press will be lost!</p>
+		<p></p>
 	</conbody>
 </concept>
