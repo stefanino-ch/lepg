@@ -999,11 +999,7 @@ proc DrawVault {} {
         }
     } else {
         # draw the rad/ angle vault
-puts $MidY
-puts [GetHeightVault]
-
         set CorrY [expr abs( (2*$MidY - $SF*[GetHeightVault] ) /2 ) ]
-puts $CorrY
         set i 1
         while {$i <= 4} {
 

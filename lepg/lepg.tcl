@@ -33,6 +33,9 @@ set g_LepDataChanged 0
 set g_PreProcFileTypes {
     {{Geometry files}   {.txt}}
 }
+
+set g_PreProcFilePathName ""
+
 set g_DataFileTypes {
     {{Data files}   {.txt}}
 }
@@ -48,8 +51,8 @@ set data_le(c0) 10.11
 #
 #  LEparagliding GUI
 set LepVersioNumber "2.52"
-set LepgNumber "V0.3.1"
-set VersionDate   "2017-12-01"
+set LepgNumber "V0.3.2 Santa Clause"
+set VersionDate   "2017-12-21"
 #
 #  Pere Casellas
 #  Stefan Feuz
@@ -168,14 +171,12 @@ proc InitGui { root } {
 
     # Geometry menu
     $base.menu add cascade -label [::msgcat::mc "Geometry"] -underline 0 -menu $base.menu.geometry
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "New Geometry"] -state disabled
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Open Geometry..."] -command OpenPreProcFile
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Edit Geometry"] -command EditPreProcData
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc Geometry"] -state disabled
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc& read back Geometry"] -state disabled
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Save Geometry"] -command SavePreProcFile
-
-    $base.menu.geometry add command -underline 5 -label [::msgcat::mc "Save Geometry As"] -state disabled
+    $base.menu.geometry add command -underline 5 -label [::msgcat::mc "Save Geometry As"] -command SavePreProcFileAs
 
     # Wing menu
     $base.menu add cascade -label [::msgcat::mc "Wing"] -underline 0 -menu $base.menu.wing
@@ -195,8 +196,7 @@ proc InitGui { root } {
     # Planform menu
     $base.menu add cascade -label [::msgcat::mc "Planform"] -underline 0 -menu $base.menu.planform
 
-    $base.menu.planform add command -underline 2 -label [::msgcat::mc "Cells number and distribution"] -command myAppCells
-    $base.menu.planform add command -underline 0 -label [::msgcat::mc "Geometry matrix inspection"] -command GeometryMatrixWindow
+    $base.menu.planform add command -underline 0 -label [::msgcat::mc "Geometry matrix inspection"] -command GeometryMatrixWindow -state disabled
 
     # Vault menu
     $base.menu add cascade -label [::msgcat::mc "Vault"] -underline 0 -menu $base.menu.vault
@@ -216,13 +216,13 @@ proc InitGui { root } {
     # Lines menu
     $base.menu add cascade -label [::msgcat::mc "Lines"] -underline 0 -menu $base.menu.lines
 
-    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Basic"]
-    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines A"]
-    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines B"]
-    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines C"]
-    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines D"]
-    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines E"]
-    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Brakes"]
+    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Basic"] -state disabled
+    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines A"] -state disabled
+    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines B"] -state disabled
+    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines C"] -state disabled
+    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines D"] -state disabled
+    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines E"] -state disabled
+    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Brakes"] -state disabled
 
     # Colors menu
     $base.menu add cascade -label [::msgcat::mc "Colors"] -underline 0 -menu $base.menu.colors
@@ -240,9 +240,9 @@ proc InitGui { root } {
     # Run menu
     $base.menu add cascade -label [::msgcat::mc "Run"] -underline 0 -menu $base.menu.run
 
-    $base.menu.run add cascade -label [::msgcat::mc "pre-Processor"] -underline 0 -command {RunLep "0"}
-    $base.menu.run add cascade -label [::msgcat::mc "lep"] -underline 0 -command {RunLep "1"}
-    $base.menu.run add cascade -label [::msgcat::mc "Both"] -underline 0 -command {RunLep "2"}
+    $base.menu.run add cascade -label [::msgcat::mc "pre-Processor"] -underline 0 -command {RunLep "0"} -state disabled
+    $base.menu.run add cascade -label [::msgcat::mc "lep"] -underline 0 -command {RunLep "1"} -state disabled
+    $base.menu.run add cascade -label [::msgcat::mc "Both"] -underline 0 -command {RunLep "2"} -state disabled
 
     # Settings menu
     $base.menu add cascade -label [::msgcat::mc "Settings"] -underline 0 -menu $base.menu.settings
@@ -252,8 +252,8 @@ proc InitGui { root } {
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "English"] -command {SetLanguage "en"}
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "German"] -command {SetLanguage "de"}
 
-    $base.menu.settings add cascade -label [::msgcat::mc "pre-Processor Directory"] -underline 0 -command PreProcDirSelect
-    $base.menu.settings add cascade -label [::msgcat::mc "lep Directory"] -underline 0 -command LepDirSelect
+    $base.menu.settings add cascade -label [::msgcat::mc "pre-Processor Directory"] -underline 0 -command PreProcDirSelect -state disabled
+    $base.menu.settings add cascade -label [::msgcat::mc "lep Directory"] -underline 0 -command LepDirSelect -state disabled
 
     # Help menu
     $base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
@@ -522,6 +522,8 @@ proc OpenPreProcFile { {FilePathName ""} } {
     global g_PreProcDataAvailable
     global g_PreProcFileTypes
 
+    global g_PreProcFilePathName
+
     if { $g_GlobPreProcDataChanged   == 1 ||
          $g_LclPreProcDataChanged    == 1 ||
          $g_LclPreProcDataNotApplied == 1 } {
@@ -548,6 +550,7 @@ proc OpenPreProcFile { {FilePathName ""} } {
         set g_LclPreProcDataChanged     0
         set g_LclPreProcDataNotApplied  0
         set g_PreProcDataAvailable      1
+        set g_PreProcFilePathName $FilePathName
     }
 }
 
@@ -570,7 +573,7 @@ proc OpenLepFile { {FilePathName ""} } {
         set ReturnValue [ readLepDataFile $FilePathName ]
 
         if { $ReturnValue != 0 } {
-            error "Cannot Open File $FilePathName for Reading"
+            error "Cannot open file $FilePathName for reading"
         }
 
         set g_LepDataChanged 0
@@ -581,26 +584,79 @@ proc OpenLepFile { {FilePathName ""} } {
     DrawSideView
 }
 
-proc SavePreProcFile { {filename ""} } {
-   global myAppFileName
-   global g_LepDataChanged #BMA
-   if { $filename == "" } {
-       set filename $myAppFileName
-   }
-   if { $filename != "" } {
-       if { [catch {open $filename w} fp] } {
-            error "Cannot write to $filename"
-       }
+proc SavePreProcFile { {FilePathName ""} } {
+    source "writePreProcDataFile.tcl"
+    global myAppFileName
+    global g_LepDataChanged
+    global g_PreProcFilePathName
+    global g_PreProcFileTypes
 
-        #-------------------------------------------------------------
-        # insert code for "save" operation
-        #-------------------------------------------------------------
-        ###  -nonewline $fp [.t get 1.0 end] #BMA
+    # if proc is called from save as $FilePathName is not empty
+    if { $FilePathName == "" } {
+        # check if there was a filename passed
+        if { $g_PreProcFilePathName != "" } {
+            # yep there's an open file
+            set FilePathName $g_PreProcFilePathName
+        } else {
+            # there's no FilePathName, therefore we ask for one
+            set FilePathName [tk_getSaveFile -filetypes $g_PreProcFileTypes]
+        }
 
-        close $fp
-        set myAppFileName $filename
-        set g_LepDataChanged 0
-   }
+        # let's check for the file extension
+        set Extension [file extension $FilePathName]
+        if {$Extension != ".txt" } {
+            # we need to add the extension
+            append FilePathName ".txt"
+        }
+    }
+
+    if {$FilePathName != ""} {
+        set ReturnValue [ writePreProcDataFile $FilePathName ]
+
+        if { $ReturnValue != 0 } {
+            error "Cannot write file $FilePathName"
+            return
+        }
+
+        set g_GlobPreProcDataChanged    0
+        set g_LclPreProcDataChanged     0
+        set g_LclPreProcDataNotApplied  0
+        set g_PreProcDataAvailable      1
+        set g_PreProcFilePathName $FilePathName
+    }
+
+    # if { $FilePathName != "" } {
+    #    if { [catch {open $FilePathName w} fp] } {
+    #         error "Cannot write to $FilePathName"
+    #    }
+    #
+    #
+    #     #-------------------------------------------------------------
+    #     # insert code for "save" operation
+    #     #-------------------------------------------------------------
+    #     ###  -nonewline $fp [.t get 1.0 end] #BMA
+    #
+    #     close $fp
+    #     set myAppFileName $FilePathName
+    #     set g_LepDataChanged 0
+    # }
+}
+
+proc SavePreProcFileAs { } {
+    global g_PreProcFileTypes
+
+    set FilePathName [tk_getSaveFile -filetypes $g_PreProcFileTypes]
+    if { $FilePathName != "" } {
+
+        # let's check for the file extension
+        set Extension [file extension $FilePathName]
+        if {$Extension != ".txt" } {
+            # we need to add the extension
+            append FilePathName ".txt"
+        }
+
+        SavePreProcFile $FilePathName
+    }
 }
 
 
@@ -626,14 +682,7 @@ proc SavePreProcFile { {filename ""} } {
     }
 }
 
-proc PreProcFileSaveAs { } {
-    global g_PreProcFileTypes
 
-    set filename [tk_getSaveFile -filetypes $g_PreProcFileTypes]
-    if { $filename != "" } {
-        SavePreProcFile $filename
-    }
-}
 
 proc myAppFileSaveAs { } {
     global myAppFileTypes
@@ -688,7 +737,7 @@ proc myAppExit { } {
 proc HelpAbout { } {
     global LepVersioNumber
     global LepgNumber
-	global VersionDate
+    global VersionDate
 #   Toplevel
 
     toplevel .helplep
@@ -715,24 +764,6 @@ proc HelpAbout { } {
 
     button .helplep.fr1.holaok -text " OK " -command {destroy .helplep}
     pack .helplep.fr1.holaok -padx 20 -pady 10
-
-}
-
-#----------------------------------------------------------------------
-#   proc myAppCells
-#
-#   Set number of cells and its distribution along span
-#----------------------------------------------------------------------
-proc myAppCells { } {
-#   Toplevel
-    toplevel .numCellsdis
-
-    wm geometry .numCellsdis +400+300
-    wm title .numCellsdis "Number of cells and distribution"
-    focus .numCellsdis
-
-    frame .numCellsdis.fr1 -width 400 -height 300 -bd 2
-    pack .numCellsdis.fr1 -side top -padx 2m -pady 2m -ipadx 2c -ipady 2c
 
 }
 
@@ -775,17 +806,6 @@ proc GeometryMatrixWindow { } {
     pack $w.ok -padx 20 -pady 10
 
 }
-
-
-#----------------------------------------------------------------------
-#   proc myAppVault
-#
-#   Define an analytical leading edge
-#----------------------------------------------------------------------
-#    source "p_va.tcl"
-#----------------------------------------------------------------------
-
-
 
 #---------------------------------------------------------------------
 #  Cut/Copy/Paste
@@ -839,24 +859,24 @@ proc SetLanguage {Lang} {
 #  Lep Directory selection
 #---------------------------------------------------------------------
 proc LepDirSelect {} {
-	dict set ::GlobalConfig LepDirectory [tk_chooseDirectory -title [::msgcat::mc "title_SelectLepDirectory"] ]
+    dict set ::GlobalConfig LepDirectory [tk_chooseDirectory -title [::msgcat::mc "title_SelectLepDirectory"] ]
 }
 
 #---------------------------------------------------------------------
 #  pre-Processsor Directory selection
 #---------------------------------------------------------------------
 proc PreProcDirSelect {} {
-	dict set ::GlobalConfig PreProcDirectory [tk_chooseDirectory -title [::msgcat::mc "title_SelectPreProcDirectory"] ]
+    dict set ::GlobalConfig PreProcDirectory [tk_chooseDirectory -title [::msgcat::mc "title_SelectPreProcDirectory"] ]
 }
 
 
 proc RunLep {RunLevel} {
 
-	# RunLevel 0: pre-Processor
-	# RunLevel 1: lep
-	# RunLevel 2: both
+    # RunLevel 0: pre-Processor
+    # RunLevel 1: lep
+    # RunLevel 2: both
 
-	puts "RunLep level $RunLevel"
+    puts "RunLep level $RunLevel"
 
 }
 

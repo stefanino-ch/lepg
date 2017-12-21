@@ -1,6 +1,6 @@
 
 #----------------------------------------------------------------------
-#  proc DetectFileVersion
+#  DetectFileVersion
 #  Determines version of the pre proc data file to be read
 #  IN:      FilePathName    Full path and name of file
 #  OUT:     -1 : file not available or not readable
@@ -56,7 +56,7 @@ proc DetectFileVersion {FilePathName} {
 }
 
 #----------------------------------------------------------------------
-#  proc JumpToSection
+#  JumpToSection
 #  Moves file pointer to a specific line
 #
 #  IN:  SectionId   Section id string to point to
@@ -100,7 +100,7 @@ proc JumpToSection {SectionId Offset File} {
 }
 
 #----------------------------------------------------------------------
-#  proc readPreProcDataFile
+#  readPreProcDataFile
 #  Reads the Pre Processor data file
 #
 # IN:   FilePathName    Full path and name of file

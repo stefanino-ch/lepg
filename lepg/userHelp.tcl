@@ -53,7 +53,5 @@ proc displayHelpfile { Filename } {
 
     append Argument .html
 
-    puts  $Argument
-
     invokeBrowser $Argument
 }
