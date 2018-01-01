@@ -20,11 +20,22 @@
 		</ul>
 		<image href="../image/edit-geometry-data-window-en.jpg" alt="Edit Geometry Window" height="365" width="317"/>
 		<p>Leading, Trailing Edge and Vault parameters can be edit on the left side of the individual sections.</p>
-		<p>Upon pressing [Apply] the individual Graphics on the right will be updated.</p>
+		<p><b>Leading Edge parameters</b></p>
+		<image href="../image/edit-geometry-leading-edge.jpg" alt="Leading Edge parameters" height="291" width="374"/>
+		<p><b>Trailing Edge parameters</b></p>
+		<image href="../image/edit-geometry-trailing-edge.jpg" alt="Trailing Edge parameters" height="297" width="400"/>
+		<p><b>Vault parameters</b></p>
+		<p><b>Sin-Cos modif</b></p>
+		<image href="../image/edit-geometry-sin-cos.jpg" alt="Sin-Cos Vault parameters" height="356" width="411"/>
+		<p><b>Radius-Angle modif</b></p>
+		<image href="../image/edit-geometry-ang-rad.jpg" alt="Rad-Ang Vault parameters" height="356" width="411"/>
+		<p>Upon pressing <b>[Apply]</b> the individual Graphics on the right will be updated.</p>
 		<p>PLEASE NOTE: No parameter checks are implemented currently! There's a chance that the geometry will not be valid.</p>
-		<p></p>
+		<p> </p>
+		<p>More explanations can be found on the developer website: <xref href="http://www.laboratoridenvol.com/index.html"> Laboratory d'envol => Software => pre-processor</xref> </p>
 	</conbody>
 	<related-links>
 		<link href="editWindowIntroduction.xml" format="dita" type="concept"></link>
+		<link href="http://www.laboratoridenvol.com/index.html"></link>
 	</related-links>
 </concept>

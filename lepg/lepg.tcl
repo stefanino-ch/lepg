@@ -35,6 +35,7 @@ set g_PreProcFileTypes {
 }
 
 set g_PreProcFilePathName ""
+                                    # path and name of the file with the geometry data in
 
 set g_DataFileTypes {
     {{Data files}   {.txt}}
@@ -82,6 +83,7 @@ proc myAppMain { argc argv } {
     dict set ::GlobalConfig Language "en"
     dict set ::GlobalConfig PreProcDirectory ""
     dict set ::GlobalConfig LepDirectory ""
+    dict set ::GlobalConfig PreProcPathName ""
 
     # Hardcoded defaults will be overwritten by config file values
     set ::GlobalConfig [::lepConfigFile::loadFile $::GlobalConfig]
@@ -252,8 +254,8 @@ proc InitGui { root } {
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "English"] -command {SetLanguage "en"}
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "German"] -command {SetLanguage "de"}
 
-    $base.menu.settings add cascade -label [::msgcat::mc "pre-Processor Directory"] -underline 0 -command PreProcDirSelect -state disabled
-    $base.menu.settings add cascade -label [::msgcat::mc "lep Directory"] -underline 0 -command LepDirSelect -state disabled
+    $base.menu.settings add cascade -label [::msgcat::mc "Geometry-Processor"] -underline 0 -command PreProcDirSelect
+    $base.menu.settings add cascade -label [::msgcat::mc "Wing-Processor"] -underline 0 -command LepDirSelect -state disabled
 
     # Help menu
     $base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
@@ -866,7 +868,9 @@ proc LepDirSelect {} {
 #  pre-Processsor Directory selection
 #---------------------------------------------------------------------
 proc PreProcDirSelect {} {
-    dict set ::GlobalConfig PreProcDirectory [tk_chooseDirectory -title [::msgcat::mc "title_SelectPreProcDirectory"] ]
+    source "PreProcDirSelect.tcl"
+
+    PreProcDirSelect
 }
 
 
