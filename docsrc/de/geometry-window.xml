@@ -20,11 +20,25 @@
 		</ul>
 		<image href="../image/edit-geometry-data-window-de.jpg" alt="Edit Geometry Window" height="365" width="317"/>
 		<p>Die Parameter für Eintritts- und Austrittskante sowie Wölbung können jeweils in den Eingabefeldern auf der linken Seite verändert werden.</p>
-		<p>Mit [Apply] werden die Eingaben bestätigt und die Grafiken auf der rechten Fensterseite aktualisiert.</p>
+		<p><b>Parameter der Eintrittskante</b></p>
+		<image href="../image/edit-geometry-leading-edge.jpg" alt="Leading Edge parameters" height="291" width="374"/>
+		<p><b>Parameter der Austrittskante</b></p>
+		<image href="../image/edit-geometry-trailing-edge.jpg" alt="Trailing Edge parameters" height="297" width="400"/>
+
+		<p><b>Parameter der Wölbung</b></p>
+		<p><b>Sin-Cos modif</b></p>
+		<image href="../image/edit-geometry-sin-cos.jpg" alt="Sin-Cos Vault parameters" height="356" width="411"/>
+
+		<p><b>Radius-Angle modif</b></p>
+		<image href="../image/edit-geometry-ang-rad.jpg" alt="Rad-Ang Vault parameters" height="356" width="411"/>
+
+		<p>Mit <b>[Apply]</b> werden die Eingaben bestätigt und die Grafiken auf der rechten Fensterseite aktualisiert.</p>
 		<p>ACHTUNG: Die eingegebenen Werte werden aktuell nicht überprüft! Es besteht die Möglichkeit dass nicht immer eine gültige Geometrie berechnet werden kann. </p>
-		<p></p>
+		<p> </p>
+		<p>Detaillierte Erklärungen findet man auf der Entwickler Website: <xref href="http://www.laboratoridenvol.com/index.html"> Laboratory d'envol => Software => pre-processor</xref>  </p>
 	</conbody>
 	<related-links>
 		<link href="editWindowIntroduction.xml" format="dita" type="concept"></link>
+		<link href="http://www.laboratoridenvol.com/index.html"></link>
 	</related-links>
 </concept>

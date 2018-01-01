@@ -35,6 +35,7 @@ set g_PreProcFileTypes {
 }
 
 set g_PreProcFilePathName ""
+                                    # path and name of the file with the geometry data in
 
 set g_DataFileTypes {
     {{Data files}   {.txt}}
@@ -82,6 +83,9 @@ proc myAppMain { argc argv } {
     dict set ::GlobalConfig Language "en"
     dict set ::GlobalConfig PreProcDirectory ""
     dict set ::GlobalConfig LepDirectory ""
+    dict set ::GlobalConfig PreProcPathName ""
+    dict set ::GlobalConfig PreProcBatchPathName ""
+
 
     # Hardcoded defaults will be overwritten by config file values
     set ::GlobalConfig [::lepConfigFile::loadFile $::GlobalConfig]
@@ -173,7 +177,7 @@ proc InitGui { root } {
     $base.menu add cascade -label [::msgcat::mc "Geometry"] -underline 0 -menu $base.menu.geometry
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Open Geometry..."] -command OpenPreProcFile
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Edit Geometry"] -command EditPreProcData
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc Geometry"] -state disabled
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc Geometry"] -command CalcGeometry
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc& read back Geometry"] -state disabled
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Save Geometry"] -command SavePreProcFile
     $base.menu.geometry add command -underline 5 -label [::msgcat::mc "Save Geometry As"] -command SavePreProcFileAs
@@ -252,8 +256,8 @@ proc InitGui { root } {
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "English"] -command {SetLanguage "en"}
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "German"] -command {SetLanguage "de"}
 
-    $base.menu.settings add cascade -label [::msgcat::mc "pre-Processor Directory"] -underline 0 -command PreProcDirSelect -state disabled
-    $base.menu.settings add cascade -label [::msgcat::mc "lep Directory"] -underline 0 -command LepDirSelect -state disabled
+    $base.menu.settings add cascade -label [::msgcat::mc "Geometry-Processor"] -underline 0 -command PreProcDirSelect
+    $base.menu.settings add cascade -label [::msgcat::mc "Wing-Processor"] -underline 0 -command LepDirSelect -state disabled
 
     # Help menu
     $base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
@@ -479,20 +483,14 @@ proc DrawSideView {} {
     }
 }
 
-#   Print geometry matrix
-    # set i 1
-    # set xx 0
-    # while {$i <= $numRibsHalf} {
-    #     foreach j {1 2 3 4 6 7 9 10 51} {
-    #         set xx [expr $xx+40]
-    #         set yy [expr 10+20*($i-1)]
-    #         .uno.c2 create text $xx $yy -text $ribConfig($i,$j) -tag texto4 -fill black -font {Courier 8}
-    #     }
-    #     set xx 0
-    #     incr i
-    # }
+proc CalcGeometry {} {
+
+    source "PreProcRun.tcl"
+
+    PreProcRun
 
 
+}
 
 
 
@@ -866,7 +864,9 @@ proc LepDirSelect {} {
 #  pre-Processsor Directory selection
 #---------------------------------------------------------------------
 proc PreProcDirSelect {} {
-    dict set ::GlobalConfig PreProcDirectory [tk_chooseDirectory -title [::msgcat::mc "title_SelectPreProcDirectory"] ]
+    source "PreProcDirSelect.tcl"
+
+    PreProcDirSelect
 }
 
 

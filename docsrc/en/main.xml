@@ -19,7 +19,7 @@
 			<li>Wing-Processor: does then at the final end all the detailed calculations and creates all plans</li>
 		</ul>
 		<p>The manual does just explain the GUI and how to start both processors.</p>
-		<p>More explanations you can find on the developer website: <xref href="http://www.laboratoridenvol.com/index.html"> Laboratory d'envol </xref> </p>
+		<p>More explanations you can find on the developer website: <xref href="http://www.laboratoridenvol.com/index.html"> Laboratory d'envol => Software => pre-processor</xref>  </p>
 		<p>Steps from the idea to the final glider plan:</p>
 		<ol>
 			<li>Define the wing outline in the Geometry window</li>

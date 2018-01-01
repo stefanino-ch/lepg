@@ -1059,6 +1059,8 @@ proc ApplyButtonPress {} {
 #  Returns: N/A
 #----------------------------------------------------------------------
 proc OkButtonPress {} {
+    global .epcw
+
     global g_LclPreProcDataChanged
     global g_LclPreProcDataNotApplied
 
@@ -1069,7 +1071,6 @@ proc OkButtonPress {} {
     set g_LclPreProcDataChanged     0
     set g_LclPreProcDataNotApplied  0
 
-    global .epcw
     destroy .epcw
 }
 

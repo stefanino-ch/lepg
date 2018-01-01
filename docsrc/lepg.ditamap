@@ -8,11 +8,13 @@
 <map title="Lep GUI Users Manual">
 	<topicref href="en/main.xml" type="concept">
 		<topicref href="en/geometry-window.xml" type="concept"/>
+		<topicref href="en/setup-geometry-processor.xml" type="concept"/>
 		<topicref href="en/editWindowIntroduction.xml" type="concept"/>
 	</topicref>
 
 	<topicref href="de/main.xml" type="concept">
 		<topicref href="de/geometry-window.xml" type="concept"/>
+		<topicref href="de/setup-geometry-processor.xml" type="concept"/>
 		<topicref href="de/editWindowIntroduction.xml" type="concept"/>
 	</topicref>
 </map>

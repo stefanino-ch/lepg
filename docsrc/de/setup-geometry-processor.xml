@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	lep-gui documentation
+	Pere Casellas (www.laboratoridenvol.com), Stefan Feuz
+	General Public License GNU GPL3.0
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "../../dtd/technicalContent/dtd/concept.dtd">
+<concept id="de-setup-geometry-processor" xml:lang="en-us">
+	<title>Setup Geometrie Prozessor Fenster</title>
+	<shortdesc>Detaillierte Erklärungen zum Setup Geometrie Prozessor Fenster. </shortdesc>
+	<conbody>
+		<p>Das Geometrie Prozessor ist ein externes Programm welches via lepg gestartet werden kann. Da der Speicherort oder die Version ändern kann muss initial konfiguriert werden welcher Prozessor verwendet werden soll. </p>
+		<image href="../image/setup-geometry-processor.jpg" alt="Edit Geometry Window" height="190" width="597"/>
+		<p>Innerhalb des lepg Installationsverzeichnisses ist ein Unterverzeichnis mit dem Namen "pre". In diesem Unterverzeichnis wird eine kompatible Version des Geometrie Prozessors mitgeliefert. Der Name des Geometrie Prozessors müsste gleich oder ahnlich wie "pre-1.4.exe" sein.</p>
+		<p> </p>
+	</conbody>
+	<related-links>
+		<link href="editWindowIntroduction.xml" format="dita" type="concept"></link>
+	</related-links>
+</concept>
