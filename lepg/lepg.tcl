@@ -1,5 +1,17 @@
 #! /usr/bin/tclsh8.6
 
+#---------------------------------------------------------------------
+#
+#  lepg main file
+#
+#  Pere Casellas
+#  Stefan Feuz
+#  http://www.laboratoridenvol.com
+#
+#  General Public License GNU GPL 3.0
+#
+#---------------------------------------------------------------------
+
 package require Tk
 package require msgcat
 
@@ -52,8 +64,8 @@ set data_le(c0) 10.11
 #
 #  LEparagliding GUI
 set LepVersioNumber "2.52"
-set LepgNumber "V0.3.2 Santa Clause"
-set VersionDate   "2017-12-21"
+set LepgNumber "V0.3.3"
+set VersionDate   "2018-01-12"
 #
 #  Pere Casellas
 #  Stefan Feuz
@@ -84,8 +96,6 @@ proc myAppMain { argc argv } {
     dict set ::GlobalConfig PreProcDirectory ""
     dict set ::GlobalConfig LepDirectory ""
     dict set ::GlobalConfig PreProcPathName ""
-    dict set ::GlobalConfig PreProcBatchPathName ""
-
 
     # Hardcoded defaults will be overwritten by config file values
     set ::GlobalConfig [::lepConfigFile::loadFile $::GlobalConfig]
@@ -122,9 +132,13 @@ proc myAppMain { argc argv } {
 #
 #---------------------------------------------------------------------
 proc InitGui { root } {
+    global base
+
     global LepVersioNumber
     global LepgNumber
-    source "EditPreProcData.tcl"
+    global g_PreProcDataAvailable
+
+    source "preProcDataEdit.tcl"
     source "userHelp.tcl"
 
     #-----------------------------------------------------------------
@@ -132,6 +146,8 @@ proc InitGui { root } {
     #-----------------------------------------------------------------
     ::msgcat::mclocale [dict get $::GlobalConfig Language]
     ::msgcat::mcload [file join [file dirname [info script]]]
+
+    trace variable g_PreProcDataAvailable w { SetPreProcBtnStatus }
 
     #-----------------------------------------------------------------
     #  treat root window "." as a special case
@@ -175,12 +191,12 @@ proc InitGui { root } {
 
     # Geometry menu
     $base.menu add cascade -label [::msgcat::mc "Geometry"] -underline 0 -menu $base.menu.geometry
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Open Geometry..."] -command OpenPreProcFile
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Edit Geometry"] -command EditPreProcData
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc Geometry"] -command CalcGeometry
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc& read back Geometry"] -state disabled
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Save Geometry"] -command SavePreProcFile
-    $base.menu.geometry add command -underline 5 -label [::msgcat::mc "Save Geometry As"] -command SavePreProcFileAs
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Open Geometry..."]           -command OpenPreProcFile
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Edit Geometry"]              -command editPreProcData
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc Geometry"]              -command CalcGeometry       -state disabled
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc& read back Geometry"]   -state disabled
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Save Geometry"]              -command SavePreProcFile    -state disabled
+    $base.menu.geometry add command -underline 5 -label [::msgcat::mc "Save Geometry As"]           -command SavePreProcFileAs  -state disabled
 
     # Wing menu
     $base.menu add cascade -label [::msgcat::mc "Wing"] -underline 0 -menu $base.menu.wing
@@ -487,7 +503,7 @@ proc CalcGeometry {} {
 
     source "PreProcRun.tcl"
 
-    PreProcRun
+    preProcRun
 
 
 }
@@ -908,7 +924,23 @@ proc GlobalVarTrace {a e op } {
         puts "g_PreProcDataAvailable      $g_PreProcDataAvailable"
 }
 
+proc SetPreProcBtnStatus { a e op } {
 
+    global base
+    global g_PreProcDataAvailable
+
+    if {$g_PreProcDataAvailable == 0} {
+        $base.menu.geometry entryconfigure "Calc Geometry"              -state disabled
+        $base.menu.geometry entryconfigure "Calc& read back Geometry"   -state disabled
+        $base.menu.geometry entryconfigure "Save Geometry"              -state disabled
+        $base.menu.geometry entryconfigure "Save Geometry As"           -state disabled
+    } else {
+        $base.menu.geometry entryconfigure "Calc Geometry"              -state active
+        $base.menu.geometry entryconfigure "Calc& read back Geometry"   -state active
+        $base.menu.geometry entryconfigure "Save Geometry"              -state active
+        $base.menu.geometry entryconfigure "Save Geometry As"           -state active
+    }
+}
 
 #---------------------------------------------------------------------
 #  Execute the main procedure

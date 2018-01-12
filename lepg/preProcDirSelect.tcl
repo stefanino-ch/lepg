@@ -1,9 +1,20 @@
+#---------------------------------------------------------------------
+#
+#  Window to select the preprocessor to be used
+#
+#  Pere Casellas
+#  Stefan Feuz
+#  http://www.laboratoridenvol.com
+#
+#  General Public License GNU GPL 3.0
+#
+#---------------------------------------------------------------------
+
 #-------
 # Globals
 global .ppds
 
 global lcl_PreProcPathName
-global lcl_PreProcBatchPathName
 
 set g_LclPreProcDirDataChanged 0
 
@@ -20,7 +31,6 @@ set g_LclPreProcDirDataNotApplied 0
 #----------------------------------------------------------------------
 proc PreProcDirSelect {} {
     global lcl_PreProcPathName
-    global lcl_PreProcBatchPathName
 
     SetLclVars
 
@@ -48,15 +58,12 @@ proc PreProcDirSelect {} {
     # Geometry Processor setup
     ttk::label .ppds.name.name -text [::msgcat::mc "Geometry Processor"] -width 20
     ttk::entry .ppds.name.e_name -width 60 -textvariable lcl_PreProcPathName
-    ttk::entry .ppds.name.b_name -width 60 -textvariable lcl_PreProcBatchPathName
 
     button .ppds.name.change -width 10 -text [::msgcat::mc "Change..."] -command ChangeButtonPress
 
     grid .ppds.name.name -row 0 -column 0 -sticky e
-    grid .ppds.name.e_name -row 0 -column 1 -sticky w -padx 10 -pady 0
-
-    grid .ppds.name.change -row 0 -column 2 -sticky w
-    grid .ppds.name.b_name -row 1 -column 1 -sticky w -padx 10 -pady 10
+    grid .ppds.name.e_name -row 0 -column 1 -sticky w -padx 10 -pady 10
+    grid .ppds.name.change -row 0 -column 2 -sticky w -padx 10
 
     #-------------
     # buttons
@@ -65,10 +72,10 @@ proc PreProcDirSelect {} {
     button .ppds.btn.cancel -width 10 -text "Cancel" -command CancelButtonPress
     button .ppds.btn.help -width 10  -text "Help" -command HelpButtonPress
 
-    grid .ppds.btn.apply -row 0 -column 0 -sticky e -padx 10 -pady 0
-    grid .ppds.btn.ok -row 0 -column 1 -sticky e -padx 10 -pady 0
-    grid .ppds.btn.cancel -row 0 -column 2 -sticky e -padx 10 -pady 0
-    grid .ppds.btn.help -row 1 -column 2 -sticky e -padx 10 -pady 20
+    grid .ppds.btn.apply -row 0 -column 0 -sticky e -padx 10 -pady 10
+    grid .ppds.btn.ok -row 0 -column 1 -sticky e -padx 10
+    grid .ppds.btn.cancel -row 0 -column 2 -sticky e -padx 10
+    grid .ppds.btn.help -row 1 -column 2 -sticky e -padx 10 -pady 10
 }
 
 #----------------------------------------------------------------------
@@ -81,13 +88,11 @@ proc PreProcDirSelect {} {
 #----------------------------------------------------------------------
 proc SetLclVars {} {
     global lcl_PreProcPathName
-    global lcl_PreProcBatchPathName
 
     global g_LclPreProcDirDataChanged
     global g_LclPreProcDirDataNotApplied
 
     set lcl_PreProcPathName         [dict get $::GlobalConfig PreProcPathName]
-    set lcl_PreProcBatchPathName    [dict get $::GlobalConfig PreProcBatchPathName]
 
     set g_LclPreProcDirDataChanged     0
     set g_LclPreProcDirDataNotApplied  0
@@ -103,13 +108,11 @@ proc SetLclVars {} {
 #----------------------------------------------------------------------
 proc ExportLclVars {} {
     global lcl_PreProcPathName
-    global lcl_PreProcBatchPathName
 
     global g_LclPreProcDirDataChanged
     global g_LclPreProcDirDataNotApplied
 
     dict set ::GlobalConfig PreProcPathName $lcl_PreProcPathName
-    dict set ::GlobalConfig PreProcBatchPathName $lcl_PreProcBatchPathName
 
     set g_LclPreProcDirDataChanged     0
     set g_LclPreProcDirDataNotApplied  0
@@ -199,19 +202,11 @@ proc ChangeButtonPress {} {
     global .ppds
 
     global lcl_PreProcPathName
-    global lcl_PreProcBatchPathName
 
     global g_LclPreProcDirDataChanged
     global g_LclPreProcDirDataNotApplied
 
     # here in we need some platform specific code
-
-    #----------------------------------------------------------------------
-    # windows
-    if { $::tcl_platform(platform) == "windows" } {
-
-    }
-
     switch $::tcl_platform(platform) {
         windows {
             set g_PreProcFileType {
@@ -221,28 +216,8 @@ proc ChangeButtonPress {} {
             set PathFileName [tk_getOpenFile -filetypes $g_PreProcFileType]
             if { $PathFileName != "" } {
                 # a new value was set
-                # now we need to create a .bat file to start the PreProc
-
-                set BatchPathName [file dirname $PathFileName]
-
-                append BatchPathName "/runPre.bat"
-
-                if {[catch {set File [open $BatchPathName w]}] == 0} {
-
-                    puts $File "cd %~dp0"
-                    puts $File [file tail $PathFileName]
-                    flush $File
-                    close $File
-
-                } else {
-                    # puts "Could not open file."
-                    return -1
-                }
-
-                # and now the .bat name needs to be put into the configuration
 
                 set lcl_PreProcPathName $PathFileName
-                set lcl_PreProcBatchPathName $BatchPathName
             }
 
             if {$lcl_PreProcPathName != ""} {
@@ -256,13 +231,7 @@ proc ChangeButtonPress {} {
         }
     }
 
-
-
-
-
-
     focus .ppds
-
 }
 
 #----------------------------------------------------------------------

@@ -1,3 +1,15 @@
+#---------------------------------------------------------------------
+#
+#  Window to edit the preprocessor data
+#
+#  Pere Casellas
+#  Stefan Feuz
+#  http://www.laboratoridenvol.com
+#
+#  General Public License GNU GPL 3.0
+#
+#---------------------------------------------------------------------
+
 #-------
 # Globals
 
@@ -11,14 +23,14 @@ global CellMode3
 set CellMode3 ""
 
 #----------------------------------------------------------------------
-#  toRad
+#  ToRad
 #  Converts degrees to rad
 #
 #  IN:      Angle in degrees
 #  OUT:     N/A
 #  Returns: Angle in rad
 #----------------------------------------------------------------------
-proc toRad { Degrees } {
+proc ToRad { Degrees } {
     # acos(-1) returns Pi
     set Pi acos(-1)
 
@@ -33,7 +45,7 @@ proc toRad { Degrees } {
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc EditPreProcData {} {
+proc editPreProcData {} {
     source "globalPreProcVars.tcl"
 
     global .epcw
@@ -767,7 +779,7 @@ proc CalcOxVault { Num } {
             set TotAngle [expr $TotAngle + $lcl_angVault($i) ]
             incr i
         }
-        set OrigX [ expr [CalcOxVault [expr $Num -1] ] + ($lcl_radVault([expr $Num -1]) - $lcl_radVault($Num) ) * sin([toRad $TotAngle]) ]
+        set OrigX [ expr [CalcOxVault [expr $Num -1] ] + ($lcl_radVault([expr $Num -1]) - $lcl_radVault($Num) ) * sin([ToRad $TotAngle]) ]
     }
     return $OrigX
 }
@@ -797,7 +809,7 @@ proc CalcOzVault { Num } {
             set TotAngle [expr $TotAngle + $lcl_angVault($i) ]
             incr i
         }
-        set OrigZ [ expr [CalcOzVault [expr $Num -1]] - ( $lcl_radVault([expr $Num -1]) - $lcl_radVault($Num) ) * cos([toRad $TotAngle]) ]
+        set OrigZ [ expr [CalcOzVault [expr $Num -1]] - ( $lcl_radVault([expr $Num -1]) - $lcl_radVault($Num) ) * cos([ToRad $TotAngle]) ]
     }
     return $OrigZ
 }
@@ -824,7 +836,7 @@ proc CalcPxVault { Num } {
             set TotAngle [ expr $TotAngle + $lcl_angVault($i) ]
             incr i
         }
-        set Pointx [ expr [CalcOxVault [expr $Num-1 ] ] + $lcl_radVault([expr $Num -1]) * sin([toRad $TotAngle]) ]
+        set Pointx [ expr [CalcOxVault [expr $Num-1 ] ] + $lcl_radVault([expr $Num -1]) * sin([ToRad $TotAngle]) ]
     }
     return $Pointx
 }
@@ -851,7 +863,7 @@ proc CalcPzVault { Num } {
             set TotAngle [ expr $TotAngle + $lcl_angVault($i) ]
             incr i
         }
-        set Pointz [ expr [CalcOzVault [expr $Num-1 ] ] - $lcl_radVault([expr $Num -1]) * cos([toRad $TotAngle]) ]
+        set Pointz [ expr [CalcOzVault [expr $Num-1 ] ] - $lcl_radVault([expr $Num -1]) * cos([ToRad $TotAngle]) ]
     }
     return $Pointz
 }
