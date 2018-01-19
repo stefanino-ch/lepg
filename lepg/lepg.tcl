@@ -1,5 +1,17 @@
 #! /usr/bin/tclsh8.6
 
+#---------------------------------------------------------------------
+#
+#  lepg main file
+#
+#  Pere Casellas
+#  Stefan Feuz
+#  http://www.laboratoridenvol.com
+#
+#  General Public License GNU GPL 3.0
+#
+#---------------------------------------------------------------------
+
 package require Tk
 package require msgcat
 
@@ -52,8 +64,8 @@ set data_le(c0) 10.11
 #
 #  LEparagliding GUI
 set LepVersioNumber "2.52"
-set LepgNumber "V0.3.2 Santa Clause"
-set VersionDate   "2017-12-21"
+set LepgNumber "V0.3.3"
+set VersionDate   "2018-01-12"
 #
 #  Pere Casellas
 #  Stefan Feuz
@@ -120,9 +132,16 @@ proc myAppMain { argc argv } {
 #
 #---------------------------------------------------------------------
 proc InitGui { root } {
+    global base
+
     global LepVersioNumber
     global LepgNumber
-    source "EditPreProcData.tcl"
+    global g_PreProcDataAvailable
+
+    source "preProcDataEdit.tcl"
+    source "PreProcRun.tcl"
+
+
     source "userHelp.tcl"
 
     #-----------------------------------------------------------------
@@ -130,6 +149,8 @@ proc InitGui { root } {
     #-----------------------------------------------------------------
     ::msgcat::mclocale [dict get $::GlobalConfig Language]
     ::msgcat::mcload [file join [file dirname [info script]]]
+
+    trace variable g_PreProcDataAvailable w { SetPreProcBtnStatus }
 
     #-----------------------------------------------------------------
     #  treat root window "." as a special case
@@ -173,20 +194,19 @@ proc InitGui { root } {
 
     # Geometry menu
     $base.menu add cascade -label [::msgcat::mc "Geometry"] -underline 0 -menu $base.menu.geometry
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Open Geometry..."] -command OpenPreProcFile
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Edit Geometry"] -command EditPreProcData
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc Geometry"] -state disabled
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc& read back Geometry"] -state disabled
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Save Geometry"] -command SavePreProcFile
-    $base.menu.geometry add command -underline 5 -label [::msgcat::mc "Save Geometry As"] -command SavePreProcFileAs
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Open Geometry..."]   -command OpenPreProcFile
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Edit Geometry"]      -command editPreProcData
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc Geometry"]      -command preProcRun         -state disabled
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Save Geometry"]      -command SavePreProcFile    -state disabled
+    $base.menu.geometry add command -underline 5 -label [::msgcat::mc "Save Geometry As"]   -command SavePreProcFileAs  -state disabled
 
     # Wing menu
     $base.menu add cascade -label [::msgcat::mc "Wing"] -underline 0 -menu $base.menu.wing
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "New Wing"] -command myAppFileNew -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Geometry"] -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Open Wing..."] -command OpenLepFile
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing"] -command myAppFileSave -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Save Wing As"] -command myAppFileSaveAs -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "New Wing"]           -command myAppFileNew -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Geometry"]    -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Open Wing..."]       -command OpenLepFile
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing"]          -command myAppFileSave -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Save Wing As"]       -command myAppFileSaveAs -state disabled
 
     # Edit menu
     $base.menu add cascade -label [::msgcat::mc "Edit"] -underline 0 -menu $base.menu.edit
@@ -481,38 +501,6 @@ proc DrawSideView {} {
     }
 }
 
-#   Print geometry matrix
-    # set i 1
-    # set xx 0
-    # while {$i <= $numRibsHalf} {
-    #     foreach j {1 2 3 4 6 7 9 10 51} {
-    #         set xx [expr $xx+40]
-    #         set yy [expr 10+20*($i-1)]
-    #         .uno.c2 create text $xx $yy -text $ribConfig($i,$j) -tag texto4 -fill black -font {Courier 8}
-    #     }
-    #     set xx 0
-    #     incr i
-    # }
-
-
-
-
-
-proc myAppFileNew { } {
-    global myAppFileName
-    global g_LepDataChanged
-    if { $g_LepDataChanged } {
-        PromptForWingSave
-    }
-
-    #-----------------------------------------------------------------
-    # insert code for "new" operation
-    #-----------------------------------------------------------------
-    ### .t delete 1.0 end
-
-    set myAppFileName ""
-    set g_LepDataChanged 0
- }
 
 proc OpenPreProcFile { {FilePathName ""} } {
     source "readPreProcDataFile.tcl"
@@ -554,36 +542,6 @@ proc OpenPreProcFile { {FilePathName ""} } {
         set g_PreProcDataAvailable      1
         set g_PreProcFilePathName $FilePathName
     }
-}
-
-proc OpenLepFile { {FilePathName ""} } {
-    # global myAppFileName
-    global g_LepDataChanged
-    global g_DataFileTypes
-
-    if { $g_LepDataChanged } {
-        PromptForWingSave
-    }
-
-    source "readLepDataFile.tcl"
-
-    if {$FilePathName == ""} {
-        set FilePathName [tk_getOpenFile -filetypes $g_DataFileTypes]
-    }
-
-    if {$FilePathName != ""} {
-        set ReturnValue [ readLepDataFile $FilePathName ]
-
-        if { $ReturnValue != 0 } {
-            error "Cannot open file $FilePathName for reading"
-        }
-
-        set g_LepDataChanged 0
-    }
-
-    DrawTopView
-    DrawTailView
-    DrawSideView
 }
 
 proc SavePreProcFile { {FilePathName ""} } {
@@ -643,7 +601,6 @@ proc SavePreProcFile { {FilePathName ""} } {
     #     set g_LepDataChanged 0
     # }
 }
-
 proc SavePreProcFileAs { } {
     global g_PreProcFileTypes
 
@@ -659,6 +616,54 @@ proc SavePreProcFileAs { } {
 
         SavePreProcFile $FilePathName
     }
+}
+
+
+proc myAppFileNew { } {
+    global myAppFileName
+    global g_LepDataChanged
+    if { $g_LepDataChanged } {
+        PromptForWingSave
+    }
+
+    #-----------------------------------------------------------------
+    # insert code for "new" operation
+    #-----------------------------------------------------------------
+    ### .t delete 1.0 end
+
+    set myAppFileName ""
+    set g_LepDataChanged 0
+ }
+
+
+proc OpenLepFile { {FilePathName ""} } {
+    # global myAppFileName
+    global g_LepDataChanged
+    global g_DataFileTypes
+
+    if { $g_LepDataChanged } {
+        PromptForWingSave
+    }
+
+    source "readLepDataFile.tcl"
+
+    if {$FilePathName == ""} {
+        set FilePathName [tk_getOpenFile -filetypes $g_DataFileTypes]
+    }
+
+    if {$FilePathName != ""} {
+        set ReturnValue [ readLepDataFile $FilePathName ]
+
+        if { $ReturnValue != 0 } {
+            error "Cannot open file $FilePathName for reading"
+        }
+
+        set g_LepDataChanged 0
+    }
+
+    DrawTopView
+    DrawTailView
+    DrawSideView
 }
 
 
@@ -910,6 +915,22 @@ proc GlobalVarTrace {a e op } {
         puts "g_LclPreProcDataChanged     $g_LclPreProcDataChanged"
         puts "g_LclPreProcDataNotApplied  $g_LclPreProcDataNotApplied"
         puts "g_PreProcDataAvailable      $g_PreProcDataAvailable"
+}
+
+proc SetPreProcBtnStatus { a e op } {
+
+    global base
+    global g_PreProcDataAvailable
+
+    if {$g_PreProcDataAvailable == 0} {
+        $base.menu.geometry entryconfigure [::msgcat::mc "Calc Geometry"]    -state disabled
+        $base.menu.geometry entryconfigure [::msgcat::mc "Save Geometry"]    -state disabled
+        $base.menu.geometry entryconfigure [::msgcat::mc "Save Geometry As"] -state disabled
+    } else {
+        $base.menu.geometry entryconfigure [::msgcat::mc "Calc Geometry"]    -state active
+        $base.menu.geometry entryconfigure [::msgcat::mc "Save Geometry"]    -state active
+        $base.menu.geometry entryconfigure [::msgcat::mc "Save Geometry As"] -state active
+    }
 }
 
 

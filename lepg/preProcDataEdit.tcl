@@ -1,3 +1,15 @@
+#---------------------------------------------------------------------
+#
+#  Window to edit the preprocessor data
+#
+#  Pere Casellas
+#  Stefan Feuz
+#  http://www.laboratoridenvol.com
+#
+#  General Public License GNU GPL 3.0
+#
+#---------------------------------------------------------------------
+
 #-------
 # Globals
 
@@ -11,14 +23,14 @@ global CellMode3
 set CellMode3 ""
 
 #----------------------------------------------------------------------
-#  toRad
+#  ToRad
 #  Converts degrees to rad
 #
 #  IN:      Angle in degrees
 #  OUT:     N/A
 #  Returns: Angle in rad
 #----------------------------------------------------------------------
-proc toRad { Degrees } {
+proc ToRad { Degrees } {
     # acos(-1) returns Pi
     set Pi acos(-1)
 
@@ -33,7 +45,7 @@ proc toRad { Degrees } {
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc EditPreProcData {} {
+proc editPreProcData {} {
     source "globalPreProcVars.tcl"
 
     global .epcw
@@ -268,10 +280,10 @@ proc EditPreProcData {} {
 
     #-------------
     # buttons
-    button .epcw.btn.apply -width 10 -text "Apply" -command ApplyButtonPress
-    button .epcw.btn.ok -width 10 -text "OK" -command OkButtonPress
-    button .epcw.btn.cancel -width 10 -text "Cancel" -command CancelButtonPress
-    button .epcw.btn.help -width 10  -text "Help" -command HelpButtonPress
+    button .epcw.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_pPDE
+    button .epcw.btn.ok     -width 10 -text "OK"        -command OkButtonPress_pPDE
+    button .epcw.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_pPDE
+    button .epcw.btn.help   -width 10 -text "Help"      -command HelpButtonPress_pPDE
 
     grid .epcw.btn.apply -row 0 -column 0 -sticky e -padx 10 -pady 0
     grid .epcw.btn.ok -row 0 -column 1 -sticky e -padx 10 -pady 0
@@ -767,7 +779,7 @@ proc CalcOxVault { Num } {
             set TotAngle [expr $TotAngle + $lcl_angVault($i) ]
             incr i
         }
-        set OrigX [ expr [CalcOxVault [expr $Num -1] ] + ($lcl_radVault([expr $Num -1]) - $lcl_radVault($Num) ) * sin([toRad $TotAngle]) ]
+        set OrigX [ expr [CalcOxVault [expr $Num -1] ] + ($lcl_radVault([expr $Num -1]) - $lcl_radVault($Num) ) * sin([ToRad $TotAngle]) ]
     }
     return $OrigX
 }
@@ -797,7 +809,7 @@ proc CalcOzVault { Num } {
             set TotAngle [expr $TotAngle + $lcl_angVault($i) ]
             incr i
         }
-        set OrigZ [ expr [CalcOzVault [expr $Num -1]] - ( $lcl_radVault([expr $Num -1]) - $lcl_radVault($Num) ) * cos([toRad $TotAngle]) ]
+        set OrigZ [ expr [CalcOzVault [expr $Num -1]] - ( $lcl_radVault([expr $Num -1]) - $lcl_radVault($Num) ) * cos([ToRad $TotAngle]) ]
     }
     return $OrigZ
 }
@@ -824,7 +836,7 @@ proc CalcPxVault { Num } {
             set TotAngle [ expr $TotAngle + $lcl_angVault($i) ]
             incr i
         }
-        set Pointx [ expr [CalcOxVault [expr $Num-1 ] ] + $lcl_radVault([expr $Num -1]) * sin([toRad $TotAngle]) ]
+        set Pointx [ expr [CalcOxVault [expr $Num-1 ] ] + $lcl_radVault([expr $Num -1]) * sin([ToRad $TotAngle]) ]
     }
     return $Pointx
 }
@@ -851,7 +863,7 @@ proc CalcPzVault { Num } {
             set TotAngle [ expr $TotAngle + $lcl_angVault($i) ]
             incr i
         }
-        set Pointz [ expr [CalcOzVault [expr $Num-1 ] ] - $lcl_radVault([expr $Num -1]) * cos([toRad $TotAngle]) ]
+        set Pointz [ expr [CalcOzVault [expr $Num-1 ] ] - $lcl_radVault([expr $Num -1]) * cos([ToRad $TotAngle]) ]
     }
     return $Pointz
 }
@@ -1039,7 +1051,7 @@ proc DrawVault {} {
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc ApplyButtonPress {} {
+proc ApplyButtonPress_pPDE {} {
     global g_LclPreProcDataNotApplied
 
     ExportLclVars
@@ -1058,7 +1070,7 @@ proc ApplyButtonPress {} {
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc OkButtonPress {} {
+proc OkButtonPress_pPDE {} {
     global .epcw
 
     global g_LclPreProcDataChanged
@@ -1082,7 +1094,7 @@ proc OkButtonPress {} {
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc CancelButtonPress {} {
+proc CancelButtonPress_pPDE {} {
 
     source "globalPreProcVars.tcl"
     global .epcw
@@ -1107,6 +1119,7 @@ proc CancelButtonPress {} {
             return 0
         }
     }
+    UnsetGlobalPreProcVarTrace
     destroy .epcw
     return 0
 }
@@ -1119,7 +1132,7 @@ proc CancelButtonPress {} {
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc HelpButtonPress {} {
+proc HelpButtonPress_pPDE {} {
     source "userHelp.tcl"
 
     displayHelpfile "geometry-window"
