@@ -195,23 +195,32 @@ proc ChangeButtonPress {} {
     global g_LclPreProcDirDataChanged
     global g_LclPreProcDirDataNotApplied
 
-    set g_PreProcFileType {
-        {{PreProc}   {.exe}}
-    }
+    # here in we need some platform specific code
+    switch $::tcl_platform(platform) {
+        windows {
+            set g_PreProcFileType {
+                {{PreProc}   {.exe}}
+            }
 
-    set PathFileName [tk_getOpenFile -filetypes $g_PreProcFileType]
-    if { $PathFileName != "" } {
-        # a new value was set
-        set lcl_PreProcPathName $PathFileName
-    }
+            set PathFileName [tk_getOpenFile -filetypes $g_PreProcFileType]
+            if { $PathFileName != "" } {
+                # a new value was set
 
-    if {$lcl_PreProcPathName != ""} {
-        set g_LclPreProcDirDataChanged     1
-        set g_LclPreProcDirDataNotApplied  1
+                set lcl_PreProcPathName $PathFileName
+            }
+
+            if {$lcl_PreProcPathName != ""} {
+                set g_LclPreProcDirDataChanged     1
+                set g_LclPreProcDirDataNotApplied  1
+            }
+
+        }
+        default {
+            tk_messageBox -title [::msgcat::mc "Sorry"] -message [::msgcat::mc "Sorry, but there is some platform specific code missing."] -icon info -type ok -default ok
+        }
     }
 
     focus .ppds
-
 }
 
 #----------------------------------------------------------------------

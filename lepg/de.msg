@@ -137,4 +137,7 @@
 "angVault"              "Winkel"
 "cellDistrCoeff"        "0.0 (proportional)... 1.0 (gleiche Breite)"
 "numCellsPreProc"       "Totale Anzahl Zellen"
+
+"txt_writePreProcInputData" "Schreibe Daten für Geometrie Prozessor..."
+"txt_findPreProcOutputFilesIn" "Berechnete Daten sind im ....\\lepg\\process Verzeichnis"
 }
