@@ -40,7 +40,9 @@ set g_LclPreProcDataNotApplied 0
 set g_PreProcDataAvailable 0
                                     # set to 1 if data in main window is available
 
-set g_LepDataChanged 0
+set g_GlobLepDataChanged 0
+
+set g_GlobLepDataAvailable 0
 
 set g_PreProcFileTypes {
     {{Geometry files}   {.txt}}
@@ -202,11 +204,11 @@ proc InitGui { root } {
 
     # Wing menu
     $base.menu add cascade -label [::msgcat::mc "Wing"] -underline 0 -menu $base.menu.wing
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "New Wing"]           -command myAppFileNew -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Geometry"]    -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Open Wing..."]       -command OpenLepFile
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing"]          -command myAppFileSave -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Save Wing As"]       -command myAppFileSaveAs -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "New Wing"]               -command NewWing
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Wing Geometry"]   -command ImportWingGeometry
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Open Wing..."]           -command OpenLepFile
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing"]              -command myAppFileSave -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Save Wing As"]           -command myAppFileSaveAs -state disabled
 
     # Edit menu
     $base.menu add cascade -label [::msgcat::mc "Edit"] -underline 0 -menu $base.menu.edit
@@ -619,29 +621,42 @@ proc SavePreProcFileAs { } {
 }
 
 
-proc myAppFileNew { } {
+proc NewWing { } {
+    source globalWingVars.tcl
     global myAppFileName
-    global g_LepDataChanged
-    if { $g_LepDataChanged } {
+    global g_GlobLepDataChanged
+
+    if { $g_GlobLepDataChanged } {
         PromptForWingSave
     }
 
-    #-----------------------------------------------------------------
-    # insert code for "new" operation
-    #-----------------------------------------------------------------
-    ### .t delete 1.0 end
+    initGlobalWingVars
 
     set myAppFileName ""
-    set g_LepDataChanged 0
- }
+    set g_GlobLepDataChanged 0
+    set g_GlobLepDataAvailable 0
+
+    global .topv.c_topv
+    .topv.c_topv delete "all"
+
+    global .tailv.c_tailv
+    .tailv.c_tailv delete "all"
+
+    global .sidev.c_sidev
+    .sidev.c_sidev delete "all"
+}
+
+proc ImportWingGeometry {} {
+    puts "ImportWingGeometry"
+}
 
 
 proc OpenLepFile { {FilePathName ""} } {
     # global myAppFileName
-    global g_LepDataChanged
+    global g_GlobLepDataChanged
     global g_DataFileTypes
 
-    if { $g_LepDataChanged } {
+    if { $g_GlobLepDataChanged } {
         PromptForWingSave
     }
 
@@ -658,12 +673,15 @@ proc OpenLepFile { {FilePathName ""} } {
             error "Cannot open file $FilePathName for reading"
         }
 
-        set g_LepDataChanged 0
+        set g_GlobLepDataChanged 0
     }
 
     DrawTopView
     DrawTailView
     DrawSideView
+
+    ##### temporary code below
+    set g_LepDataChanged 1
 }
 
 
@@ -720,7 +738,7 @@ proc PromptForPreProcFileOpenCancel { } {
 }
 
 proc PromptForWingSave { } {
-    set answer [tk_messageBox -title "myApp:  Do you want to save?" \
+    set answer [tk_messageBox -title "Do you want to save?" \
         -type yesno -icon question \
         -message "Do you want to save the changes?"]
     if { $answer == "yes" } {

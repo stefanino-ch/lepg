@@ -108,8 +108,8 @@ global              numCellsPreProc
 #  OUT:     n/a
 #----------------------------------------------------------------------
 proc initGlobalPreProcVars {} {
-    global g_PreProcDataAv
-    set g_PreProcDataAv 0
+    global g_PreProcDataAvailable
+    set g_PreProcDataAvailable 0
 
     global g_PreProcDataChanged
     set g_PreProcDataChanged 0

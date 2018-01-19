@@ -10,6 +10,30 @@
 #
 #---------------------------------------------------------------------
 
+global SingleWingVariables
+set SingleWingVariables { brandName wingName drawScale wingScale \
+                        numCells numRibsTot numRibsHalf alphaMax \
+                        washinMode alphaCenter paraType rotLeTriang \
+                        airfConfigNum  \
+                         strainMiniRibs numStrainPoints \
+                        strainCoef seamUp seamUpLe seamUpTe seamLo seamLoLe \
+                        seamLoTe seamRib seamVRib markSpace markRad markDisp \
+                        finesse posCop calage riserLength lineLength distTowP \
+                        lineMode numLinePlan brakeLength brakeDistr \
+                          numMiniRibs miniRibXSep miniRibYSep \
+                         numTeCol    \
+                         numLeCol \
+                        numAddRipPo  loadTot
+                    }
+
+# Complex wing variables to handle differently
+#                       airfoilName holeRibNum1 holeRibNum2 numHoles numLinePath
+#                       brake ribGeomLine ramLength
+#                       miniRib ribConfig teColRibNum numTeColMarks teColMarkNum
+#                       teColMarkYDist teColMarkXDist  leColRibNum
+#                       numleColMarks leColMarkNum leColMarkYDist leColMarkXDist
+#                       addRipPoX addRipPoY holeConfig skinTens
+
 #   old names       new name            old name
 global              brandName           # bname
 global              wingName            # wname
@@ -174,8 +198,72 @@ global              loadDistr           # cdis
 # global missingName  # loadDeform
 
 proc initGlobalWingVars {} {
-puts "create global wing vars"
-    source "lep_GlobalWingVars.tcl"
-    set numRibsHalf ""
-    set ribConfig(0,0) ""
+
+    global g_GlobLepDataAvailable
+    set g_GlobLepDataAvailable 0
+
+    global g_GlobLepDataChanged
+    set g_GlobLepDataChanged 0
+
+    global SingleWingVariables
+
+    foreach {e} $SingleWingVariables {
+        global $e
+        set $e ""
+    }
+
+    set airfoilName(0) 0
+
+    set i 1
+    while {$i <= 9} {
+        set ribGeomLine($i) 0
+        incr i
+    }
+
+    set holeRibNum1(0) 0
+    set holeRibNum2(0) 0
+    set numHoles(0) 0
+
+    global ribConfig
+    foreach i {1 2 3 4 6 7 9 10 11 12 14 15 16 17 18 19 20 21 50 51 55 56} {
+      # RibGeom
+      set ribconfig(0,$i) 0
+    }
+
+    global holeConfig
+    set holeConfig(0,0) 0
+
+    set numLinePath(0) 0
+
+    set brake(0,3) 0
+
+    set ramLength(0,0) 0
+
+    set miniRib(0,0) 0
+
+    set numTeColMarks(0) 0
+    set teColRibNum(0) 0
+    set teColMarkNum(0,0,) 0
+    set teColMarkYDist(0,0,) 0
+    set teColMarkXDist(0,0,) 0
+
+    set numLeColMarks(0) 0
+    set leColRibNum(0) 0
+    set leColMarkNum(0,0,) 0
+    set leColMarkYDist(0,0,) 0
+    set leColMarkXDist(0,0,) 0
+
+    set addRipPoX(0) 0
+    set addRipPoY(0) 0
+
+    global skinTens
+    set i 1
+    while {$i <= 6} {
+        foreach j {1 2 3 4} {
+            set skinTens($i,$j) 0
+        }
+        incr i
+    }
+
+    set loadDistr(0,0) 0
 }
