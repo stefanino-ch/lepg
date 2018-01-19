@@ -116,14 +116,12 @@ proc DoPreProcRun {} {
             close $fid
 
             append Status [::msgcat::mc "txt_findPreProcOutputFilesIn"]
-<<<<<<< HEAD
-=======
         }
         unix {
             # PERE: in the line below runPre.bat must be exchanged with the name of a shell script
             # The shell script must be placed in the ./process Directory
             # If you look into rupPre.bat you will see what the shell script must do
-            
+
             set fid [open "|./process/runPre.bat $PreProcPathName" r+]
 
             fconfigure $fid -buffering line
@@ -140,7 +138,6 @@ proc DoPreProcRun {} {
             close $fid
 
             append Status [::msgcat::mc "txt_findPreProcOutputFilesIn"]
->>>>>>> master
         }
         default {
             tk_messageBox -title [::msgcat::mc "Sorry"] -message [::msgcat::mc "Sorry, but there is some platform specific code missing."] -icon info -type ok -default ok
