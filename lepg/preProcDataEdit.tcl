@@ -280,10 +280,10 @@ proc editPreProcData {} {
 
     #-------------
     # buttons
-    button .epcw.btn.apply -width 10 -text "Apply" -command ApplyButtonPress
-    button .epcw.btn.ok -width 10 -text "OK" -command OkButtonPress
-    button .epcw.btn.cancel -width 10 -text "Cancel" -command CancelButtonPress
-    button .epcw.btn.help -width 10  -text "Help" -command HelpButtonPress
+    button .epcw.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_pPDE
+    button .epcw.btn.ok     -width 10 -text "OK"        -command OkButtonPress_pPDE
+    button .epcw.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_pPDE
+    button .epcw.btn.help   -width 10 -text "Help"      -command HelpButtonPress_pPDE
 
     grid .epcw.btn.apply -row 0 -column 0 -sticky e -padx 10 -pady 0
     grid .epcw.btn.ok -row 0 -column 1 -sticky e -padx 10 -pady 0
@@ -1051,7 +1051,7 @@ proc DrawVault {} {
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc ApplyButtonPress {} {
+proc ApplyButtonPress_pPDE {} {
     global g_LclPreProcDataNotApplied
 
     ExportLclVars
@@ -1070,7 +1070,8 @@ proc ApplyButtonPress {} {
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc OkButtonPress {} {
+proc OkButtonPress_pPDE {} {
+
     global .epcw
 
     global g_LclPreProcDataChanged
@@ -1094,7 +1095,7 @@ proc OkButtonPress {} {
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc CancelButtonPress {} {
+proc CancelButtonPress_pPDE {} {
 
     source "globalPreProcVars.tcl"
     global .epcw
@@ -1131,7 +1132,7 @@ proc CancelButtonPress {} {
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc HelpButtonPress {} {
+proc HelpButtonPress_pPDE {} {
     source "userHelp.tcl"
 
     displayHelpfile "geometry-window"

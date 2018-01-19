@@ -1,3 +1,14 @@
+#---------------------------------------------------------------------
+#
+#  Writes the data file for the preprocessor
+#
+#  Pere Casellas
+#  Stefan Feuz
+#  http://www.laboratoridenvol.com
+#
+#  General Public License GNU GPL 3.0
+#
+#---------------------------------------------------------------------
 
 global Separator
 set Separator "**********************************"

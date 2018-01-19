@@ -139,6 +139,9 @@ proc InitGui { root } {
     global g_PreProcDataAvailable
 
     source "preProcDataEdit.tcl"
+    source "PreProcRun.tcl"
+
+
     source "userHelp.tcl"
 
     #-----------------------------------------------------------------
@@ -191,20 +194,19 @@ proc InitGui { root } {
 
     # Geometry menu
     $base.menu add cascade -label [::msgcat::mc "Geometry"] -underline 0 -menu $base.menu.geometry
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Open Geometry..."]           -command OpenPreProcFile
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Edit Geometry"]              -command editPreProcData
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc Geometry"]              -command CalcGeometry       -state disabled
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc& read back Geometry"]   -state disabled
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Save Geometry"]              -command SavePreProcFile    -state disabled
-    $base.menu.geometry add command -underline 5 -label [::msgcat::mc "Save Geometry As"]           -command SavePreProcFileAs  -state disabled
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Open Geometry..."]   -command OpenPreProcFile
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Edit Geometry"]      -command editPreProcData
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc Geometry"]      -command preProcRun         -state disabled
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Save Geometry"]      -command SavePreProcFile    -state disabled
+    $base.menu.geometry add command -underline 5 -label [::msgcat::mc "Save Geometry As"]   -command SavePreProcFileAs  -state disabled
 
     # Wing menu
     $base.menu add cascade -label [::msgcat::mc "Wing"] -underline 0 -menu $base.menu.wing
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "New Wing"] -command myAppFileNew -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Geometry"] -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Open Wing..."] -command OpenLepFile
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing"] -command myAppFileSave -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Save Wing As"] -command myAppFileSaveAs -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "New Wing"]           -command myAppFileNew -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Geometry"]    -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Open Wing..."]       -command OpenLepFile
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing"]          -command myAppFileSave -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Save Wing As"]       -command myAppFileSaveAs -state disabled
 
     # Edit menu
     $base.menu add cascade -label [::msgcat::mc "Edit"] -underline 0 -menu $base.menu.edit
@@ -499,32 +501,6 @@ proc DrawSideView {} {
     }
 }
 
-proc CalcGeometry {} {
-
-    source "PreProcRun.tcl"
-
-    preProcRun
-
-
-}
-
-
-
-proc myAppFileNew { } {
-    global myAppFileName
-    global g_LepDataChanged
-    if { $g_LepDataChanged } {
-        PromptForWingSave
-    }
-
-    #-----------------------------------------------------------------
-    # insert code for "new" operation
-    #-----------------------------------------------------------------
-    ### .t delete 1.0 end
-
-    set myAppFileName ""
-    set g_LepDataChanged 0
- }
 
 proc OpenPreProcFile { {FilePathName ""} } {
     source "readPreProcDataFile.tcl"
@@ -566,36 +542,6 @@ proc OpenPreProcFile { {FilePathName ""} } {
         set g_PreProcDataAvailable      1
         set g_PreProcFilePathName $FilePathName
     }
-}
-
-proc OpenLepFile { {FilePathName ""} } {
-    # global myAppFileName
-    global g_LepDataChanged
-    global g_DataFileTypes
-
-    if { $g_LepDataChanged } {
-        PromptForWingSave
-    }
-
-    source "readLepDataFile.tcl"
-
-    if {$FilePathName == ""} {
-        set FilePathName [tk_getOpenFile -filetypes $g_DataFileTypes]
-    }
-
-    if {$FilePathName != ""} {
-        set ReturnValue [ readLepDataFile $FilePathName ]
-
-        if { $ReturnValue != 0 } {
-            error "Cannot open file $FilePathName for reading"
-        }
-
-        set g_LepDataChanged 0
-    }
-
-    DrawTopView
-    DrawTailView
-    DrawSideView
 }
 
 proc SavePreProcFile { {FilePathName ""} } {
@@ -655,7 +601,6 @@ proc SavePreProcFile { {FilePathName ""} } {
     #     set g_LepDataChanged 0
     # }
 }
-
 proc SavePreProcFileAs { } {
     global g_PreProcFileTypes
 
@@ -671,6 +616,54 @@ proc SavePreProcFileAs { } {
 
         SavePreProcFile $FilePathName
     }
+}
+
+
+proc myAppFileNew { } {
+    global myAppFileName
+    global g_LepDataChanged
+    if { $g_LepDataChanged } {
+        PromptForWingSave
+    }
+
+    #-----------------------------------------------------------------
+    # insert code for "new" operation
+    #-----------------------------------------------------------------
+    ### .t delete 1.0 end
+
+    set myAppFileName ""
+    set g_LepDataChanged 0
+ }
+
+
+proc OpenLepFile { {FilePathName ""} } {
+    # global myAppFileName
+    global g_LepDataChanged
+    global g_DataFileTypes
+
+    if { $g_LepDataChanged } {
+        PromptForWingSave
+    }
+
+    source "readLepDataFile.tcl"
+
+    if {$FilePathName == ""} {
+        set FilePathName [tk_getOpenFile -filetypes $g_DataFileTypes]
+    }
+
+    if {$FilePathName != ""} {
+        set ReturnValue [ readLepDataFile $FilePathName ]
+
+        if { $ReturnValue != 0 } {
+            error "Cannot open file $FilePathName for reading"
+        }
+
+        set g_LepDataChanged 0
+    }
+
+    DrawTopView
+    DrawTailView
+    DrawSideView
 }
 
 
@@ -930,17 +923,17 @@ proc SetPreProcBtnStatus { a e op } {
     global g_PreProcDataAvailable
 
     if {$g_PreProcDataAvailable == 0} {
-        $base.menu.geometry entryconfigure "Calc Geometry"              -state disabled
-        $base.menu.geometry entryconfigure "Calc& read back Geometry"   -state disabled
-        $base.menu.geometry entryconfigure "Save Geometry"              -state disabled
-        $base.menu.geometry entryconfigure "Save Geometry As"           -state disabled
+        $base.menu.geometry entryconfigure [::msgcat::mc "Calc Geometry"]    -state disabled
+        $base.menu.geometry entryconfigure [::msgcat::mc "Save Geometry"]    -state disabled
+        $base.menu.geometry entryconfigure [::msgcat::mc "Save Geometry As"] -state disabled
     } else {
-        $base.menu.geometry entryconfigure "Calc Geometry"              -state active
-        $base.menu.geometry entryconfigure "Calc& read back Geometry"   -state active
-        $base.menu.geometry entryconfigure "Save Geometry"              -state active
-        $base.menu.geometry entryconfigure "Save Geometry As"           -state active
+        $base.menu.geometry entryconfigure [::msgcat::mc "Calc Geometry"]    -state active
+        $base.menu.geometry entryconfigure [::msgcat::mc "Save Geometry"]    -state active
+        $base.menu.geometry entryconfigure [::msgcat::mc "Save Geometry As"] -state active
     }
 }
+
+
 
 #---------------------------------------------------------------------
 #  Execute the main procedure
