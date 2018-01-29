@@ -25,7 +25,7 @@ proc PreProcDirSelect {} {
     toplevel .ppds
     focus .ppds
 
-    wm protocol .ppds WM_DELETE_WINDOW { CancelButtonPress }
+    wm protocol .ppds WM_DELETE_WINDOW { CancelButtonPress_pPDS }
 
     wm title .ppds [::msgcat::mc "Setup Geometry Processor"]
 
@@ -46,7 +46,7 @@ proc PreProcDirSelect {} {
     ttk::label .ppds.name.name -text [::msgcat::mc "Geometry Processor"] -width 20
     ttk::entry .ppds.name.e_name -width 60 -textvariable lcl_PreProcPathName
 
-    button .ppds.name.change -width 10 -text [::msgcat::mc "Change..."] -command ChangeButtonPress
+    button .ppds.name.change -width 10 -text [::msgcat::mc "Change..."] -command ChangeButtonPress_pPDS
 
     grid .ppds.name.name -row 0 -column 0 -sticky e
     grid .ppds.name.e_name -row 0 -column 1 -sticky w
@@ -54,10 +54,10 @@ proc PreProcDirSelect {} {
 
     #-------------
     # buttons
-    button .ppds.btn.apply -width 10 -text "Apply" -command ApplyButtonPress
-    button .ppds.btn.ok -width 10 -text "OK" -command OkButtonPress
-    button .ppds.btn.cancel -width 10 -text "Cancel" -command CancelButtonPress
-    button .ppds.btn.help -width 10  -text "Help" -command HelpButtonPress
+    button .ppds.btn.apply -width 10 -text "Apply" -command ApplyButtonPress_pPDS
+    button .ppds.btn.ok -width 10 -text "OK" -command OkButtonPress_pPDS
+    button .ppds.btn.cancel -width 10 -text "Cancel" -command CancelButtonPress_pPDS
+    button .ppds.btn.help -width 10  -text "Help" -command HelpButtonPress_pPDS
 
     grid .ppds.btn.apply -row 0 -column 0 -sticky e -padx 10 -pady 0
     grid .ppds.btn.ok -row 0 -column 1 -sticky e -padx 10 -pady 0
@@ -108,14 +108,14 @@ proc ExportLclVars {} {
 }
 
 #----------------------------------------------------------------------
-#  ApplyButtonPress
+#  ApplyButtonPress_pPDS
 #  All action after the Apply button was pressed
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc ApplyButtonPress {} {
+proc ApplyButtonPress_pPDS {} {
     global g_LclPreProcDirDataNotApplied
 
     ExportLclVars
@@ -123,14 +123,14 @@ proc ApplyButtonPress {} {
 }
 
 #----------------------------------------------------------------------
-#  OkButtonPress
+#  OkButtonPress_pPDS
 #  All action after the Ok button was pressed
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc OkButtonPress {} {
+proc OkButtonPress_pPDS {} {
     global .ppds
 
     global g_LclPreProcDirDataChanged
@@ -145,14 +145,14 @@ proc OkButtonPress {} {
 }
 
 #----------------------------------------------------------------------
-#  CancelButtonPress
+#  CancelButtonPress_pPDS
 #  All action after the Cancel button was pressed
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc CancelButtonPress {} {
+proc CancelButtonPress_pPDS {} {
 
     global .ppds
 
@@ -180,14 +180,14 @@ proc CancelButtonPress {} {
 }
 
 #----------------------------------------------------------------------
-#  ChangeButtonPress
+#  ChangeButtonPress_pPDS
 #  All action after the Change button was pressed
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc ChangeButtonPress {} {
+proc ChangeButtonPress_pPDS {} {
     global .ppds
 
     global lcl_PreProcPathName
@@ -241,14 +241,14 @@ proc ChangeButtonPress {} {
 }
 
 #----------------------------------------------------------------------
-#  HelpButtonPress
+#  HelpButtonPress_pPDS
 #  Opens the helpfile for the current window
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc HelpButtonPress {} {
+proc HelpButtonPress_pPDS {} {
     source "userHelp.tcl"
 
     displayHelpfile "geometry-window"
