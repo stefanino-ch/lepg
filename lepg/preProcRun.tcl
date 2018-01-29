@@ -122,7 +122,7 @@ proc DoPreProcRun {} {
             # The shell script must be placed in the ./process Directory
             # If you look into rupPre.bat you will see what the shell script must do
 
-            set fid [open "|./process/runPre.bat $PreProcPathName" r+]
+            set fid [open "|./process/runPrelin.sh $PreProcPathName" r+]
 
             fconfigure $fid -buffering line
             while {[gets $fid line] != -1} {
