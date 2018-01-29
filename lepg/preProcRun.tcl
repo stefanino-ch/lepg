@@ -53,7 +53,7 @@ proc CreatePreProcRunWindow {} {
     #-------------
     #
     label  .pprun.status -width 80 -height 50 -background LightYellow  -justify left -textvariable Status
-    button .pprun.ok -width 10 -text "OK" -command OkButtonPress
+    button .pprun.ok -width 10 -text "OK" -command OkButtonPress_pPR
 
     grid .pprun.status -row 0 -column 0 -sticky nesw -padx 10 -pady 10
     grid .pprun.ok     -row 1 -column 0 -sticky e    -padx 10 -pady 10
@@ -122,7 +122,7 @@ proc DoPreProcRun {} {
             # The shell script must be placed in the ./process Directory
             # If you look into rupPre.bat you will see what the shell script must do
 
-            set fid [open "|./process/runPre.bat $PreProcPathName" r+]
+            set fid [open "|./process/runPrelin.sh $PreProcPathName" r+]
 
             fconfigure $fid -buffering line
             while {[gets $fid line] != -1} {
@@ -155,7 +155,7 @@ proc DoPreProcRun {} {
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc OkButtonPress {} {
+proc OkButtonPress_pPR {} {
     global .pprun
     destroy .pprun
     return 0

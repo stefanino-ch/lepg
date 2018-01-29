@@ -141,7 +141,7 @@ proc InitGui { root } {
     global g_PreProcDataAvailable
 
     source "preProcDataEdit.tcl"
-    source "PreProcRun.tcl"
+    source "preProcRun.tcl"
 
 
     source "userHelp.tcl"
