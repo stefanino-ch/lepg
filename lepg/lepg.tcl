@@ -66,7 +66,7 @@ set data_le(c0) 10.11
 #
 #  LEparagliding GUI
 set LepVersioNumber "2.52"
-set LepgNumber "V0.3.3"
+set LepgNumber "V0.3.4"
 set VersionDate   "2018-01-12"
 #
 #  Pere Casellas
@@ -207,8 +207,8 @@ proc InitGui { root } {
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "New Wing"]               -command NewWing
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Wing Geometry"]   -command ImportWingGeometry
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "Open Wing..."]           -command OpenLepFile
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing"]              -command myAppFileSave -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Save Wing As"]           -command myAppFileSaveAs -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing"]              -command SaveWingFile -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Save Wing As"]           -command SaveWingFileAs -state disabled
 
     # Edit menu
     $base.menu add cascade -label [::msgcat::mc "Edit"] -underline 0 -menu $base.menu.edit
@@ -620,9 +620,16 @@ proc SavePreProcFileAs { } {
     }
 }
 
-
+#----------------------------------------------------------------------
+#  NewWing
+#  Resets all global wing values
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: Scale Factor
+#----------------------------------------------------------------------
 proc NewWing { } {
-    source globalWingVars.tcl
+    source "globalWingVars.tcl"
     global myAppFileName
     global g_GlobLepDataChanged
 
@@ -646,13 +653,60 @@ proc NewWing { } {
     .sidev.c_sidev delete "all"
 }
 
+#----------------------------------------------------------------------
+#  ImportWingGeometry
+#  Is called upon selection of Wing->Import Wing menu
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: Scale Factor
+#----------------------------------------------------------------------
 proc ImportWingGeometry {} {
-    puts "ImportWingGeometry"
+    source "globalWingVars.tcl"
+    source "preProcFileImport.tcl"
+
+    global g_GlobLepDataChanged
+    global g_DataFileTypes
+
+    if { $g_GlobLepDataChanged } {
+        PromptForWingSave
+    }
+
+GO ON HERE
+    # get rid of old values
+
+    initGlobalWingVars
+
+
+    set FilePathName [tk_getOpenFile -filetypes $g_DataFileTypes]
+
+    if {$FilePathName != ""} {
+        set ReturnValue [ importPreProcFile $FilePathName ]
+
+        if { $ReturnValue != 0 } {
+            error "Cannot open file $FilePathName for reading"
+        }
+
+        set g_GlobLepDataChanged 0
+    }
+
+    # DrawTopView
+    # DrawTailView
+    # DrawSideView
+
 }
 
-
+#----------------------------------------------------------------------
+#  OpenLepFile
+#  Checks for unsaved data. Asks in case if current data should be saved.
+#  Opens a new wing file.
+#
+#  IN:      FilePathName    optional the name of the file to open
+#  OUT:     N/A
+#  Returns: Scale Factor
+#----------------------------------------------------------------------
 proc OpenLepFile { {FilePathName ""} } {
-    # global myAppFileName
+
     global g_GlobLepDataChanged
     global g_DataFileTypes
 
@@ -681,11 +735,18 @@ proc OpenLepFile { {FilePathName ""} } {
     DrawSideView
 
     ##### temporary code below
-    set g_LepDataChanged 1
+    set g_GlobLepDataChanged 1
 }
 
-
- proc myAppFileSave { {filename ""} } {
+#----------------------------------------------------------------------
+#  SaveWingFile
+#  Saves the wing file
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: Scale Factor
+#----------------------------------------------------------------------
+ proc SaveWingFile { {filename ""} } {
     global myAppFileName
     global g_LepDataChanged #BMA
     if { $filename == "" } {
@@ -707,13 +768,20 @@ proc OpenLepFile { {FilePathName ""} } {
     }
 }
 
+#----------------------------------------------------------------------
+#  SaveWingFileAs
+#  Saves the wing file under a new name
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: Scale Factor
+#----------------------------------------------------------------------
+proc SaveWingFileAs { } {
+    global g_DataFileTypes
 
-
-proc myAppFileSaveAs { } {
-    global myAppFileTypes
-    set filename [tk_getSaveFile -filetypes $myAppFileTypes]
+    set filename [tk_getSaveFile -filetypes $g_DataFileTypes]
     if { $filename != "" } {
-        myAppFileSave $filename
+        SaveWingFile $filename
     }
 }
 
@@ -742,7 +810,7 @@ proc PromptForWingSave { } {
         -type yesno -icon question \
         -message "Do you want to save the changes?"]
     if { $answer == "yes" } {
-        myAppFileSaveAs
+        SaveWingFileAs
     }
 }
 
