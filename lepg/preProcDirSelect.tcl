@@ -17,10 +17,10 @@ set g_LclPreProcDirDataNotApplied 0
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc PreProcDirSelect {} {
+proc PreProcDirSelect_pPDS {} {
     global lcl_PreProcPathName
 
-    SetLclVars
+    SetLclVars_pPDS
 
     toplevel .ppds
     focus .ppds
@@ -68,14 +68,14 @@ proc PreProcDirSelect {} {
 }
 
 #----------------------------------------------------------------------
-#  SetLclVars
+#  SetLclVars_pPDS
 #  Reads the global application values into the lcl ones
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc SetLclVars {} {
+proc SetLclVars_pPDS {} {
     global lcl_PreProcPathName
 
     global g_LclPreProcDirDataChanged
@@ -88,14 +88,14 @@ proc SetLclVars {} {
 }
 
 #----------------------------------------------------------------------
-#  ExportLclVars
+#  ExportLclVars_pPDS
 #  Exports the local vars back into the global ones
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc ExportLclVars {} {
+proc ExportLclVars_pPDS {} {
     global lcl_PreProcPathName
 
     global g_LclPreProcDirDataChanged
@@ -118,7 +118,7 @@ proc ExportLclVars {} {
 proc ApplyButtonPress_pPDS {} {
     global g_LclPreProcDirDataNotApplied
 
-    ExportLclVars
+    ExportLclVars_pPDS
     set g_LclPreProcDirDataNotApplied 0
 }
 
@@ -136,7 +136,7 @@ proc OkButtonPress_pPDS {} {
     global g_LclPreProcDirDataChanged
     global g_LclPreProcDirDataNotApplied
 
-    ExportLclVars
+    ExportLclVars_pPDS
 
     set g_LclPreProcDirDataChanged     0
     set g_LclPreProcDirDataNotApplied  0

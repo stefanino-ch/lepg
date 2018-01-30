@@ -274,7 +274,7 @@ proc InitGui { root } {
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "English"] -command {SetLanguage "en"}
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "German"] -command {SetLanguage "de"}
 
-    $base.menu.settings add cascade -label [::msgcat::mc "Geometry-Processor"] -underline 0 -command PreProcDirSelect
+    $base.menu.settings add cascade -label [::msgcat::mc "Geometry-Processor"] -underline 0 -command PreProcDirSelect_lepg
     $base.menu.settings add cascade -label [::msgcat::mc "Wing-Processor"] -underline 0 -command LepDirSelect -state disabled
 
     # Help menu
@@ -872,10 +872,10 @@ proc LepDirSelect {} {
 #---------------------------------------------------------------------
 #  pre-Processsor Directory selection
 #---------------------------------------------------------------------
-proc PreProcDirSelect {} {
+proc PreProcDirSelect_lepg {} {
     source "PreProcDirSelect.tcl"
 
-    PreProcDirSelect
+    PreProcDirSelect_pPDS
 }
 
 
