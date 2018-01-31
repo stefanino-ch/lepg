@@ -663,7 +663,7 @@ proc NewWing { } {
 #----------------------------------------------------------------------
 proc ImportWingGeometry {} {
     source "globalWingVars.tcl"
-    source "preProcFileImport.tcl"
+    source "preProcOutFileImport.tcl"
 
     global g_GlobLepDataChanged
     global g_DataFileTypes
@@ -672,16 +672,13 @@ proc ImportWingGeometry {} {
         PromptForWingSave
     }
 
-GO ON HERE
     # get rid of old values
-
     initGlobalWingVars
-
 
     set FilePathName [tk_getOpenFile -filetypes $g_DataFileTypes]
 
     if {$FilePathName != ""} {
-        set ReturnValue [ importPreProcFile $FilePathName ]
+        set ReturnValue [ importPreProcOutFile $FilePathName ]
 
         if { $ReturnValue != 0 } {
             error "Cannot open file $FilePathName for reading"
@@ -690,10 +687,9 @@ GO ON HERE
         set g_GlobLepDataChanged 0
     }
 
-    # DrawTopView
-    # DrawTailView
-    # DrawSideView
-
+    DrawTopView
+    DrawTailView
+    DrawSideView
 }
 
 #----------------------------------------------------------------------

@@ -56,50 +56,6 @@ proc DetectFileVersion {FilePathName} {
 }
 
 #----------------------------------------------------------------------
-#  JumpToSection
-#  Moves file pointer to a specific line
-#
-#  IN:  SectionId   Section id string to point to
-#       Offset      0: for file versions >1.4
-#                   1: for file versions <= 1.4
-#       File        File pointer
-#  OUT: File        File pointer
-#----------------------------------------------------------------------
-proc JumpToSection {SectionId Offset File} {
-
-    set IterationNum 1
-
-    # Seek from the current position until file end. If data file is read in
-    # sequencially only a fer reads should be needed
-
-    while {$IterationNum <= 2} {
-        while { [gets $File DataLine] >= 0 } {
-            if { [string first $SectionId $DataLine] >= 0 } {
-                # section id found and read
-                # file pointer stays on first data line
-
-                if {$Offset == 1} {
-                    # read an additional data line in old files
-                    gets $File DataLine
-                }
-
-                return [list 0 $File]
-            }
-        }
-
-        # If we arrive here File is potentially not read in the regular
-        # sequence. Reset file pointer and read again from start
-
-        # Set file pointer to the start of the file
-        seek $File 0 start
-        incr IterationNum
-    }
-
-    # SectionId not found
-    return [list -1 $File]
-}
-
-#----------------------------------------------------------------------
 #  readPreProcDataFile
 #  Reads the Pre Processor data file
 #
@@ -108,13 +64,15 @@ proc JumpToSection {SectionId Offset File} {
 #        0 : all cool file read, data should be available
 #----------------------------------------------------------------------
 proc readPreProcDataFile {FilePathName} {
+    source "preProcFileConstants.tcl"
+    source "fileReadHelpers.tcl"
 
     set ReturnValue -1
 
     # Check what file version to be read
     set FileVersion [DetectFileVersion $FilePathName]
 
-    source "preProcFileConstants.tcl"
+
     # open data file
     # as we know the version number=> file is there and readable=> we don't need to do error handling anymore
     set File [open $FilePathName r+]
@@ -130,7 +88,7 @@ proc readPreProcDataFile {FilePathName} {
 
     #---------
     # Wing name
-    lassign [JumpToSection [set c_WingNameSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_WingNameSect_pPFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -143,7 +101,7 @@ proc readPreProcDataFile {FilePathName} {
 
     #---------
     # Leading edge parameters
-    lassign [JumpToSection [set c_LeadingESect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_LeadingESect_pPFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -156,7 +114,7 @@ proc readPreProcDataFile {FilePathName} {
 
     #--------
     # Trailing edge parameters
-    lassign [JumpToSection [set c_TrailingESect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_TrailingESect_pPFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -169,7 +127,7 @@ proc readPreProcDataFile {FilePathName} {
 
     #--------------
     # Vault
-    lassign [JumpToSection [set c_VaultSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_VaultSect_pPFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -182,7 +140,7 @@ proc readPreProcDataFile {FilePathName} {
 
     #--------------
     # Cells distribution
-    lassign [JumpToSection [set c_CellsDistrSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_CellsDistrSect_pPFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue

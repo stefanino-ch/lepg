@@ -29,7 +29,7 @@ proc WriteFileHeader {File} {
 
     puts $File $Separator
     puts $File "LEPARAGLIDING"
-    puts -nonewline $File  $c_WingNameSectLbl
+    puts -nonewline $File  $c_WingNameSect_pPFC_Lbl
     puts $File "     v1.4"
     puts $File $Separator
 
@@ -70,7 +70,7 @@ proc WriteLeadingEdge {File} {
     global Separator
 
     puts $File $Separator
-    puts $File $c_LeadingESectLbl
+    puts $File $c_LeadingESect_pPFC_Lbl
     puts $File $Separator
 
     puts -nonewline $File "a1= "
@@ -107,7 +107,7 @@ proc WriteVault {File} {
     global Separator
 
     puts $File $Separator
-    puts $File $c_VaultSectLbl
+    puts $File $c_VaultSect_pPFC_Lbl
     puts $File $Separator
 
     puts $File $vaultType
@@ -153,7 +153,7 @@ proc WriteTrailingEdge {File} {
     global Separator
 
     puts $File $Separator
-    puts $File $c_TrailingESectLbl
+    puts $File $c_TrailingESect_pPFC_Lbl
     puts $File $Separator
 
     puts -nonewline $File "a1= "
@@ -194,7 +194,7 @@ proc WriteCellsDistrib {File} {
     global Separator
 
     puts $File $Separator
-    puts $File $c_CellsDistrSectLbl
+    puts $File $c_CellsDistrSect_pPFC_Lbl
     puts $File $Separator
 
     puts $File $cellDistrType

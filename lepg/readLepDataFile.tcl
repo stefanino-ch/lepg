@@ -1,9 +1,9 @@
 #----------------------------------------------------------------------
-#  proc DetectFileVersion
+#  proc DetectFileVersion_rLDF
 #
 #  Determines version of the lep data file to be read.
 #----------------------------------------------------------------------
-proc DetectFileVersion {FilePathName} {
+proc DetectFileVersion_rLDF {FilePathName} {
     source "lepFileConstants.tcl"
 
     # return values
@@ -59,50 +59,6 @@ proc DetectFileVersion {FilePathName} {
 }
 
 #----------------------------------------------------------------------
-#  proc JumpToSection
-#  Moves file pointer to a specific line
-#
-#  IN:  SectionId   Section id string to point to
-#       Offset      0: for file versions >2.6
-#                   1: for file versions <= 2.6
-#       File        File pointer
-#  OUT: File        File pointer
-#----------------------------------------------------------------------
-proc JumpToSection {SectionId Offset File} {
-
-    set IterationNum 1
-
-    # Seek from the current position until file end. If data file is read in
-    # sequencially only a fer reads should be needed
-
-    while {$IterationNum <= 2} {
-        while { [gets $File DataLine] >= 0 } {
-            if { [string first $SectionId $DataLine] >= 0 } {
-                # section id found and read
-                # file pointer stays on first data line
-
-                if {$Offset == 1} {
-                    # read an additional data line in old files
-                    gets $File DataLine
-                }
-
-                return [list 0 $File]
-            }
-        }
-
-        # If we arrive here File is potentially not read in the regular
-        # sequence. Reset file pointer and read again from start
-
-        # Set file pointer to the start of the file
-        seek $File 0 start
-        incr IterationNum
-    }
-
-    # SectionId not found
-    return [list -1 $File]
-}
-
-#----------------------------------------------------------------------
 #  proc readLepDataFile
 #  Reads the lep data file
 #
@@ -112,12 +68,14 @@ proc JumpToSection {SectionId Offset File} {
 #----------------------------------------------------------------------
 proc readLepDataFile {FilePathName} {
 
+    source "fileReadHelpers.tcl"
+    source "lepFileConstants.tcl"
+
     set ReturnValue -1
 
     # Check what file version to be read
-    set FileVersion [DetectFileVersion $FilePathName]
+    set FileVersion [DetectFileVersion_rLDF $FilePathName]
 
-    source "lepFileConstants.tcl"
     # open data file
     # as we know the version number=> file is there and readable=> we don't need to do error handling anymore
     set File [open $FilePathName r+]
@@ -133,7 +91,7 @@ proc readLepDataFile {FilePathName} {
 
     #---------
     # Geometry
-    lassign [JumpToSection [set c_GeometrySect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_GeometrySect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -146,7 +104,7 @@ proc readLepDataFile {FilePathName} {
 
     #--------
     # Airfoil
-    lassign [JumpToSection [set c_AirfoilSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_AirfoilSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -159,7 +117,7 @@ proc readLepDataFile {FilePathName} {
 
     #--------------
     # Anchor points
-    lassign [JumpToSection [set c_AnchorPoSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_AnchorPoSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -172,7 +130,7 @@ proc readLepDataFile {FilePathName} {
 
     #--------------
     # Airfoil holes
-    lassign [JumpToSection [set c_AirfoilHoSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_AirfoilHoSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -185,7 +143,7 @@ proc readLepDataFile {FilePathName} {
 
     #-------------
     # Skin tension
-    lassign [JumpToSection [set c_SkinTensSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_SkinTensSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -198,7 +156,7 @@ proc readLepDataFile {FilePathName} {
 
     #------------------
     # Sewing allowances
-    lassign [JumpToSection [set c_SewingSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_SewingSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -211,7 +169,7 @@ proc readLepDataFile {FilePathName} {
 
     #------
     # Marks
-    lassign [JumpToSection [set c_MarksSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_MarksSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -224,7 +182,7 @@ proc readLepDataFile {FilePathName} {
 
     #-----------------------
     # Global angle of attack
-    lassign [JumpToSection [set c_GlobalAoASect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_GlobalAoASect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -237,7 +195,7 @@ proc readLepDataFile {FilePathName} {
 
     #-----------------
     # Suspension lines
-    lassign [JumpToSection [set c_SuspLinesSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_SuspLinesSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -250,7 +208,7 @@ proc readLepDataFile {FilePathName} {
 
     #-------
     # Brakes
-    lassign [JumpToSection [set c_BrakesSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_BrakesSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -263,7 +221,7 @@ proc readLepDataFile {FilePathName} {
 
     #---------------------
     # Ramification lengths
-    lassign [JumpToSection [set c_RamLengthSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_RamLengthSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -276,7 +234,7 @@ proc readLepDataFile {FilePathName} {
 
     #----------------
     # H V and VH ribs => miniRib
-    lassign [JumpToSection [set c_MiniRibSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_MiniRibSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -289,7 +247,7 @@ proc readLepDataFile {FilePathName} {
 
     #----------------------
     # Trailing edge  colors
-    lassign [JumpToSection [set c_TeColSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_TeColSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -302,7 +260,7 @@ proc readLepDataFile {FilePathName} {
 
     #--------------------
     # Leading edge colors
-    lassign [JumpToSection [set c_LeColSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_LeColSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -315,7 +273,7 @@ proc readLepDataFile {FilePathName} {
 
     #----------------------
     # Additional rib points
-    lassign [JumpToSection [set c_AddRibPoSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_AddRibPoSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -328,7 +286,7 @@ proc readLepDataFile {FilePathName} {
 
     #--------------------------
     # Elastig lines corrections
-    lassign [JumpToSection [set c_ElLinesCorrSect$Suffix] $Offset $File] ReturnValue File
+    lassign [jumpToSection [set c_ElLinesCorrSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -350,7 +308,7 @@ proc readLepDataFile {FilePathName} {
 
 
 #----------------------------------------------------------------------
-#  proc ReadGeometrySectV2_52
+#  ReadGeometrySectV2_52
 #  Reads the Geometry section of a lep data file
 #  Applicable versions 2.52 ...
 #

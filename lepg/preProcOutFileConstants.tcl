@@ -1,7 +1,6 @@
 #---------------------------------------------------------------------
 #
-#  All code to import an output file of the preprocessor containing
-#  the wing geometry.
+#  Constant values for the preprocessor output file
 #
 #  Pere Casellas
 #  Stefan Feuz
@@ -15,10 +14,12 @@
 # Constant values
 #---------------------------------------------------------------------
 
+#---------
+# Geometry Matrix
+global c_GeometrySect_pPOFC_Lbl
+set c_GeometrySect_pPOFC_Lbl "1. Matrix of geometry"
 
-proc importPreProcFile {FilePathName} {
-
-puts "do the import"
-
-    return 0
-}
+#---------
+# Main Geometry
+global c_MainGeometrySect_pPOFC_Lbl
+set c_MainGeometrySect_pPOFC_Lbl "2. Main geometry paraglider data"

@@ -1,6 +1,6 @@
 #---------------------------------------------------------------------
 #
-#  Constant values for lep file handling
+#  Constant values for the preprocessor input file
 #
 #  Pere Casellas
 #  Stefan Feuz
@@ -14,45 +14,45 @@
 # Constant values
 #---------------------------------------------------------------------
 
-global c_VersionSectId
-set c_VersionSectId "section-id-00"
+global c_VersionSect_pPFC_Id
+set c_VersionSect_pPFC_Id "section-id-00"
 
 #---------
 # Wing name
-global c_WingNameSectLbl
-set c_WingNameSectLbl "GEOMETRY PRE-PROCESSOR"
-global c_WingNameSectId
-set c_WingNameSectId "section-id-10"
+global c_WingNameSect_pPFC_Lbl
+set c_WingNameSect_pPFC_Lbl "GEOMETRY PRE-PROCESSOR"
+global c_WingNameSect_pPFC_Id
+set c_WingNameSect_pPFC_Id "section-id-10"
 
 
 #---------
 # Leading edge parameters
-global c_LeadingESectLbl
-set c_LeadingESectLbl "1. Leading edge"
-global c_LeadingESectId
-set c_LeadingESectId "section-id-20"
+global c_LeadingESect_pPFC_Lbl
+set c_LeadingESect_pPFC_Lbl "1. Leading edge"
+global c_LeadingESect_pPFC_Id
+set c_LeadingESect_pPFC_Id "section-id-20"
 
 #--------
 # Trailing edge parameters
-global c_TrailingESectLbl
-set c_TrailingESectLbl "2. Trailing"
-global c_TrailingESectId
-set c_TrailingESectId "section-id-30"
+global c_TrailingESect_pPFC_Lbl
+set c_TrailingESect_pPFC_Lbl "2. Trailing"
+global c_TrailingESect_pPFC_Id
+set c_TrailingESect_pPFC_Id "section-id-30"
 
 
 #--------------
 # Vault parameters
-global c_VaultSectLbl
-set c_VaultSectLbl "3. Vault"
-global c_VaultSectId
-set c_VaultSectId "section-id-40"
+global c_VaultSect_pPFC_Lbl
+set c_VaultSect_pPFC_Lbl "3. Vault"
+global c_VaultSect_pPFC_Id
+set c_VaultSect_pPFC_Id "section-id-40"
 
 #--------------
 # Cells distrubution
-global c_CellsDistrSectLbl
-set c_CellsDistrSectLbl "4. Cells"
-global c_CellsDistrSectId
-set c_CellsDistrSectId "section-id-50"
+global c_CellsDistrSect_pPFC_Lbl
+set c_CellsDistrSect_pPFC_Lbl "4. Cells"
+global c_CellsDistrSect_pPFC_Id
+set c_CellsDistrSect_pPFC_Id "section-id-50"
 
 #---------------------------------------------------------------------
 # Global values

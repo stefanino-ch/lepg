@@ -46,7 +46,7 @@ proc CreatePreProcRunWindow {} {
     toplevel .pprun
     focus .pprun
 
-    wm protocol .pprun WM_DELETE_WINDOW { OkButtonPress }
+    wm protocol .pprun WM_DELETE_WINDOW { OkButtonPress_pPR }
 
     wm title .pprun [::msgcat::mc "Run Geometry Processor"]
 
