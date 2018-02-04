@@ -179,13 +179,21 @@ proc ReadMainGeometrySectV1_4  {File} {
     set DataLine  [gets $File]
     set numCells  [lindex $DataLine 1]
 
-    # in between line
+    # detect if there is an even or odd number of cells
     set DataLine  [gets $File]
+    set EvenOdd   [lindex $DataLine 0]
 
-    # number of ribs
-    set DataLine  [gets $File]
-    set numRibsTot [lindex $DataLine 3]
-    set numRibsTot [expr $numRibsTot * 2]
+    if { $EvenOdd == 0 } {
+        # Even number of cells
+        set DataLine  [gets $File]
+        set numRibsTot [lindex $DataLine 4]
+    } else {
+        # Odd number of cells
+        set DataLine  [gets $File]
+        set numRibsTot [lindex $DataLine 3]
+    }
+    # The preprocessor gives the number of ribs per side. We need tu multiply
+    set numRibsTot [expr $numRibsTot *2 ]
 
     return [list 0 $File]
 }
