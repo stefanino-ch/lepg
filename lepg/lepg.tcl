@@ -66,8 +66,8 @@ set data_le(c0) 10.11
 #
 #  LEparagliding GUI
 set LepVersioNumber "2.52"
-set LepgNumber "V0.3.4"
-set VersionDate   "2018-01-12"
+set LepgNumber "V0.3.5"
+set VersionDate   "2018-02-04"
 #
 #  Pere Casellas
 #  Stefan Feuz
@@ -170,20 +170,8 @@ proc InitGui { root } {
     menu $base.menu.file -tearoff 0
     menu $base.menu.geometry -tearoff 0
     menu $base.menu.wing -tearoff 0
-
-    menu $base.menu.edit -tearoff 0
-    menu $base.menu.planform -tearoff 0
-    menu $base.menu.vault -tearoff 0
-    menu $base.menu.airfoils -tearoff 0
-    menu $base.menu.calage -tearoff 0
-    menu $base.menu.skin -tearoff 0
-    menu $base.menu.vhribs -tearoff 0
-    menu $base.menu.lines -tearoff 0
-    menu $base.menu.colors -tearoff 0
-    menu $base.menu.parameters -tearoff 0
-    menu $base.menu.dxf -tearoff 0
-    menu $base.menu.txt -tearoff 0
-    menu $base.menu.run -tearoff 0
+    menu $base.menu.wing.colors -tearoff 0
+    menu $base.menu.wingplan -tearoff 0
     menu $base.menu.settings -tearoff 0
     menu $base.menu.settings.language -tearoff 0
     menu $base.menu.help -tearoff 0
@@ -197,76 +185,51 @@ proc InitGui { root } {
     # Geometry menu
     $base.menu add cascade -label [::msgcat::mc "Geometry"] -underline 0 -menu $base.menu.geometry
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Open Geometry..."]   -command OpenPreProcFile
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Edit Geometry"]      -command editPreProcData
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc Geometry"]      -command preProcRun         -state disabled
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Save Geometry"]      -command SavePreProcFile    -state disabled
     $base.menu.geometry add command -underline 5 -label [::msgcat::mc "Save Geometry As"]   -command SavePreProcFileAs  -state disabled
+    $base.menu.geometry add separator
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Edit Geometry"]      -command editPreProcData
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc Geometry"]      -command preProcRun         -state disabled
+
 
     # Wing menu
     $base.menu add cascade -label [::msgcat::mc "Wing"] -underline 0 -menu $base.menu.wing
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "New Wing"]               -command NewWing
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Wing Geometry"]   -command ImportWingGeometry
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "Open Wing..."]           -command OpenLepFile
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing"]              -command SaveWingFile -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Save Wing As"]           -command SaveWingFileAs -state disabled
-
-    # Edit menu
-    $base.menu add cascade -label [::msgcat::mc "Edit"] -underline 0 -menu $base.menu.edit
-
-    $base.menu.edit add command -underline 2 -label [::msgcat::mc "Cut"] -command myAppEditCut
-    $base.menu.edit add command -underline 0 -label [::msgcat::mc "Copy"] -command myAppEditCopy
-    $base.menu.edit add command -underline 0 -label [::msgcat::mc "Paste"] -command myAppEditPaste
-
-    # Planform menu
-    $base.menu add cascade -label [::msgcat::mc "Planform"] -underline 0 -menu $base.menu.planform
-
-    $base.menu.planform add command -underline 0 -label [::msgcat::mc "Geometry matrix inspection"] -command GeometryMatrixWindow -state disabled
-
-    # Vault menu
-    $base.menu add cascade -label [::msgcat::mc "Vault"] -underline 0 -menu $base.menu.vault
-
-    # Airfolils menu
-    $base.menu add cascade -label [::msgcat::mc "Airfoils"] -underline 0 -menu $base.menu.airfolils
-
-    # Calage menu
-    $base.menu add cascade -label [::msgcat::mc "Calage"] -underline 0 -menu $base.menu.calage
-
-    # Skin menu
-    $base.menu add cascade -label [::msgcat::mc "Skin"] -underline 0 -menu $base.menu.skin
-
-    # VH-ribs menu
-    $base.menu add cascade -label [::msgcat::mc "VH-ribs"] -underline 0 -menu $base.menu.vhribs
-
-    # Lines menu
-    $base.menu add cascade -label [::msgcat::mc "Lines"] -underline 0 -menu $base.menu.lines
-
-    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Basic"] -state disabled
-    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines A"] -state disabled
-    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines B"] -state disabled
-    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines C"] -state disabled
-    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines D"] -state disabled
-    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Lines E"] -state disabled
-    $base.menu.lines add command -underline 0 -label [::msgcat::mc "Brakes"] -state disabled
-
-    # Colors menu
-    $base.menu add cascade -label [::msgcat::mc "Colors"] -underline 0 -menu $base.menu.colors
-
-    # Parameters menu
-    $base.menu add cascade -label [::msgcat::mc "Parameters"] -underline 0 -menu $base.menu.parameters
-
-    # DXF menu
-    $base.menu add cascade -label [::msgcat::mc "DXF"] -underline 0 -menu $base.menu.dxf
-
-    # txt menu
-    $base.menu add cascade -label [::msgcat::mc "txt"] -underline 0 -menu $base.menu.txt
+    $base.menu.wing add separator
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Wing Geometry"]   -command ImportWingGeometry
+    $base.menu.wing add separator
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Basic Data"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Airfolils"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Anchor Points"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Airfoil Holes"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Skin Tension"]             -command xxx -state disabled
 
 
-    # Run menu
-    $base.menu add cascade -label [::msgcat::mc "Run"] -underline 0 -menu $base.menu.run
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Global AoA"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Suspension Lines"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Brakes"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Ramification lengths"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "HV-VH Ribs"]             -command xxx -state disabled
+    $base.menu.wing add cascade -label [::msgcat::mc "Colors"] -menu $base.menu.wing.colors
+    $base.menu.wing.colors add command -underline 5 -label [::msgcat::mc "Leading Edge"]             -command xxx -state disabled
+    $base.menu.wing.colors add command -underline 5 -label [::msgcat::mc "Trailing Edge"]             -command xxx -state disabled
 
-    $base.menu.run add cascade -label [::msgcat::mc "pre-Processor"] -underline 0 -command {RunLep "0"} -state disabled
-    $base.menu.run add cascade -label [::msgcat::mc "lep"] -underline 0 -command {RunLep "1"} -state disabled
-    $base.menu.run add cascade -label [::msgcat::mc "Both"] -underline 0 -command {RunLep "2"} -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Additional rib points"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Elastic lines corr"]             -command xxx -state disabled
+
+
+    # Wing plan menu
+    $base.menu add cascade -label [::msgcat::mc "Wing plan"] -underline 0 -menu $base.menu.wingplan
+    $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "Sewing Allowances"]             -command xxx -state disabled
+    $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "Marks"]             -command xxx -state disabled
+    $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "DXF"]             -command xxx -state disabled
+
+
+
+
 
     # Settings menu
     $base.menu add cascade -label [::msgcat::mc "Settings"] -underline 0 -menu $base.menu.settings
@@ -856,64 +819,6 @@ proc HelpAbout { } {
 
 }
 
-#----------------------------------------------------------------------
-#   proc GeometryMatrixWindow
-#
-#   Prints geometry matrix for inspect and edit
-#----------------------------------------------------------------------
-proc GeometryMatrixWindow { } {
-
-    source "globalWingVars.tcl"
-
-    #myApp_lep_r
-
-    set w .text
-    catch {destroy $w}
-    toplevel $w
-    focus $w
-    wm title $w "Geometry matrix inspection and edit"
-    wm geometry $w 600x300+50+50
-
-    frame $w.f1 -width 600 -height 50 -bd 2 -relief groove
-    frame $w.f2 -width 600 -height 300 -bd 2 -relief groove -bg yellow
-    pack $w.f1 $w.f2 -side top
-
-    text $w.f2.text -width 600 -height 400 -relief sunken -bd 2 -setgrid 1 -height 30
-#    scrollbar $w.scroll -command $w.text yview
-#    pack $w.scroll -side right -fill y
-#    pack $w.f2.text -fill both
-
-    pack $w.f2.text -side top
-
-    # Se inserta el texto en el widget
-    set i 1
-    while {$i <= $numRibsHalf} {
-    $w.f2.text insert $i.0 $ribGeomLine($i)\n
-    incr i }
-
-    button $w.ok -text " OK " -command {destroy .text}
-    pack $w.ok -padx 20 -pady 10
-
-}
-
-#---------------------------------------------------------------------
-#  Cut/Copy/Paste
-#
-#  These procedures generate events
-#  for all Tk Widgets in the GUI
-#---------------------------------------------------------------------
-proc myAppEditCut { } {
-    event generate [focus] <<Cut>>
-}
-
-proc myAppEditCopy { } {
-    event generate [focus] <<Copy>>
-}
-
-proc myAppEditPaste { } {
-    event generate [focus] <<Paste>>
-}
-
 proc myAppSearchBindingsAndEval {event bindtags script} {
     foreach tag $bindtags {
         foreach sequence [bind $tag] {
@@ -960,16 +865,6 @@ proc PreProcDirSelect_lepg {} {
     PreProcDirSelect_pPDS
 }
 
-
-proc RunLep {RunLevel} {
-
-    # RunLevel 0: pre-Processor
-    # RunLevel 1: lep
-    # RunLevel 2: both
-
-    puts "RunLep level $RunLevel"
-
-}
 
 proc SetGlobalVarTrace {} {
     global g_GlobPreProcDataChanged
