@@ -47,6 +47,7 @@ proc ToRad { Degrees } {
 #----------------------------------------------------------------------
 proc editPreProcData {} {
     source "globalPreProcVars.tcl"
+    source "windowExplanationsHelper.tcl"
 
     global .epcw
     global .epcw.c_le
@@ -55,7 +56,7 @@ proc editPreProcData {} {
 
     global VaultMode1
     global VaultMode2
-    global HelpText
+    global HelpText_pPDE
 
     global g_PreProcDataAvailable
 
@@ -115,7 +116,7 @@ proc editPreProcData {} {
     ttk::label .epcw.name.wname -text [::msgcat::mc "Wing name"] -width 12
     ttk::entry .epcw.name.e_wname -width 16 -textvariable lcl_wingNamePreProc
 
-    SetHelpBind .epcw.name.e_wname wingNamePreProc
+    SetHelpBind .epcw.name.e_wname wingNamePreProc HelpText_pPDE
 
     grid .epcw.name.wname -row 0 -column 0 -sticky e
     grid .epcw.name.e_wname -row 0 -column 1 -sticky w
@@ -134,11 +135,11 @@ proc editPreProcData {} {
     ttk::entry .epcw.le.e_xmLE -width 8 -textvariable lcl_xmLE
     ttk::entry .epcw.le.e_c0LE -width 8 -textvariable lcl_c0LE
 
-    SetHelpBind .epcw.le.e_a1LE a1LE
-    SetHelpBind .epcw.le.e_b1LE b1LE
-    SetHelpBind .epcw.le.e_x1LE x1LE
-    SetHelpBind .epcw.le.e_xmLE xmLE
-    SetHelpBind .epcw.le.e_c0LE c0LE
+    SetHelpBind .epcw.le.e_a1LE a1LE HelpText_pPDE
+    SetHelpBind .epcw.le.e_b1LE b1LE HelpText_pPDE
+    SetHelpBind .epcw.le.e_x1LE x1LE HelpText_pPDE
+    SetHelpBind .epcw.le.e_xmLE xmLE HelpText_pPDE
+    SetHelpBind .epcw.le.e_c0LE c0LE HelpText_pPDE
 
 
     grid .epcw.le.a1LE -row 0 -column 0 -sticky e
@@ -168,12 +169,12 @@ proc editPreProcData {} {
     ttk::entry .epcw.te.e_c0TE -width 8 -textvariable lcl_c0TE
     ttk::entry .epcw.te.e_y0TE -width 8 -textvariable lcl_y0TE
 
-    SetHelpBind .epcw.te.e_a1TE a1TE
-    SetHelpBind .epcw.te.e_b1TE b1TE
-    SetHelpBind .epcw.te.e_x1TE x1TE
-    SetHelpBind .epcw.te.e_xmTE xmTE
-    SetHelpBind .epcw.te.e_c0TE c0TE
-    SetHelpBind .epcw.te.e_y0TE y0TE
+    SetHelpBind .epcw.te.e_a1TE a1TE HelpText_pPDE
+    SetHelpBind .epcw.te.e_b1TE b1TE HelpText_pPDE
+    SetHelpBind .epcw.te.e_x1TE x1TE HelpText_pPDE
+    SetHelpBind .epcw.te.e_xmTE xmTE HelpText_pPDE
+    SetHelpBind .epcw.te.e_c0TE c0TE HelpText_pPDE
+    SetHelpBind .epcw.te.e_y0TE y0TE HelpText_pPDE
 
     grid .epcw.te.a1TE -row 0 -column 0 -sticky e
     grid .epcw.te.e_a1TE -row 0 -column 1 -sticky w
@@ -206,23 +207,23 @@ proc editPreProcData {} {
     ttk::entry .epcw.vault.e_x1Vault -width 8 -state $VaultMode1 -textvariable lcl_x1Vault
     ttk::entry .epcw.vault.e_xmVault -width 8 -state $VaultMode1 -textvariable lcl_c1Vault
 
-    SetHelpBind .epcw.vault.e_a1Vault a1Vault
-    SetHelpBind .epcw.vault.e_b1Vault b1Vault
-    SetHelpBind .epcw.vault.e_x1Vault x1Vault
-    SetHelpBind .epcw.vault.e_xmVault xmVault
+    SetHelpBind .epcw.vault.e_a1Vault a1Vault HelpText_pPDE
+    SetHelpBind .epcw.vault.e_b1Vault b1Vault HelpText_pPDE
+    SetHelpBind .epcw.vault.e_x1Vault x1Vault HelpText_pPDE
+    SetHelpBind .epcw.vault.e_xmVault xmVault HelpText_pPDE
 
     foreach i {1 2 3 4} {
         # radius
         ttk::label .epcw.vault.rVault$i -text [::msgcat::mc "R$i \[cm\]"]  -state $VaultMode2
         ttk::entry .epcw.vault.e_rVault$i -width 8 -state $VaultMode2 -textvariable lcl_radVault($i)
 
-        SetHelpBind .epcw.vault.e_rVault$i radVault
+        SetHelpBind .epcw.vault.e_rVault$i radVault HelpText_pPDE
 
         # ang
         ttk::label .epcw.vault.angVault$i -text [::msgcat::mc "Angle$i \[deg\]"]   -state $VaultMode2
         ttk::entry .epcw.vault.e_angVault$i -width 8   -state $VaultMode2  -textvariable lcl_angVault($i)
 
-        SetHelpBind .epcw.vault.e_angVault$i angVault
+        SetHelpBind .epcw.vault.e_angVault$i angVault HelpText_pPDE
     }
 
     grid .epcw.vault.ra -row 0 -column 0 -columnspan 3 -sticky w
@@ -262,8 +263,8 @@ proc editPreProcData {} {
     ttk::entry .epcw.cells.e_cellDistrCoeff -width 8 -textvariable lcl_cellDistrCoeff
     ttk::entry .epcw.cells.e_numCellsPreProc -width 8 -textvariable lcl_numCellsPreProc
 
-    SetHelpBind .epcw.cells.e_cellDistrCoeff cellDistrCoeff
-    SetHelpBind .epcw.cells.e_numCellsPreProc numCellsPreProc
+    SetHelpBind .epcw.cells.e_cellDistrCoeff cellDistrCoeff HelpText_pPDE
+    SetHelpBind .epcw.cells.e_numCellsPreProc numCellsPreProc HelpText_pPDE
 
     grid .epcw.cells.ra -row 0 -column 0 -columnspan 2 -sticky w
     grid .epcw.cells.rb -row 1 -column 0 -columnspan 2 -sticky w
@@ -275,7 +276,7 @@ proc editPreProcData {} {
 
     #-------------
     # explanations
-    label .epcw.help.e_help -width 40 -height 3 -background LightYellow -textvariable HelpText
+    label .epcw.help.e_help -width 40 -height 3 -background LightYellow -textvariable HelpText_pPDE
     grid .epcw.help.e_help -row 0 -column 0 -sticky nesw -padx 10 -pady 10
 
     #-------------
@@ -530,40 +531,6 @@ proc UnsetGlobalPreProcVarTrace {} {
     global g_PreProcDataAvailable
 
     trace remove variable g_PreProcDataAvailable write { SetLclVarsAndDraw }
-}
-
-
-
-#----------------------------------------------------------------------
-#  proc SetHelpBind
-#  Initial setup of the bind functions for the input fields
-#
-#  IN:      Element for which the bind must be setup
-#           VarName name of the field
-#  OUT:     N/A
-#----------------------------------------------------------------------
-proc SetHelpBind { Element VarName } {
-    bind $Element <Enter> [list SetHelpText 1 $VarName]
-    bind $Element <Leave> [list SetHelpText 0 $VarName]
-}
-
-#----------------------------------------------------------------------
-#  SetHelpText
-#  Controls the help text display in the Explanations window
-#
-#  IN:      Focus   The value indicating if the field has currently the focus or note
-#           Var     Name of the Field
-#  OUT:     N/A
-#----------------------------------------------------------------------
-proc SetHelpText { Focus Var } {
-    global HelpText
-
-    if { $Focus == 1} {
-        # display a help text
-        set HelpText [::msgcat::mc $Var]
-    } else {
-        set HelpText ""
-    }
 }
 
 #----------------------------------------------------------------------

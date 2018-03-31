@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	lep-gui documentation
+	Pere Casellas (www.laboratoridenvol.com), Stefan Feuz
+	General Public License GNU GPL3.0
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "../../dtd/technicalContent/dtd/concept.dtd">
+<concept id="en-wing-basic-data" xml:lang="en-us">
+	<title>Basic properties of the wing</title>
+	<shortdesc>Detailed explanation about the Wing Basic Data window.</shortdesc>
+	<conbody>
+		<p>Some basic parameters of the wing can be edited in here. </p>
+		<image href="../image/wing-basic-data.jpg" alt="Wing Basic Data window" height="325" width="356"/>
+		<p> </p>
+	</conbody>
+	<related-links>
+		<link href="editWindowIntroduction.xml" format="dita" type="concept"></link>
+	</related-links>
+</concept>

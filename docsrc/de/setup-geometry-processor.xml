@@ -10,7 +10,7 @@
 	<title>Setup Geometrie Prozessor Fenster</title>
 	<shortdesc>Detaillierte Erklärungen zum Setup Geometrie Prozessor Fenster. </shortdesc>
 	<conbody>
-		<p>Das Geometrie Prozessor ist ein externes Programm welches via lepg gestartet werden kann. Da der Speicherort oder die Version ändern kann muss initial konfiguriert werden welcher Prozessor verwendet werden soll. </p>
+		<p>Der Geometrie Prozessor ist ein externes Programm welches via lepg gestartet werden kann. Da der Speicherort oder die Version ändern kann muss initial konfiguriert werden welcher Prozessor verwendet werden soll. </p>
 		<image href="../image/setup-geometry-processor.jpg" alt="Edit Geometry Window" height="190" width="597"/>
 		<p>Innerhalb des lepg Installationsverzeichnisses ist ein Unterverzeichnis mit dem Namen "pre". In diesem Unterverzeichnis wird eine kompatible Version des Geometrie Prozessors mitgeliefert. Der Name des Geometrie Prozessors müsste gleich oder ahnlich wie "pre-1.4.exe" sein.</p>
 		<p> </p>

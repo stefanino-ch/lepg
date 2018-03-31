@@ -1,4 +1,6 @@
 ﻿::msgcat::mcmset de {
+"Explanations"                  "Erklärungen"
+
 "##### File Menu"               "##### Datei Menu"
 "Exit"                          "Beenden"
 
@@ -17,6 +19,7 @@
 "Open Wing..."                  "Flügel öffnen..."
 "Save Wing"                     "Flügel speichern"
 "Save Wing As"                  "Flügel speichern unter"
+"Basic Data"                    "Basisdaten"
 
 "##### Edit Menu"               "##### Bearbeiten Menu"
 "Edit"                          "Bearbeiten"
@@ -140,4 +143,16 @@
 
 "txt_writePreProcInputData" "Schreibe Daten für Geometrie Prozessor..."
 "txt_findPreProcOutputFilesIn" "Berechnete Daten sind im ....\\lepg\\process Verzeichnis"
+
+"##### Basic Data Window"    "##### Fenster Basisdaten"
+"Wing Basic Data"       "Flügel Basisdaten"
+"Brand Name"            "Name des Herstellers"
+"Wing Name"             "Name des Flügels"
+"Draw Scale"            "Zeichnungsmasstab"
+"Wing Scale"            "Flügelmasstab"
+
+"brandName"             "Herstellername"
+"wingName"              "Flügelname"
+"drawScale"             "Zeichnungsmasstab"
+"wingScale"             "Flügelmasstab"
 }

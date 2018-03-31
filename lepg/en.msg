@@ -29,6 +29,11 @@
 "cellDistrCoeff"        "0.0 (proportional)... 1.0 (uniform)"
 "numCellsPreProc"       "Total number of cells"
 
+"brandName"             "Name of your brand"
+"wingName"              "Name of your wing"
+"drawScale"             "Scale of your drawings"
+"wingScale"             "Scale of your wing"
+
 "txt_writePreProcInputData" "Writing input data for processor..."
 "txt_findPreProcOutputFilesIn" "Output files can be found in ....\\lepg\\process directory"
 }

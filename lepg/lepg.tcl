@@ -42,7 +42,7 @@ set g_PreProcDataAvailable 0
 
 set g_GlobLepDataChanged 0
 
-set g_GlobLepDataAvailable 0
+set g_WingDataAvailable 0
 
 set g_PreProcFileTypes {
     {{Geometry files}   {.txt}}
@@ -54,6 +54,12 @@ set g_PreProcFilePathName ""
 set g_DataFileTypes {
     {{Data files}   {.txt}}
 }
+
+set g_WingDataAvailable 0
+                                    # set to 1 if wing data is available for edit
+
+set g_WingDataChanged 0
+                                    # set to 1 if there is unsaved wing data
 
 set .topv.c_topv ""
 set .tailv.c_tailv ""
@@ -139,6 +145,7 @@ proc InitGui { root } {
     global LepVersioNumber
     global LepgNumber
     global g_PreProcDataAvailable
+    global g_WingDataAvailable
 
     source "preProcDataEdit.tcl"
     source "preProcRun.tcl"
@@ -153,6 +160,7 @@ proc InitGui { root } {
     ::msgcat::mcload [file join [file dirname [info script]]]
 
     trace variable g_PreProcDataAvailable w { SetPreProcBtnStatus }
+    trace variable g_WingDataAvailable    w { SetWingBtnStatus }
 
     #-----------------------------------------------------------------
     #  treat root window "." as a special case
@@ -201,7 +209,7 @@ proc InitGui { root } {
     $base.menu.wing add separator
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Wing Geometry"]   -command ImportWingGeometry
     $base.menu.wing add separator
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Basic Data"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Basic Data"]             -command OpenWingBasicDataEdit -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Airfolils"]             -command xxx -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Anchor Points"]             -command xxx -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Airfoil Holes"]             -command xxx -state disabled
@@ -226,10 +234,6 @@ proc InitGui { root } {
     $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "Sewing Allowances"]             -command xxx -state disabled
     $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "Marks"]             -command xxx -state disabled
     $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "DXF"]             -command xxx -state disabled
-
-
-
-
 
     # Settings menu
     $base.menu add cascade -label [::msgcat::mc "Settings"] -underline 0 -menu $base.menu.settings
@@ -595,6 +599,7 @@ proc NewWing { } {
     source "globalWingVars.tcl"
     global myAppFileName
     global g_GlobLepDataChanged
+    global g_WingDataAvailable
 
     if { $g_GlobLepDataChanged } {
         PromptForWingSave
@@ -604,7 +609,7 @@ proc NewWing { } {
 
     set myAppFileName ""
     set g_GlobLepDataChanged 0
-    set g_GlobLepDataAvailable 0
+    set g_WingDataAvailable 1
 
     global .topv.c_topv
     .topv.c_topv delete "all"
@@ -629,6 +634,7 @@ proc ImportWingGeometry {} {
     source "preProcOutFileImport.tcl"
 
     global g_GlobLepDataChanged
+    global g_WingDataAvailable
     global g_DataFileTypes
 
     if { $g_GlobLepDataChanged } {
@@ -650,6 +656,8 @@ proc ImportWingGeometry {} {
         set g_GlobLepDataChanged 0
     }
 
+    set g_WingDataAvailable 1
+
     DrawTopView
     DrawTailView
     DrawSideView
@@ -668,6 +676,7 @@ proc OpenLepFile { {FilePathName ""} } {
 
     global g_GlobLepDataChanged
     global g_DataFileTypes
+    global g_WingDataAvailable
 
     if { $g_GlobLepDataChanged } {
         PromptForWingSave
@@ -688,6 +697,8 @@ proc OpenLepFile { {FilePathName ""} } {
 
         set g_GlobLepDataChanged 0
     }
+
+    set g_WingDataAvailable 1
 
     DrawTopView
     DrawTailView
@@ -771,6 +782,12 @@ proc PromptForWingSave { } {
     if { $answer == "yes" } {
         SaveWingFileAs
     }
+}
+
+proc OpenWingBasicDataEdit { } {
+    source "wingBasicDataEdit.tcl"
+
+    wingBasicDataEdit
 }
 
 proc myAppExit { } {
@@ -907,6 +924,18 @@ proc SetPreProcBtnStatus { a e op } {
         $base.menu.geometry entryconfigure [::msgcat::mc "Calc Geometry"]    -state active
         $base.menu.geometry entryconfigure [::msgcat::mc "Save Geometry"]    -state active
         $base.menu.geometry entryconfigure [::msgcat::mc "Save Geometry As"] -state active
+    }
+}
+
+proc SetWingBtnStatus { a e op } {
+
+    global base
+    global g_WingDataAvailable
+
+    if {$g_WingDataAvailable == 0} {
+        $base.menu.wing entryconfigure [::msgcat::mc "Basic Data"]    -state disabled
+    } else {
+        $base.menu.wing entryconfigure [::msgcat::mc "Basic Data"]    -state active
     }
 }
 

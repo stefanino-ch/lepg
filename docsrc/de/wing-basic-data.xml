@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	lep-gui documentation
+	Pere Casellas (www.laboratoridenvol.com), Stefan Feuz
+	General Public License GNU GPL3.0
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "../../dtd/technicalContent/dtd/concept.dtd">
+<concept id="de-wing-basic-data" xml:lang="en-us">
+	<title>Grundeigenschaften des Flügels</title>
+	<shortdesc>Detaillierte Erklärungen zum Flügel Basisdaten Fenster. </shortdesc>
+	<conbody>
+		<p>Einige wenige Basisdaten des Flügels können in diesem Fester angepasst werden.</p>
+		<image href="../image/wing-basic-data.jpg" alt="Wing Basic Data window" height="325" width="356"/>
+		<p> </p>
+	</conbody>
+	<related-links>
+		<link href="editWindowIntroduction.xml" format="dita" type="concept"></link>
+	</related-links>
+</concept>
