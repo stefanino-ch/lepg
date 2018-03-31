@@ -70,7 +70,7 @@ proc editPreProcData {} {
     toplevel .epcw
     focus .epcw
 
-    wm protocol .epcw WM_DELETE_WINDOW { CancelButtonPress }
+    wm protocol .epcw WM_DELETE_WINDOW { CancelButtonPress_pPDE }
 
     wm title .epcw [::msgcat::mc "Edit Geometry data"]
 
