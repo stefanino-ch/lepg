@@ -1,7 +1,18 @@
+#---------------------------------------------------------------------
+#
+#  Window to edit the basic wing data
+#
+#  Pere Casellas
+#  Stefan Feuz
+#  http://www.laboratoridenvol.com
+#
+#  General Public License GNU GPL 3.0
+#
+#---------------------------------------------------------------------
+
 #-------
 # Globals
 global .wbde
-# global g_WingDataChanged
 
 global  Lcl_wBDE_DataChanged
 set     Lcl_wBDE_DataChanged    0
@@ -21,6 +32,9 @@ set     AllGlobalVars_wBDE {brandName wingName drawScale wingScale}
 #----------------------------------------------------------------------
 proc wingBasicDataEdit {} {
     source "windowExplanationsHelper.tcl"
+
+    global .wbde
+
     global Lcl_brandName
     global Lcl_wingName
     global Lcl_drawScale

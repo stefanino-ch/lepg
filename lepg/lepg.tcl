@@ -25,24 +25,15 @@ package require lepConfigFile
 #---------------------------------------------------------------------
 #  Globals
 #---------------------------------------------------------------------
-set myAppFileName ""
+
 
 # PreProcessor related values
-set g_GlobPreProcDataChanged 0
-                                    # set to 1 if PreProc data in main window
-                                    # has been changed
-set g_LclPreProcDataChanged 0
-                                    # set to 1 if PreProc data in Edit PreProc
-                                    # window has been changed
-set g_LclPreProcDataNotApplied 0
-                                    # set to 1 if PreProc data in Edit PreProc
-                                    # window has been changed and not applied
 set g_PreProcDataAvailable 0
                                     # set to 1 if data in main window is available
 
-set g_GlobLepDataChanged 0
-
-set g_WingDataAvailable 0
+set g_PreProcDataChanged 0
+                                    # set to 1 if PreProc data in main window
+                                    # has been changed
 
 set g_PreProcFileTypes {
     {{Geometry files}   {.txt}}
@@ -51,9 +42,6 @@ set g_PreProcFileTypes {
 set g_PreProcFilePathName ""
                                     # path and name of the file with the geometry data in
 
-set g_DataFileTypes {
-    {{Data files}   {.txt}}
-}
 
 set g_WingDataAvailable 0
                                     # set to 1 if wing data is available for edit
@@ -61,10 +49,16 @@ set g_WingDataAvailable 0
 set g_WingDataChanged 0
                                     # set to 1 if there is unsaved wing data
 
+set g_WingFileTypes {
+    {{Data files}   {.txt}}
+}
+
+set g_WingFilePathName ""
+                                    # path and name of the wing file
+
 set .topv.c_topv ""
 set .tailv.c_tailv ""
 set .sidev.c_sidev ""
-
 
 set data_le(c0) 10.11
 
@@ -127,7 +121,7 @@ proc myAppMain { argc argv } {
     #  If we have an argument, then open the file
     #-----------------------------------------------------------------
     if { [llength $argv] > 0 } {
-        OpenLepFile [lindex $argv 0]
+        OpenWingFile [lindex $argv 0]
     }
 }
 #----------------------------------------------------------------------
@@ -192,18 +186,19 @@ proc InitGui { root } {
 
     # Geometry menu
     $base.menu add cascade -label [::msgcat::mc "Geometry"] -underline 0 -menu $base.menu.geometry
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "New Geometry..."]    -command NewGeometry
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Open Geometry..."]   -command OpenPreProcFile
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Save Geometry"]      -command SavePreProcFile    -state disabled
     $base.menu.geometry add command -underline 5 -label [::msgcat::mc "Save Geometry As"]   -command SavePreProcFileAs  -state disabled
     $base.menu.geometry add separator
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Edit Geometry"]      -command editPreProcData
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Edit Geometry"]      -command editPreProcData    -state disabled
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc Geometry"]      -command preProcRun         -state disabled
 
 
     # Wing menu
     $base.menu add cascade -label [::msgcat::mc "Wing"] -underline 0 -menu $base.menu.wing
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "New Wing"]               -command NewWing
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Open Wing..."]           -command OpenLepFile
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Open Wing..."]           -command OpenWingFile
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing"]              -command SaveWingFile -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Save Wing As"]           -command SaveWingFileAs -state disabled
     $base.menu.wing add separator
@@ -262,13 +257,6 @@ proc InitGui { root } {
     wm protocol $root WM_DELETE_WINDOW { myAppExit }
     wm geometry . +100+100
     wm title $root "Laboratori d'envol Paragliding Design Program $LepVersioNumber GUI-$LepgNumber "
-
-    #-----------------------------------------------------------------
-    #  insert code defining myApp main window
-    #-----------------------------------------------------------------
-    ### text .t
-    ### bind .t <Key> {set g_LepDataChanged 1}
-    ### pack .t
 }
 
 #    End InitGui
@@ -297,7 +285,7 @@ proc CreateMainWindow {} {
     pack .sidev.c_sidev -expand yes -fill both
 
     # Basic data
-    ttk::labelframe .bd -text [::msgcat::mc "Basic data"]
+    ttk::labelframe .bd -text [::msgcat::mc "Basic wing data"]
 
     grid .tailv -row 0 -column 0 -sticky nesw
     grid .sidev -row 0 -column 1 -sticky nesw
@@ -470,28 +458,53 @@ proc DrawSideView {} {
     }
 }
 
+#----------------------------------------------------------------------
+#  NewGeometry
+#  Resets all global preproc values
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc NewGeometry {} {
+    source "globalPreProcVars.tcl"
+    global g_WingFilePathName
+    global g_PreProcDataChanged
+    global g_PreProcDataAvailable
+
+    if { $g_PreProcDataChanged } {
+        PromptForGeometrySave
+    }
+
+    initGlobalPreProcVars
+
+    set g_PreProcFilePathName ""
+    set g_PreDataChanged 0
+    set g_PreProcDataAvailable 1
+
+    global .topv.c_topv
+    .topv.c_topv delete "all"
+
+    global .tailv.c_tailv
+    .tailv.c_tailv delete "all"
+
+    global .sidev.c_sidev
+    .sidev.c_sidev delete "all"
+}
+
 
 proc OpenPreProcFile { {FilePathName ""} } {
     source "readPreProcDataFile.tcl"
 
-    global g_GlobPreProcDataChanged
-    global g_LclPreProcDataChanged
-    global g_LclPreProcDataNotApplied
+    global g_PreProcDataChanged
 
     global g_PreProcDataAvailable
     global g_PreProcFileTypes
 
     global g_PreProcFilePathName
 
-    if { $g_GlobPreProcDataChanged   == 1 ||
-         $g_LclPreProcDataChanged    == 1 ||
-         $g_LclPreProcDataNotApplied == 1 } {
-
-             set Answer [PromptForPreProcFileOpenCancel]
-
-             if { $Answer == 1 } {
-                 return 0
-        }
+    if { $g_PreProcDataChanged   == 1 } {
+            PromptForGeometrySave
     }
 
     if {$FilePathName == ""} {
@@ -505,22 +518,27 @@ proc OpenPreProcFile { {FilePathName ""} } {
             error "Cannot Open File $FilePathName for Reading"
         }
 
-        set g_GlobPreProcDataChanged    0
-        set g_LclPreProcDataChanged     0
-        set g_LclPreProcDataNotApplied  0
+        set g_PreProcDataChanged    0
         set g_PreProcDataAvailable      1
         set g_PreProcFilePathName $FilePathName
     }
 }
 
+#----------------------------------------------------------------------
+#  SavePreProcFile
+#  Saves the PreProc File
+#
+#  IN:      Filename: if set the procedure will not ask for a filenam
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
 proc SavePreProcFile { {FilePathName ""} } {
     source "writePreProcDataFile.tcl"
-    global myAppFileName
-    global g_LepDataChanged
+    global g_PreProcDataChanged
     global g_PreProcFilePathName
     global g_PreProcFileTypes
 
-    # if proc is called from save as $FilePathName is not empty
+    # if proc is called from save $FilePathName is not empty
     if { $FilePathName == "" } {
         # check if there was a filename passed
         if { $g_PreProcFilePathName != "" } {
@@ -530,13 +548,13 @@ proc SavePreProcFile { {FilePathName ""} } {
             # there's no FilePathName, therefore we ask for one
             set FilePathName [tk_getSaveFile -filetypes $g_PreProcFileTypes]
         }
+    }
 
-        # let's check for the file extension
-        set Extension [file extension $FilePathName]
-        if {$Extension != ".txt" } {
-            # we need to add the extension
-            append FilePathName ".txt"
-        }
+    # let's check for the file extension
+    set Extension [file extension $FilePathName]
+    if {$Extension != ".txt" } {
+        # we need to add the extension
+        append FilePathName ".txt"
     }
 
     if {$FilePathName != ""} {
@@ -547,42 +565,26 @@ proc SavePreProcFile { {FilePathName ""} } {
             return
         }
 
-        set g_GlobPreProcDataChanged    0
-        set g_LclPreProcDataChanged     0
-        set g_LclPreProcDataNotApplied  0
-        set g_PreProcDataAvailable      1
+        set g_PreProcDataChanged    0
+        set g_PreProcDataAvailable  1
         set g_PreProcFilePathName $FilePathName
     }
-
-    # if { $FilePathName != "" } {
-    #    if { [catch {open $FilePathName w} fp] } {
-    #         error "Cannot write to $FilePathName"
-    #    }
-    #
-    #
-    #     #-------------------------------------------------------------
-    #     # insert code for "save" operation
-    #     #-------------------------------------------------------------
-    #     ###  -nonewline $fp [.t get 1.0 end] #BMA
-    #
-    #     close $fp
-    #     set myAppFileName $FilePathName
-    #     set g_LepDataChanged 0
-    # }
 }
+
+
+#----------------------------------------------------------------------
+#  SavePreProcFileAs
+#  Saves the PreProc File under a new name
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
 proc SavePreProcFileAs { } {
     global g_PreProcFileTypes
 
     set FilePathName [tk_getSaveFile -filetypes $g_PreProcFileTypes]
     if { $FilePathName != "" } {
-
-        # let's check for the file extension
-        set Extension [file extension $FilePathName]
-        if {$Extension != ".txt" } {
-            # we need to add the extension
-            append FilePathName ".txt"
-        }
-
         SavePreProcFile $FilePathName
     }
 }
@@ -593,22 +595,22 @@ proc SavePreProcFileAs { } {
 #
 #  IN:      N/A
 #  OUT:     N/A
-#  Returns: Scale Factor
+#  Returns: N/A
 #----------------------------------------------------------------------
 proc NewWing { } {
     source "globalWingVars.tcl"
-    global myAppFileName
-    global g_GlobLepDataChanged
+    global g_WingFilePathName
+    global g_WingDataChanged
     global g_WingDataAvailable
 
-    if { $g_GlobLepDataChanged } {
+    if { $g_WingDataChanged } {
         PromptForWingSave
     }
 
     initGlobalWingVars
 
-    set myAppFileName ""
-    set g_GlobLepDataChanged 0
+    set g_WingFilePathName ""
+    set g_WingDataChanged 0
     set g_WingDataAvailable 1
 
     global .topv.c_topv
@@ -627,24 +629,24 @@ proc NewWing { } {
 #
 #  IN:      N/A
 #  OUT:     N/A
-#  Returns: Scale Factor
+#  Returns: N/A
 #----------------------------------------------------------------------
 proc ImportWingGeometry {} {
     source "globalWingVars.tcl"
     source "preProcOutFileImport.tcl"
 
-    global g_GlobLepDataChanged
+    global g_WingDataChanged
     global g_WingDataAvailable
-    global g_DataFileTypes
+    global g_WingFileTypes
 
-    if { $g_GlobLepDataChanged } {
+    if { $g_WingDataChanged } {
         PromptForWingSave
     }
 
     # get rid of old values
     initGlobalWingVars
 
-    set FilePathName [tk_getOpenFile -filetypes $g_DataFileTypes]
+    set FilePathName [tk_getOpenFile -filetypes $g_WingFileTypes]
 
     if {$FilePathName != ""} {
         set ReturnValue [ importPreProcOutFile $FilePathName ]
@@ -653,7 +655,7 @@ proc ImportWingGeometry {} {
             error "Cannot open file $FilePathName for reading"
         }
 
-        set g_GlobLepDataChanged 0
+        set g_WingDataChanged 0
     }
 
     set g_WingDataAvailable 1
@@ -664,28 +666,28 @@ proc ImportWingGeometry {} {
 }
 
 #----------------------------------------------------------------------
-#  OpenLepFile
+#  OpenWingFile
 #  Checks for unsaved data. Asks in case if current data should be saved.
 #  Opens a new wing file.
 #
 #  IN:      FilePathName    optional the name of the file to open
 #  OUT:     N/A
-#  Returns: Scale Factor
+#  Returns: N/A
 #----------------------------------------------------------------------
-proc OpenLepFile { {FilePathName ""} } {
+proc OpenWingFile { {FilePathName ""} } {
 
-    global g_GlobLepDataChanged
-    global g_DataFileTypes
+    global g_WingDataChanged
+    global g_WingFileTypes
     global g_WingDataAvailable
 
-    if { $g_GlobLepDataChanged } {
+    if { $g_WingDataChanged } {
         PromptForWingSave
     }
 
     source "readLepDataFile.tcl"
 
     if {$FilePathName == ""} {
-        set FilePathName [tk_getOpenFile -filetypes $g_DataFileTypes]
+        set FilePathName [tk_getOpenFile -filetypes $g_WingFileTypes]
     }
 
     if {$FilePathName != ""} {
@@ -695,7 +697,7 @@ proc OpenLepFile { {FilePathName ""} } {
             error "Cannot open file $FilePathName for reading"
         }
 
-        set g_GlobLepDataChanged 0
+        set g_WingDataChanged 0
     }
 
     set g_WingDataAvailable 1
@@ -705,36 +707,54 @@ proc OpenLepFile { {FilePathName ""} } {
     DrawSideView
 
     ##### temporary code below
-    set g_GlobLepDataChanged 1
+    set g_WingDataChanged 1
 }
 
 #----------------------------------------------------------------------
 #  SaveWingFile
 #  Saves the wing file
 #
-#  IN:      N/A
+#  IN:      Filename: if set the procedure will not ask for a filenam
 #  OUT:     N/A
-#  Returns: Scale Factor
+#  Returns: N/A
 #----------------------------------------------------------------------
- proc SaveWingFile { {filename ""} } {
-    global myAppFileName
-    global g_LepDataChanged #BMA
-    if { $filename == "" } {
-        set filename $myAppFileName
-    }
-    if { $filename != "" } {
-        if { [catch {open $filename w} fp] } {
-             error "Cannot write to $filename"
+ proc SaveWingFile { {FilePathName ""} } {
+    source "writeWingDataFile.tcl"
+    global g_WingDataChanged
+    global g_WingFilePathName
+    global g_WingFileTypes
+
+    # if proc is called from save $FilePathName is not empty
+    if { $FilePathName == "" } {
+        # check if there was a filename passed
+        if { $g_WingFilePathName != "" } {
+            # yep there's an open file
+            set FilePathName $g_WingFilePathName
+        } else {
+            # there's no FilePathName, therefore we ask for one
+            set FilePathName [tk_getSaveFile -filetypes $g_WingFileTypes]
         }
 
-         #-------------------------------------------------------------
-         # insert code for "save" operation
-         #-------------------------------------------------------------
-         ###  -nonewline $fp [.t get 1.0 end] #BMA
+    }
 
-         close $fp
-         set myAppFileName $filename
-         set g_LepDataChanged 0
+    # let's check for the file extension
+    set Extension [file extension $FilePathName]
+    if {$Extension != ".txt" } {
+        # we need to add the extension
+        append FilePathName ".txt"
+    }
+
+    if {$FilePathName != ""} {
+        set ReturnValue [ writeWingDataFile $FilePathName ]
+
+        if { $ReturnValue != 0 } {
+            error "Cannot write file $FilePathName"
+            return
+        }
+
+        set g_WingDataChanged    0
+        set g_WingDataAvailable  1
+        set g_WingFilePathName $FilePathName
     }
 }
 
@@ -744,19 +764,19 @@ proc OpenLepFile { {FilePathName ""} } {
 #
 #  IN:      N/A
 #  OUT:     N/A
-#  Returns: Scale Factor
+#  Returns: N/A
 #----------------------------------------------------------------------
 proc SaveWingFileAs { } {
-    global g_DataFileTypes
+    global g_WingFileTypes
 
-    set filename [tk_getSaveFile -filetypes $g_DataFileTypes]
-    if { $filename != "" } {
-        SaveWingFile $filename
+    set FilePathName [tk_getSaveFile -filetypes $g_WingFileTypes]
+    if { $FilePathName != "" } {
+        SaveWingFile $FilePathName
     }
 }
 
 #----------------------------------------------------------------------
-#  PromptForPreProcFileOpenCancel
+#  PromptForGeometrySave
 #  Asks the user if he really wants to loose all unsaved PreProc data
 #
 #  IN:      N/A
@@ -764,21 +784,19 @@ proc SaveWingFileAs { } {
 #  Returns: 1   if user has selected yes => I wann loose the data
 #           0   if user want to abort
 #----------------------------------------------------------------------
-proc PromptForPreProcFileOpenCancel { } {
+proc PromptForGeometrySave { } {
     set answer [tk_messageBox -title "Geometry: you have unsaved data!" \
         -type yesno -icon question \
-        -message "You have unsaved Geometry data. \n Do you want to continue and loose your data?"]
+        -message "You have unsaved Geometry data. \n Do you want to save the changes?"]
     if { $answer == "yes" } {
-        return 0
-    } else {
-        return 1
+        SavePreProcFileAs
     }
 }
 
 proc PromptForWingSave { } {
-    set answer [tk_messageBox -title "Do you want to save?" \
+    set answer [tk_messageBox -title "Wing: you have unsaved data!" \
         -type yesno -icon question \
-        -message "Do you want to save the changes?"]
+        -message "You have unsaved Wing data. \n Do you want to save the changes?"]
     if { $answer == "yes" } {
         SaveWingFileAs
     }
@@ -791,8 +809,17 @@ proc OpenWingBasicDataEdit { } {
 }
 
 proc myAppExit { } {
+    global g_PreProcDataChanged
+    global g_WingDataChanged
 
     # make sure there's no unsaved data
+    if { $g_PreProcDataChanged == 1 } {
+        PromptForGeometrySave
+    }
+
+    if { $g_WingDataChanged == 1} {
+        PromptForWingSave
+    }
 
     ::lepConfigFile::saveFile $::GlobalConfig
     exit
@@ -884,12 +911,8 @@ proc PreProcDirSelect_lepg {} {
 
 
 proc SetGlobalVarTrace {} {
-    global g_GlobPreProcDataChanged
-    trace variable g_GlobPreProcDataChanged w { GlobalVarTrace }
-    global g_LclPreProcDataChanged
-    trace variable g_LclPreProcDataChanged w { GlobalVarTrace }
-    global g_LclPreProcDataNotApplied
-    trace variable g_LclPreProcDataNotApplied w { GlobalVarTrace }
+    global g_PreProcDataChanged
+    trace variable g_PreProcDataChanged w { GlobalVarTrace }
     global g_PreProcDataAvailable
     trace variable g_PreProcDataAvailable w { GlobalVarTrace }
 }
@@ -901,13 +924,9 @@ proc GlobalVarTrace {a e op } {
         set systemTime [clock seconds]
         puts "***** [clock format $systemTime -format %H:%M:%S]"
 
-        global g_GlobPreProcDataChanged
-        global g_LclPreProcDataChanged
-        global g_LclPreProcDataNotApplied
+        global g_PreProcDataChanged
         global g_PreProcDataAvailable
-        puts "g_GlobPreProcDataChanged    $g_GlobPreProcDataChanged"
-        puts "g_LclPreProcDataChanged     $g_LclPreProcDataChanged"
-        puts "g_LclPreProcDataNotApplied  $g_LclPreProcDataNotApplied"
+        puts "g_PreProcDataChanged        $g_PreProcDataChanged"
         puts "g_PreProcDataAvailable      $g_PreProcDataAvailable"
 }
 
@@ -917,13 +936,17 @@ proc SetPreProcBtnStatus { a e op } {
     global g_PreProcDataAvailable
 
     if {$g_PreProcDataAvailable == 0} {
-        $base.menu.geometry entryconfigure [::msgcat::mc "Calc Geometry"]    -state disabled
         $base.menu.geometry entryconfigure [::msgcat::mc "Save Geometry"]    -state disabled
         $base.menu.geometry entryconfigure [::msgcat::mc "Save Geometry As"] -state disabled
+        $base.menu.geometry entryconfigure [::msgcat::mc "Edit Geometry"]    -state disabled
+        $base.menu.geometry entryconfigure [::msgcat::mc "Calc Geometry"]    -state disabled
+
     } else {
-        $base.menu.geometry entryconfigure [::msgcat::mc "Calc Geometry"]    -state active
         $base.menu.geometry entryconfigure [::msgcat::mc "Save Geometry"]    -state active
         $base.menu.geometry entryconfigure [::msgcat::mc "Save Geometry As"] -state active
+        $base.menu.geometry entryconfigure [::msgcat::mc "Edit Geometry"]    -state active
+        $base.menu.geometry entryconfigure [::msgcat::mc "Calc Geometry"]    -state active
+
     }
 }
 
@@ -933,9 +956,13 @@ proc SetWingBtnStatus { a e op } {
     global g_WingDataAvailable
 
     if {$g_WingDataAvailable == 0} {
-        $base.menu.wing entryconfigure [::msgcat::mc "Basic Data"]    -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "Save Wing"]    -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "Save Wing As"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "Basic Data"]   -state disabled
     } else {
-        $base.menu.wing entryconfigure [::msgcat::mc "Basic Data"]    -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "Save Wing"]    -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "Save Wing As"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "Basic Data"]   -state active
     }
 }
 
