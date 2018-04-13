@@ -324,9 +324,12 @@ proc ReadGeometrySectV2_52 {File} {
     set DataLine  [gets $File]
     # BrandName
     set brandName  [gets $File]
+    regsub -all {"} $brandName {\1} brandName
+
     set DataLine  [gets $File]
     # WingName
     set wingName  [gets $File]
+    regsub -all {"} $wingName {\1} wingName
     set DataLine  [gets $File]
     # DrawScale
     set drawScale    [gets $File]
