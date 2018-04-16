@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	lep-gui documentation
+	Pere Casellas (www.laboratoridenvol.com), Stefan Feuz
+	General Public License GNU GPL3.0
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "../../dtd/technicalContent/dtd/concept.dtd">
+<concept id="en-wing-sewing-allowances" xml:lang="en-us">
+	<title>Configuration of the Sewing Allowances</title>
+	<shortdesc>Detailed explanation about the Sewing Allowances window.</shortdesc>
+	<conbody>
+		<p>Here in you can configure the sewing allowances of the wing plan. Settings for upper and lower panel, Ribs and V-Ribs can be setup individually.</p>
+		<image href="../image/wing-sewing-allowances.jpg" alt="Wing Sewing Allowances Window" height="350" width="479"/>
+		<p> </p>
+	</conbody>
+	<related-links>
+		<link href="editWindowIntroduction.xml" format="dita" type="concept"></link>
+	</related-links>
+</concept>

@@ -226,7 +226,7 @@ proc InitGui { root } {
 
     # Wing plan menu
     $base.menu add cascade -label [::msgcat::mc "Wing plan"] -underline 0 -menu $base.menu.wingplan
-    $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "Sewing Allowances"]             -command xxx -state disabled
+    $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "Sewing Allowances"]             -command OpenWingSewingAllowancesEdit -state disabled
     $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "Marks"]             -command xxx -state disabled
     $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "DXF"]             -command xxx -state disabled
 
@@ -808,6 +808,12 @@ proc OpenWingBasicDataEdit { } {
     wingBasicDataEdit
 }
 
+proc OpenWingSewingAllowancesEdit { } {
+    source "wingSewingAllowancesEdit.tcl"
+
+    wingSewingAllowancesEdit
+}
+
 proc myAppExit { } {
     global g_PreProcDataChanged
     global g_WingDataChanged
@@ -959,10 +965,14 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "Save Wing"]    -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Save Wing As"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Basic Data"]   -state disabled
+
+        $base.menu.wingplan entryconfigure [::msgcat::mc "Sewing Allowances"] -state disabled
     } else {
         $base.menu.wing entryconfigure [::msgcat::mc "Save Wing"]    -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Save Wing As"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Basic Data"]   -state active
+
+        $base.menu.wingplan entryconfigure [::msgcat::mc "Sewing Allowances"] -state active
     }
 }
 

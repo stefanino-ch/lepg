@@ -34,6 +34,15 @@
 "drawScale"             "Scale of your drawings"
 "wingScale"             "Scale of your wing"
 
+"seamUp"                "Sewing allowance for upper panel edges"
+"seamUpLe"              "Sewing allowance for upper panel leading edge"
+"seamUpTe"              "Sewing allowance for upper panel trailing edge"
+"seamLo"                "Sewing allowance for lower panel edges"
+"seamLoLe"              "Sewing allowance for lower panel leading edge"
+"seamLoTe"              "Sewing allowance for lower panel trailing edge"
+"seamRib"               "Sewing allowance for ribs"
+"seamVRib"              "Sewing allowance for v-ribs"
+
 "txt_writePreProcInputData" "Writing input data for processor..."
 "txt_findPreProcOutputFilesIn" "Output files can be found in ....\\lepg\\process directory"
 }

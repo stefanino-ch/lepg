@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	lep-gui documentation
+	Pere Casellas (www.laboratoridenvol.com), Stefan Feuz
+	General Public License GNU GPL3.0
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "../../dtd/technicalContent/dtd/concept.dtd">
+<concept id="de-wing-sewing-allowances" xml:lang="en-us">
+	<title>Nahtzugaben des Flügelplanes</title>
+	<shortdesc>Detaillierte Erklärungen zum Verändern der Nahtzugaben. </shortdesc>
+	<conbody>
+		<p>In diesem Fenster werden die Nahtzugaben des Schnittmusters konfiguriert. Die Einstellungen für oberes- und unteres Panel sowie für Rippen und V-Rippen erfolgt jeweils separat</p>
+		<image href="../image/wing-sewing-allowances.jpg" alt="Wing Sewing Allowances Window" height="350" width="479"/>
+		<p> </p>
+	</conbody>
+	<related-links>
+		<link href="editWindowIntroduction.xml" format="dita" type="concept"></link>
+	</related-links>
+</concept>

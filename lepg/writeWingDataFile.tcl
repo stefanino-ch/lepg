@@ -76,6 +76,38 @@ proc WriteGeometrySectV2_52  {File} {
 }
 
 #----------------------------------------------------------------------
+#  WriteSewingAllowancesV2_52
+#  Writes the Sewing Allowances section in the V2.52 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteSewingAllowancesV2_52  {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File $c_SewingSect_lFC_Lbl
+    puts $File $Separator
+
+#seamUp seamUpLe seamUpTe seamLo seamLoLe seamLoTe seamRib seamVRib
+
+    puts $File "$seamUp\t$seamUpLe\t$seamUpTe\tupper panels (mm)"
+
+    puts $File "$seamLo\t$seamLoLe\t$seamLoTe\tlower panels (mm)"
+
+    puts $File "$seamRib\tribs (mm)"
+
+    puts $File "$seamVRib\tvribs (mm)"
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
 #  writeWingDataFile
 #  Writes the Wing data file
 #
@@ -122,6 +154,11 @@ proc writeWingDataFile {FilePathName} {
 
     #------------------
     # Sewing allowances
+    lassign [WriteSewingAllowancesV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
 
     #------
     # Marks
