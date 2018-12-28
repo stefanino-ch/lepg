@@ -14,16 +14,50 @@
 
 "##### Wing Menu"               "##### Flügel Menu"
 "Wing"                          "Flügel"
-"New Wing"                      "Neuer Flügel"
 "Import Wing Geometry"          "Flügel Geometrie importieren"
 "Open Wing..."                  "Flügel öffnen..."
 "Save Wing"                     "Flügel speichern"
 "Save Wing As"                  "Flügel speichern unter"
 "Basic Data"                    "Basisdaten"
+"Airfoils"                      "Rippen"
+
+"##### Basic Data Window"       "##### Fenster Basisdaten"
+"Wing Basic Data"               "Flügel Basisdaten"
+"Brand Name"                    "Name des Herstellers"
+"Wing Name"                     "Name des Flügels"
+"Draw Scale"                    "Zeichnungsmasstab"
+"Wing Scale"                    "Flügelmasstab"
+
+"brandName"                     "Herstellername"
+"wingName"                      "Flügelname"
+"drawScale"                     "Zeichnungsmasstab"
+"wingScale"                     "Flügelmasstab"
+
+"***** Wing Airfoils Data"      "*****"
+"Wing Airfoils Data"            "Konfiguration der Rippen"
+"% cord inlet start"            "% Beginn Einl."
+"% cord inlet stop"             "% Ende Einl."
+"Closed/ open cell"             "Geschl/ offen"
+"Disp."                         "Verschiebung"
+"rweight"                       "rweight"
+"Rot/ % Mini Rib"               "Rot/ % Mini Rib"
+
+
+"airfoilName"                   "Dateiname in der das Profil gespeichert ist."
+"inletStartPerc"                "Profilsehnenlänge in % am Begin des Lufteinlasses."
+"inletStopPerc"                 "Profilsehnenlänge in % am Ende des Lufteinlasses"
+"closedOpenCell"                "Nur 0 oder 1 möglich. \n 0 =geschlossene Zelle; \n 1= offene Zelle."
+"ribDisplacement"               "Seitl. Verschiebung in cm der Rippen. Dient der besseren Platzierung der Rippen ohne Aufhängepunkte. \nWert ist normalerweise = 0"
+"relWeightChord"                "Relative weight of the chord, in relation to the load. \nValue is usually 1."
+"rotMiniRIbPerc"                "Single skin: nur 0 oder 1: Kontroller des Rippenwinkels (Winkel beta in Geometrie). \n 0: keine; 1: autom Rotation. \n Double skin: Länge der Miniribs in %."
+
 
 "##### Wing Plan Menu"          "##### Flügelplan"
 "Wing plan"                     "Flügelplan"
 "Sewing Allowances"             "Nahtzugaben"
+
+
+
 
 "Wing Sewing Allowances"        "Flügel Nahtzugaben"
 "Edge"                          "Kanten"
@@ -52,9 +86,6 @@
 
 "##### Vault Menu"              "##### Vault Menu"
 "Vault"                         "Vault"
-
-"##### Airfoils Menu"           "##### Airfoils Menu"
-"Airfoils"                      "Airfoils"
 
 "##### Calage Menu"             "##### Calage Menu"
 "Calage"                        "Calage"
@@ -160,15 +191,5 @@
 "txt_writePreProcInputData" "Schreibe Daten für Geometrie Prozessor..."
 "txt_findPreProcOutputFilesIn" "Berechnete Daten sind im ....\\lepg\\process Verzeichnis"
 
-"##### Basic Data Window"    "##### Fenster Basisdaten"
-"Wing Basic Data"       "Flügel Basisdaten"
-"Brand Name"            "Name des Herstellers"
-"Wing Name"             "Name des Flügels"
-"Draw Scale"            "Zeichnungsmasstab"
-"Wing Scale"            "Flügelmasstab"
 
-"brandName"             "Herstellername"
-"wingName"              "Flügelname"
-"drawScale"             "Zeichnungsmasstab"
-"wingScale"             "Flügelmasstab"
 }

@@ -41,7 +41,7 @@ proc DetectFileVersion_rLDF {FilePathName} {
     while {$i <= 20} {
         set DataLine [gets $file]
 
-        if { [string first $c_VersionSectId $DataLine] >= 0 } {
+        if { [string first $c_VersionSect_lFC_Id $DataLine] >= 0 } {
             # file version 2.7 or later
             set DataLine [gets $file]
             set DataLine [gets $file]
@@ -377,11 +377,19 @@ proc ReadGeometrySectV2_52 {File} {
     set DataLine [gets $File]
 
     # NumRibsHalf
+    # if the number of Ribs total is odd (uneven) we must increase the half num of Ribs
     set numRibsHalf [expr ceil($numRibsTot/2)]
+
     # Erase ".0" at the end of string
     set l [string length $numRibsHalf]
     # NumberRibs
     set numRibsHalf [string range $numRibsHalf 0 [expr $l-3]]
+
+    if { [expr ($numRibsTot % 2)] != 0 } {
+        # odd (uneven7 ungerade)
+        # increment by one unless we miss the middle rib
+        incr numRibsHalf
+    }
 
     # Read matrix of geometry
     set i 1
@@ -402,7 +410,6 @@ proc ReadGeometrySectV2_52 {File} {
         set ribConfig($i,9) $RibGeom($i,6)
         set ribConfig($i,10) $RibGeom($i,7)
         set ribConfig($i,51) $RibGeom($i,8)
-
         incr i
     }
 
@@ -614,10 +621,13 @@ proc ReadSewingSectV2_52 {File} {
     # seamloTe
     set seamLoTe [lindex $DataLine 2]
 
+    set DataLine  [gets $File]
     # seamRib
-    set seamRib   [gets $File]
+    set seamRib   [lindex $DataLine 0]
+
+    set DataLine  [gets $File]
     # seamVRib
-    set seamVRib  [gets $File]
+    set seamVRib  [lindex $DataLine 0]
 
     return [list 0 $File]
 }

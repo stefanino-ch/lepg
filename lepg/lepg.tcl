@@ -197,15 +197,14 @@ proc InitGui { root } {
 
     # Wing menu
     $base.menu add cascade -label [::msgcat::mc "Wing"] -underline 0 -menu $base.menu.wing
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "New Wing"]               -command NewWing
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Wing Geometry"]   -command ImportWingGeometry
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "Open Wing..."]           -command OpenWingFile
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing"]              -command SaveWingFile -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Save Wing As"]           -command SaveWingFileAs -state disabled
-    $base.menu.wing add separator
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Wing Geometry"]   -command ImportWingGeometry
+
     $base.menu.wing add separator
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Basic Data"]             -command OpenWingBasicDataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Airfolils"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Airfoils"]               -command OpenWingAirfoilsDataEdit  -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Anchor Points"]             -command xxx -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Airfoil Holes"]             -command xxx -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Skin Tension"]             -command xxx -state disabled
@@ -590,40 +589,6 @@ proc SavePreProcFileAs { } {
 }
 
 #----------------------------------------------------------------------
-#  NewWing
-#  Resets all global wing values
-#
-#  IN:      N/A
-#  OUT:     N/A
-#  Returns: N/A
-#----------------------------------------------------------------------
-proc NewWing { } {
-    source "globalWingVars.tcl"
-    global g_WingFilePathName
-    global g_WingDataChanged
-    global g_WingDataAvailable
-
-    if { $g_WingDataChanged } {
-        PromptForWingSave
-    }
-
-    initGlobalWingVars
-
-    set g_WingFilePathName ""
-    set g_WingDataChanged 0
-    set g_WingDataAvailable 1
-
-    global .topv.c_topv
-    .topv.c_topv delete "all"
-
-    global .tailv.c_tailv
-    .tailv.c_tailv delete "all"
-
-    global .sidev.c_sidev
-    .sidev.c_sidev delete "all"
-}
-
-#----------------------------------------------------------------------
 #  ImportWingGeometry
 #  Is called upon selection of Wing->Import Wing menu
 #
@@ -808,6 +773,12 @@ proc OpenWingBasicDataEdit { } {
     wingBasicDataEdit
 }
 
+proc OpenWingAirfoilsDataEdit { } {
+    source "wingAirfoilsDataEdit.tcl"
+
+    wingAirfoilsDataEdit
+}
+
 proc OpenWingSewingAllowancesEdit { } {
     source "wingSewingAllowancesEdit.tcl"
 
@@ -965,12 +936,14 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "Save Wing"]    -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Save Wing As"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Basic Data"]   -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "Airfoils"]     -state disabled
 
         $base.menu.wingplan entryconfigure [::msgcat::mc "Sewing Allowances"] -state disabled
     } else {
         $base.menu.wing entryconfigure [::msgcat::mc "Save Wing"]    -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Save Wing As"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Basic Data"]   -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "Airfoils"]     -state active
 
         $base.menu.wingplan entryconfigure [::msgcat::mc "Sewing Allowances"] -state active
     }
