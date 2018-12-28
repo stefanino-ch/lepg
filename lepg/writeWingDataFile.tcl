@@ -57,6 +57,11 @@ proc writeWingDataFile {FilePathName} {
 
     #--------------
     # Anchor points
+    lassign [WriteAnchorsSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
 
     #--------------
     # Airfoil holes
@@ -153,7 +158,7 @@ proc WriteGeometrySectV2_52  {File} {
     global Separator
 
     puts $File $Separator
-    puts $File $c_GeometrySect_lFC_Lbl
+    puts $File "* $c_GeometrySect_lFC_Lbl"
     puts $File $Separator
 
     puts $File "* Brand name"
@@ -218,7 +223,7 @@ proc WriteAirfoilSectV2_52  {File} {
     global Separator
 
     puts $File $Separator
-    puts $File $c_AirfoilSect_lFC_Lbl
+    puts $File "* $c_AirfoilSect_lFC_Lbl"
     puts $File $Separator
     puts $File "* Airfoil name. intake in. intake out. open. disp   rweight"
 
@@ -242,6 +247,44 @@ proc WriteAirfoilSectV2_52  {File} {
 }
 
 #----------------------------------------------------------------------
+#  WriteAnchorsSectV2_52
+#  Writes the Anchors section in the V2.52 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteAnchorsSectV2_52  {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_AnchorPoSect_lFC_Lbl"
+    puts $File $Separator
+    puts $File "* Airf	Anch	A	B	C	D	E	F"
+
+    set i 1
+    while {$i <= $numRibsHalf} {
+
+        puts -nonewline $File "$ribConfig($i,1)"
+        puts -nonewline $File "\t$ribConfig($i,15)"
+        puts -nonewline $File "\t$ribConfig($i,16)"
+        puts -nonewline $File "\t$ribConfig($i,17)"
+        puts -nonewline $File "\t$ribConfig($i,18)"
+        puts -nonewline $File "\t$ribConfig($i,19)"
+        puts -nonewline $File "\t$ribConfig($i,20)"
+        puts            $File "\t$ribConfig($i,21)"
+
+        incr i
+    }
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
 #  WriteSewingAllowancesV2_52
 #  Writes the Sewing Allowances section in the V2.52 format
 #
@@ -257,7 +300,7 @@ proc WriteSewingAllowancesV2_52  {File} {
     global Separator
 
     puts $File $Separator
-    puts $File $c_SewingSect_lFC_Lbl
+    puts $File "* $c_SewingSect_lFC_Lbl"
     puts $File $Separator
 
     puts $File "$seamUp\t$seamUpLe\t$seamUpTe\tupper panels (mm)"

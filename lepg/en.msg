@@ -1,6 +1,5 @@
 ﻿::msgcat::mcmset en {
 
-
 "lbl_LangChanged"       "Language selection changed"
 
 "title_SelectPreProcDirectory" "Select pre-Processor installation directory"
@@ -34,7 +33,7 @@
 "drawScale"             "Scale of your drawings"
 "wingScale"             "Scale of your wing"
 
-"***** Wing Airfoils Data"      "*****"
+"##### Wing Airfoils Data"      "#####"
 "airfoilName"                   "Name the file containing the airfoil assigned to that rib."
 "inletStartPerc"                "Percentage of chord start of the air inlet."
 "inletStopPerc"                 "Percentage of chord end of the air  inlet."
@@ -42,6 +41,14 @@
 "ribDisplacement"               "Displacement in cm of the rib perpendicular to the chord, and in the plane \nof the rib itself. Serves to improve the position of the ribs without suspension lines. \n Value is usually 0"
 "relWeightChord"                "Relative weight of the chord, in relation to the load. \n Value is usually 1."
 "rotMiniRIbPerc"                "Single skin: 0 or 1 only: control in rotation of triangles (angle beta in Geometry section). \n 0: no rotation; 1: triangles are rotated automatically. \n Double skin: defines the minirib length in % of chord."
+
+"##### Anchors Data"            "#####"
+"anchorPosA"                    "Position Anchor A in % of chord."
+"anchorPosB"                    "Position Anchor B in % of chord."
+"anchorPosC"                    "Position Anchor C in % of chord."
+"anchorPosD"                    "Position Anchor D in % of chord."
+"anchorPosE"                    "Position Anchor E in % of chord."
+"anchorPosF"                    "Position Brakelines in % of chord."
 
 "seamUp"                "Sewing allowance for upper panel edges"
 "seamUpLe"              "Sewing allowance for upper panel leading edge"

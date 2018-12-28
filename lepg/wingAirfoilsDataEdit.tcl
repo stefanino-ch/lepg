@@ -18,7 +18,7 @@ global  Lcl_wADE_DataChanged
 set     Lcl_wADE_DataChanged    0
 
 global  AllGlobalVars_wADE
-set     AllGlobalVars_wADE { ribConfig }
+set     AllGlobalVars_wADE { airfoilName ribConfig }
 
 
 #----------------------------------------------------------------------

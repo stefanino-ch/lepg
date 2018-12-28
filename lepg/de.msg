@@ -20,6 +20,7 @@
 "Save Wing As"                  "Flügel speichern unter"
 "Basic Data"                    "Basisdaten"
 "Airfoils"                      "Rippen"
+"Anchor Points"                 "Aufhängepunkte"
 
 "##### Basic Data Window"       "##### Fenster Basisdaten"
 "Wing Basic Data"               "Flügel Basisdaten"
@@ -33,15 +34,15 @@
 "drawScale"                     "Zeichnungsmasstab"
 "wingScale"                     "Flügelmasstab"
 
-"***** Wing Airfoils Data"      "*****"
+"##### Wing Airfoils Data"      "#####"
 "Wing Airfoils Data"            "Konfiguration der Rippen"
+"Airfoil name"                  "Profildatei"
 "% cord inlet start"            "% Beginn Einl."
 "% cord inlet stop"             "% Ende Einl."
 "Closed/ open cell"             "Geschl/ offen"
 "Disp."                         "Verschiebung"
 "rweight"                       "rweight"
 "Rot/ % Mini Rib"               "Rot/ % Mini Rib"
-
 
 "airfoilName"                   "Dateiname in der das Profil gespeichert ist."
 "inletStartPerc"                "Profilsehnenlänge in % am Begin des Lufteinlasses."
@@ -51,6 +52,14 @@
 "relWeightChord"                "Relative weight of the chord, in relation to the load. \nValue is usually 1."
 "rotMiniRIbPerc"                "Single skin: nur 0 oder 1: Kontroller des Rippenwinkels (Winkel beta in Geometrie). \n 0: keine; 1: autom Rotation. \n Double skin: Länge der Miniribs in %."
 
+"##### Anchors Data"            "#####"
+"Wing Anchors Data"             "Aufhängepunkte"
+"anchorPosA"                    "Position Aufhängepunkt A in % der Flügeltiefe."
+"anchorPosB"                    "Position Aufhängepunkt B in % der Flügeltiefe."
+"anchorPosC"                    "Position Aufhängepunkt C in % der Flügeltiefe."
+"anchorPosD"                    "Position Aufhängepunkt D in % der Flügeltiefe."
+"anchorPosE"                    "Position Aufhängepunkt E in % der Flügeltiefe."
+"anchorPosF"                    "Position Befestigungspunkt Bremse in % der Flügeltiefe."
 
 "##### Wing Plan Menu"          "##### Flügelplan"
 "Wing plan"                     "Flügelplan"

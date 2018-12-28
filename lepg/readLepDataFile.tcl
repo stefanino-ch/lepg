@@ -1,3 +1,15 @@
+#---------------------------------------------------------------------
+#
+#  Reads the lep data file
+#
+#  Pere Casellas
+#  Stefan Feuz
+#  http://www.laboratoridenvol.com
+#
+#  General Public License GNU GPL 3.0
+#
+#---------------------------------------------------------------------
+
 #----------------------------------------------------------------------
 #  proc DetectFileVersion_rLDF
 #
@@ -74,7 +86,9 @@ proc readLepDataFile {FilePathName} {
     set ReturnValue -1
 
     # Check what file version to be read
+    Debug_rLDF "Check file version..."
     set FileVersion [DetectFileVersion_rLDF $FilePathName]
+    Debug_rLDF "$FileVersion \n"
 
     # open data file
     # as we know the version number=> file is there and readable=> we don't need to do error handling anymore
@@ -91,29 +105,35 @@ proc readLepDataFile {FilePathName} {
 
     #---------
     # Geometry
+    Debug_rLDF "Geometry: jump..."
     lassign [jumpToSection [set c_GeometrySect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "read..."
     lassign [ReadGeometrySectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "done\n"
 
     #--------
     # Airfoil
+    Debug_rLDF "Airfoil: jump..."
     lassign [jumpToSection [set c_AirfoilSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "read..."
     lassign [ReadAirfoilSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "done\n"
 
     #--------------
     # Anchor points
@@ -1044,4 +1064,16 @@ proc ReadElLinesCorrSectV2_52 {File} {
     # code to read this is missing
 
     return [list 0 $File]
+}
+
+proc Debug_rLDF { MessageString } {
+
+    set debug_rLDF 0
+
+    if { $debug_rLDF == 1 } {
+        puts -nonewline $MessageString
+    }
+
+    return
+
 }
