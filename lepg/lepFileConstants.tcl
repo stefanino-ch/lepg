@@ -126,7 +126,7 @@ set c_AddRibPoSect_lFC_Id "section-id-170"
 #--------------------------
 # Elastig lines corrections
 global c_ElLinesCorrSect_lFC_Lbl
-set c_ElLinesCorrSect_lFC_Lbl "18. Elastic"
+set c_ElLinesCorrSect_lFC_Lbl "18. Elastic lines corrections"
 global c_ElLinesCorrSect_lFC_Id
 set c_ElLinesCorrSect_lFC_Id "section-id-180"
 

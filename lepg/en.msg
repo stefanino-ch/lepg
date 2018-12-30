@@ -59,6 +59,11 @@
 "numStrainPoints"               "Number of points to calculate"
 "strainCoef"                    "Coefficient 0.0 to 1.0"
 
+"##### Elastic lines corr"      "#####"
+"loadTot"                       "Total in flight weight."
+"loadDistr"                     "Load distribution in [%]."
+"loadDeform"                    "Deformation with 10 kg load."
+
 "##### Sewing allowances"       "#####"
 "seamUp"                        "Sewing allowance for upper panel edges"
 "seamUpLe"                      "Sewing allowance for upper panel leading edge"

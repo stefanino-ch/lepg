@@ -21,7 +21,7 @@ global  AllGlobalVars_wMDE
 set     AllGlobalVars_wMDE { markSpace markRad markDisp }
 
 #----------------------------------------------------------------------
-#  wingSewingAllowancesEdit
+#  wingMarksEdit
 #  Displays a window to edit the basic wing data
 #
 #  IN:      N/A

@@ -220,7 +220,7 @@ proc InitGui { root } {
     $base.menu.wing.colors add command -underline 5 -label [::msgcat::mc "Trailing Edge"]             -command xxx -state disabled
 
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Additional rib points"]             -command xxx -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Elastic lines corr"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Elastic lines corr"]    -command OpenElasticLinesCorrEdit -state disabled
 
 
     # Wing plan menu
@@ -803,6 +803,12 @@ proc OpenWingMarksEdit { } {
     wingMarksEdit
 }
 
+proc OpenElasticLinesCorrEdit { } {
+    source "wingElasticLinesCorrEdit.tcl"
+
+    wingElasticLinesCorrEdit
+}
+
 proc myAppExit { } {
     global g_PreProcDataChanged
     global g_WingDataChanged
@@ -958,6 +964,7 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "Anchor Points"] -state disabled
 
         $base.menu.wing entryconfigure [::msgcat::mc "Skin Tension"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "Elastic lines corr"] -state disabled
 
         $base.menu.wingplan entryconfigure [::msgcat::mc "Sewing Allowances"] -state disabled
         $base.menu.wingplan entryconfigure [::msgcat::mc "Marks"] -state disabled
@@ -969,6 +976,7 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "Anchor Points"] -state active
 
         $base.menu.wing entryconfigure [::msgcat::mc "Skin Tension"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "Elastic lines corr"] -state active
 
         $base.menu.wingplan entryconfigure [::msgcat::mc "Sewing Allowances"] -state active
         $base.menu.wingplan entryconfigure [::msgcat::mc "Marks"] -state active

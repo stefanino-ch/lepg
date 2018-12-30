@@ -318,16 +318,19 @@ proc readLepDataFile {FilePathName} {
 
     #--------------------------
     # Elastig lines corrections
+    Debug_rLDF "Elastig lines corrections: jump..."
     lassign [jumpToSection [set c_ElLinesCorrSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "read..."
     lassign [ReadElLinesCorrSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "done\n"
 
 # add DXF
 
@@ -1054,29 +1057,34 @@ proc ReadElLinesCorrSectV2_52 {File} {
 
     # loadDistr
     set DataLine [gets $File]
+    set loadDistr(1,1) [lindex $DataLine 0]
+    set loadDistr(1,2) [lindex $DataLine 1]
+
+    set DataLine [gets $File]
     set loadDistr(2,1) [lindex $DataLine 0]
     set loadDistr(2,2) [lindex $DataLine 1]
+    set loadDistr(2,3) [lindex $DataLine 2]
 
     set DataLine [gets $File]
     set loadDistr(3,1) [lindex $DataLine 0]
     set loadDistr(3,2) [lindex $DataLine 1]
     set loadDistr(3,3) [lindex $DataLine 2]
+    set loadDistr(3,4) [lindex $DataLine 3]
 
     set DataLine [gets $File]
     set loadDistr(4,1) [lindex $DataLine 0]
     set loadDistr(4,2) [lindex $DataLine 1]
     set loadDistr(4,3) [lindex $DataLine 2]
     set loadDistr(4,4) [lindex $DataLine 3]
+    set loadDistr(4,5) [lindex $DataLine 4]
 
-    set DataLine [gets $File]
-    set loadDistr(5,1) [lindex $DataLine 0]
-    set loadDistr(5,2) [lindex $DataLine 1]
-    set loadDistr(5,3) [lindex $DataLine 2]
-    set loadDistr(5,4) [lindex $DataLine 3]
-    set loadDistr(5,5) [lindex $DataLine 4]
-
-    # loadDeform
-    # code to read this is missing
+    for {set i 1} {$i <=5} {incr i} {
+        set DataLine [gets $File]
+        set loadDeform($i,1) [lindex $DataLine 0]
+        set loadDeform($i,2) [lindex $DataLine 1]
+        set loadDeform($i,3) [lindex $DataLine 2]
+        set loadDeform($i,4) [lindex $DataLine 3]
+    }
 
     return [list 0 $File]
 }

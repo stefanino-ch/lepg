@@ -195,7 +195,7 @@ global              addRipPoY           # yarp
 
 global              loadTot             # csusl
 global              loadDistr           # cdis
-# global missingName  # loadDeform
+global              loadDeform
 
 proc initGlobalWingVars {} {
 

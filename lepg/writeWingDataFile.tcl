@@ -117,6 +117,12 @@ proc writeWingDataFile {FilePathName} {
 
     #--------------------------
     # Elastig lines corrections
+    lassign [WriteElLinesCorrSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
 
     #--------------------------
     # DXF
@@ -313,7 +319,7 @@ proc WriteSkinTensSectV2_52  {File} {
     puts $File $Separator
     puts $File "* $c_SkinTensSect_lFC_Lbl"
     puts $File $Separator
-    puts $File "Extrados"
+    puts $File "Upper \tlower skin"
 
     for {set i 1} {$i <= 6} {incr i} {
 
@@ -383,6 +389,39 @@ proc WriteMarksSectV2_52 {File} {
     puts $File $Separator
 
     puts $File "$markSpace\t$markRad\t$markDisp"
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteElLinesCorrSectV2_52
+#  Writes the elastic lines correction section in the V2.52 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteElLinesCorrSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_ElLinesCorrSect_lFC_Lbl"
+    puts $File $Separator
+
+    puts $File $loadTot
+
+    puts $File "$loadDistr(1,1)\t$loadDistr(1,2)"
+    puts $File "$loadDistr(2,1)\t$loadDistr(2,2)\t$loadDistr(2,3)"
+    puts $File "$loadDistr(3,1)\t$loadDistr(3,2)\t$loadDistr(3,3)\t$loadDistr(3,4)"
+    puts $File "$loadDistr(4,1)\t$loadDistr(4,2)\t$loadDistr(4,3)\t$loadDistr(4,4)\t$loadDistr(4,5)"
+
+    for {set i 1} {$i <=5} {incr i} {
+        puts $File "$loadDeform($i,1)\t$loadDeform($i,2)\t$loadDeform($i,3)\t$loadDeform($i,4)"
+    }
 
     return [list 0 $File]
 }
