@@ -61,6 +61,22 @@
 "anchorPosE"                    "Position Aufhängepunkt E in % der Flügeltiefe."
 "anchorPosF"                    "Position Befestigungspunkt Bremse in % der Flügeltiefe."
 
+"##### Skin Tension"            "#####"
+"Skin Tension"                  "Tuchspannung"
+"Skin Tension Data"             "Tuchspannung editieren"
+"Top panel % chord"             "Obers. % Flügelt."
+"Top panel over wide %"         "Verbreiterung Obers."
+"Lower panel % chord"           "Unters. % Flügelt."
+"Lower panel over wide %"       "Verbreiterung Unters."
+
+"topPanelChordPerc"             "Obersegel: Distanz in % der Flügeltiefe ab Eintrittskante."
+"topPanelOverWide"              "Verbreiterung an der Position."
+"lowPanelChordPerc"             "Untersegel: Distanz in % der Flügeltiefe ab Eintrittskante."
+"lowPanelOverWide"              "Verbreiterung an der Position."
+"strainMiniRibs"                "Strain in mini-ribs"
+"numStrainPoints"               "Anzahl der Berechungspunkte"
+"strainCoef"                    "Koeffizient 0.0 bis 1.0"
+
 "##### Wing Plan Menu"          "##### Flügelplan"
 "Wing plan"                     "Flügelplan"
 "Sewing Allowances"             "Nahtzugaben"

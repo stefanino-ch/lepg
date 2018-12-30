@@ -50,6 +50,15 @@
 "anchorPosE"                    "Position Anchor E in % of chord."
 "anchorPosF"                    "Position Brakelines in % of chord."
 
+"##### Skin Tension"            "#####"
+"topPanelChordPerc"             "Distance in % of chord from the leading edge of the top panel."
+"topPanelOverWide"              "Over-wide corresponding in % of chord."
+"lowPanelChordPerc"             "Distance in % of chord from the leading edge of the lower panel."
+"lowPanelOverWide"              "Over-wide corresponding in % of chord."
+"strainMiniRibs"                "Strain in mini-ribs"
+"numStrainPoints"               "Number of points to calculate"
+"strainCoef"                    "Coefficient 0.0 to 1.0"
+
 "seamUp"                "Sewing allowance for upper panel edges"
 "seamUpLe"              "Sewing allowance for upper panel leading edge"
 "seamUpTe"              "Sewing allowance for upper panel trailing edge"

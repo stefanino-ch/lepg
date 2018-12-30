@@ -137,55 +137,67 @@ proc readLepDataFile {FilePathName} {
 
     #--------------
     # Anchor points
+    Debug_rLDF "Anchor points: jump..."
     lassign [jumpToSection [set c_AnchorPoSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "read..."
     lassign [ReadAnchorPoSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "done\n"
 
     #--------------
     # Airfoil holes
+    Debug_rLDF "Airfoil holes: jump..."
     lassign [jumpToSection [set c_AirfoilHoSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "read..."
     lassign [ReadAirfoilHoSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "done\n"
 
     #-------------
     # Skin tension
+    Debug_rLDF "Skin tension: jump..."
     lassign [jumpToSection [set c_SkinTensSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "read..."
     lassign [ReadSkinTensSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "done\n"
 
     #------------------
     # Sewing allowances
+    Debug_rLDF "Sewing allowances: jump..."
     lassign [jumpToSection [set c_SewingSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "read..."
     lassign [ReadSewingSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "done\n"
 
     #------
     # Marks
@@ -588,14 +600,17 @@ proc ReadAirfoilHoSectV2_52 {File} {
 proc ReadSkinTensSectV2_52 {File} {
     source "globalWingVars.tcl"
 
+    # read the extrados line
     set DataLine [gets $File]
 
     set i 1
     while {$i <= 6} {
         set DataLine [gets $File]
-        foreach j {0 1 2 3} {
+        Debug_rLDF "\nRead Skin Tens: DataLine $DataLine\n"
+        foreach j { 0 1 2 3 } {
             # skinTension
             set skinTens($i,[expr $j+1]) [lindex $DataLine $j]
+            Debug_rLDF "skinTens $i [expr $j+1] $skinTens($i,[expr $j+1])\n"
         }
         incr i
     }

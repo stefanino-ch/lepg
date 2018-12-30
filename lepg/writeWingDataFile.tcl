@@ -54,7 +54,6 @@ proc writeWingDataFile {FilePathName} {
         return $ReturnValue
     }
 
-
     #--------------
     # Anchor points
     lassign [WriteAnchorsSectV2_52 $File] ReturnValue File
@@ -68,6 +67,13 @@ proc writeWingDataFile {FilePathName} {
 
     #-------------
     # Skin tension
+    #--------------
+    # Anchor points
+    lassign [WriteSkinTensSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
 
     #------------------
     # Sewing allowances
@@ -283,6 +289,44 @@ proc WriteAnchorsSectV2_52  {File} {
 
     return [list 0 $File]
 }
+
+#----------------------------------------------------------------------
+#  WriteSkinTensSectV2_52
+#  Writes the Skin Tension section in the V2.52 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteSkinTensSectV2_52  {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_SkinTensSect_lFC_Lbl"
+    puts $File $Separator
+    puts $File "Extrados"
+
+    for {set i 1} {$i <= 6} {incr i} {
+
+        puts -nonewline $File $skinTens($i,1)
+        puts -nonewline $File "\t$skinTens($i,2)"
+        puts -nonewline $File "\t$skinTens($i,3)"
+        puts            $File "\t$skinTens($i,4)"
+    }
+
+    # strainMiniRibs
+    puts $File $strainMiniRibs
+
+    # numStrainPoints, # strainCoef
+    puts $File "$numStrainPoints    $strainCoef"
+
+    return [list 0 $File]
+}
+
 
 #----------------------------------------------------------------------
 #  WriteSewingAllowancesV2_52
