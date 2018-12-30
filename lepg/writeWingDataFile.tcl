@@ -85,6 +85,11 @@ proc writeWingDataFile {FilePathName} {
 
     #------
     # Marks
+    lassign [WriteMarksSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
 
     #-----------------------
     # Global angle of attack
@@ -354,6 +359,30 @@ proc WriteSewingAllowancesV2_52  {File} {
     puts $File "$seamRib\tribs (mm)"
 
     puts $File "$seamVRib\tvribs (mm)"
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteMarksSectV2_52
+#  Writes the Marks section in the V2.52 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteMarksSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_MarksSect_lFC_Lbl"
+    puts $File $Separator
+
+    puts $File "$markSpace\t$markRad\t$markDisp"
 
     return [list 0 $File]
 }

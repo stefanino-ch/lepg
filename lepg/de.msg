@@ -83,7 +83,7 @@
 
 
 
-
+"##### Sewing Allowances"       "#####"
 "Wing Sewing Allowances"        "Flügel Nahtzugaben"
 "Edge"                          "Kanten"
 "Leading Edge"                  "Eintrittskante"
@@ -101,6 +101,15 @@
 "seamRib"                       "Nahtzugabe Rippen"
 "seamVRib"                      "Nahtzugabe V-Rippen"
 
+"##### Marks"                   "#####"
+"Marks"                         "Markierungen"
+"Wing Marks setup"              "Markierungen"
+"Marks spacing"                 "Mark. Distanz"
+"Point radius"                  "Mark. Radius"
+"Point displacement"            "Mark. Verschiebung"
+"markSpace"                     "Distanz zwischen den Markierungen."
+"markRad"                       "Radius der Markierungskreise."
+"markDisp"                      "Seitl. Verschiebung der Markierungskreise."
 
 "##### Planform Menu"           "##### Grundriss Menu"
 "Planform"                      "Grundriss"
