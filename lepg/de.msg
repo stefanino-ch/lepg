@@ -77,6 +77,26 @@
 "numStrainPoints"               "Anzahl der Berechungspunkte"
 "strainCoef"                    "Koeffizient 0.0 bis 1.0"
 
+"##### AoA estimation"          "#####"
+"Global AoA"                    "Anstellwinkel"
+"Global AoA estimation"         "Anstellwinkel Definitionen"
+"Finesse goal"                  "Gleitwinkel"
+"\[deg\]"                       "\[Grad\]"
+"Center of pressure"            "Druckpunkt"
+"Calage"                        "Pos Pilot"
+"\[% chord\]"                   "\[% Profilsehnenlänge\]"
+"Riser length"                  "Traggurten"
+"Length of lines"               "Leinenlänge"
+"Main carabiners distance"      "Distanz Aufhängung"
+
+"finesse"                       "Angestrebter Anstellwinkel, \nbasierend auf Flügelproportionen."
+"posCop"                        "Position des Druckpunktes. \nSchätzung als % der Profilsehnenlänge."
+"calage"                        "Schwerpunktposition in % der Profilsehnenlänge. \n(Distanz Flügelnase zur Pilotenposition)"
+"riserLength"                   "Länge der Traggurten."
+"lineLength"                    "Länge der Leinen. (Hauptkarabiner zum Flügel)"
+"distTowP"                      "Distanz der Hauptkarabiner."
+
+
 "##### Elastic lines corr"      "#####"
 "Elastic lines corr"            "Leinenelastizität"
 "Elastic lines correction"      "Leinenelastizität bearbeiten"

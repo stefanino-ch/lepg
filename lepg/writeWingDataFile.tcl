@@ -93,6 +93,11 @@ proc writeWingDataFile {FilePathName} {
 
     #-----------------------
     # Global angle of attack
+    lassign [WriteGlobalAoASectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
 
     #-----------------
     # Suspension lines
@@ -389,6 +394,46 @@ proc WriteMarksSectV2_52 {File} {
     puts $File $Separator
 
     puts $File "$markSpace\t$markRad\t$markDisp"
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteGlobalAoASectV2_52
+#  Writes the global AoA estimation section in the V2.52 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteGlobalAoASectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_GlobalAoASect_lFC_Lbl"
+    puts $File $Separator
+
+    puts $File "* Finesse GR"
+    puts $File "\t$finesse"
+
+    puts $File "* Center of pressure % of chord"
+    puts $File "\t$posCop"
+
+    puts $File "* Calage %"
+    puts $File "\t$calage"
+
+    puts $File "* Risers lenght cm"
+    puts $File "\t$riserLength"
+
+    puts $File "* Line lenght cm"
+    puts $File "\t$lineLength"
+
+    puts $File "* Karabiners cm"
+    puts $File "\t$distTowP"
 
     return [list 0 $File]
 }

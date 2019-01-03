@@ -59,6 +59,14 @@
 "numStrainPoints"               "Number of points to calculate"
 "strainCoef"                    "Coefficient 0.0 to 1.0"
 
+"##### AoA estimation"          "#####"
+"finesse"                       "Finesse goal, according to the \ngeneral proportions of the wing."
+"posCop"                        "Position of the wing center of \npressure estimated as % of central cord."
+"calage"                        "Calage in % (distance from the leading \nedge point to the perpendicular to the central \nchord from the pilot position.)"
+"riserLength"                   "Lenght of the risers."
+"lineLength"                    "Length of lines. (From maillons to sail)"
+"distTowP"                      "Separation between main carabiners."
+
 "##### Elastic lines corr"      "#####"
 "loadTot"                       "Total in flight weight."
 "loadDistr"                     "Load distribution in [%]."

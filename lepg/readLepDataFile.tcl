@@ -709,26 +709,35 @@ proc ReadMarksSectV2_52 {File} {
 proc ReadGlobalAoASectV2_52 {File} {
     source "globalWingVars.tcl"
 
-    set DataLine   [gets $File]
-
-    set DataLine   [gets $File]
     # finesse
-    set finesse [gets $File]
-    set DataLine  [gets $File]
+    set DataLine    [gets $File]
+    set DataLine    [gets $File]
+    set finesse     [lindex $DataLine 0]
+
     # posCOP
-    set posCop [gets $File]
-    set DataLine  [gets $File]
+    set DataLine    [gets $File]
+    set DataLine    [gets $File]
+    set posCop      [lindex $DataLine 0]
+
     # calage
-    set calage [gets $File]
-    set DataLine  [gets $File]
+    set DataLine    [gets $File]
+    set DataLine    [gets $File]
+    set calage      [lindex $DataLine 0]
+
     # riserLength
-    set riserLength [gets $File]
-    set DataLine  [gets $File]
+    set DataLine    [gets $File]
+    set DataLine    [gets $File]
+    set riserLength [lindex $DataLine 0]
+
     # lineLength
-    set lineLength [gets $File]
-    set DataLine  [gets $File]
+    set DataLine    [gets $File]
+    set DataLine    [gets $File]
+    set lineLength  [lindex $DataLine 0]
+
     # distTowP
-    set distTowP [gets $File]
+    set DataLine    [gets $File]
+    set DataLine    [gets $File]
+    set distTowP    [lindex $DataLine 0]
 
     return [list 0 $File]
 }

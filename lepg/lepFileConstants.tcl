@@ -70,7 +70,7 @@ set c_MarksSect_lFC_Id "section-id-070"
 #-----------------------
 # Global angle of attack
 global c_GlobalAoASect_lFC_Lbl
-set c_GlobalAoASect_lFC_Lbl "8. Global angle"
+set c_GlobalAoASect_lFC_Lbl "8. Global angle of attack estimation"
 global c_GlobalAoASect_lFC_Id
 set c_GlobalAoASect_lFC_Id "section-id-080"
 

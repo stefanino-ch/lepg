@@ -210,7 +210,7 @@ proc InitGui { root } {
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Skin Tension"]           -command OpenWingSkinTensionDataEdit -state disabled
 
 
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Global AoA"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Global AoA"]             -command OpenGlobalAoADataEdit -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Suspension Lines"]             -command xxx -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Brakes"]             -command xxx -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Ramification lengths"]             -command xxx -state disabled
@@ -791,6 +791,12 @@ proc OpenWingSkinTensionDataEdit { } {
     wingSkinTensionDataEdit
 }
 
+proc OpenGlobalAoADataEdit { } {
+    source "wingGlobalAoADataEdit.tcl"
+
+    wingGlobalAoADataEdit
+}
+
 proc OpenWingSewingAllowancesEdit { } {
     source "wingSewingAllowancesEdit.tcl"
 
@@ -964,6 +970,8 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "Anchor Points"] -state disabled
 
         $base.menu.wing entryconfigure [::msgcat::mc "Skin Tension"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "Global AoA"] -state disabled
+
         $base.menu.wing entryconfigure [::msgcat::mc "Elastic lines corr"] -state disabled
 
         $base.menu.wingplan entryconfigure [::msgcat::mc "Sewing Allowances"] -state disabled
@@ -976,6 +984,7 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "Anchor Points"] -state active
 
         $base.menu.wing entryconfigure [::msgcat::mc "Skin Tension"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "Global AoA"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Elastic lines corr"] -state active
 
         $base.menu.wingplan entryconfigure [::msgcat::mc "Sewing Allowances"] -state active
