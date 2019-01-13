@@ -206,7 +206,7 @@ proc InitGui { root } {
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Basic Data"]             -command OpenWingBasicDataEdit -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Airfoils"]               -command OpenWingAirfoilsDataEdit  -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Anchor Points"]          -command OpenWingAnchorsDataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Airfoil Holes"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Airfoil Holes"]          -command OpenWingAirfoilHolesDataEdit -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Skin Tension"]           -command OpenWingSkinTensionDataEdit -state disabled
 
 
@@ -785,6 +785,12 @@ proc OpenWingAnchorsDataEdit { } {
     wingAnchorsDataEdit
 }
 
+proc OpenWingAirfoilHolesDataEdit { } {
+    source "wingAirfoilHolesDataEdit.tcl"
+
+    wingAirfoilHolesDataEdit
+}
+
 proc OpenWingSkinTensionDataEdit { } {
     source "wingSkinTensionDataEdit.tcl"
 
@@ -968,6 +974,7 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "Basic Data"]   -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Airfoils"]     -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Anchor Points"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "Airfoil Holes"] -state disabled
 
         $base.menu.wing entryconfigure [::msgcat::mc "Skin Tension"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Global AoA"] -state disabled
@@ -982,7 +989,7 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "Basic Data"]   -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Airfoils"]     -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Anchor Points"] -state active
-
+        $base.menu.wing entryconfigure [::msgcat::mc "Airfoil Holes"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Skin Tension"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Global AoA"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Elastic lines corr"] -state active

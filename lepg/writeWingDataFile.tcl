@@ -64,6 +64,11 @@ proc writeWingDataFile {FilePathName} {
 
     #--------------
     # Airfoil holes
+    lassign [WriteAirfoilHoSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
 
     #-------------
     # Skin tension
@@ -301,6 +306,55 @@ proc WriteAnchorsSectV2_52  {File} {
         puts            $File "\t$ribConfig($i,21)"
 
         incr i
+    }
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteAirfoilHoSectV2_52
+#  Writes the Airfoul holes section in the V2.52 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteAirfoilHoSectV2_52  {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_AirfoilHoSect_lFC_Lbl"
+    puts $File $Separator
+
+    # AirfConfigNum - Number of Airfoil configurations
+    puts $File $airfConfigNum
+
+    for { set ConfigIt 1 } { $ConfigIt <= $airfConfigNum } {incr ConfigIt } {
+        # Initial rib for first lightening configuration
+        puts $File $holeRibNum1($ConfigIt)
+
+        # Final rib for first lightening configuration
+        puts $File $holeRibNum2($ConfigIt)
+
+        # Number of holes for the first lightening configuration
+        puts $File $numHoles($ConfigIt)
+
+        for { set HoleIt 1 } { $HoleIt <= $numHoles($ConfigIt) } { incr HoleIt } {
+            puts -nonewline $File "$holeConfig($holeRibNum1($ConfigIt),$HoleIt,9)"
+            puts -nonewline $File "\t$holeConfig($holeRibNum1($ConfigIt),$HoleIt,2)"
+            puts -nonewline $File "\t$holeConfig($holeRibNum1($ConfigIt),$HoleIt,3)"
+            puts -nonewline $File "\t$holeConfig($holeRibNum1($ConfigIt),$HoleIt,4)"
+            puts -nonewline $File "\t$holeConfig($holeRibNum1($ConfigIt),$HoleIt,5)"
+            puts -nonewline $File "\t$holeConfig($holeRibNum1($ConfigIt),$HoleIt,6)"
+            puts -nonewline $File "\t$holeConfig($holeRibNum1($ConfigIt),$HoleIt,7)"
+            puts            $File "\t$holeConfig($holeRibNum1($ConfigIt),$HoleIt,8)"
+        }
+
+
     }
 
     return [list 0 $File]

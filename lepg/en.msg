@@ -50,6 +50,17 @@
 "anchorPosE"                    "Position Anchor E in % of chord."
 "anchorPosF"                    "Position Brakelines in % of chord."
 
+"##### Airfoil holes"           "#####"
+"holeRibNum1"                   "Num of first rib where config applies."
+"holeRibNum2"                   "Num of last rib where config applies."
+"holeconfig_P1"                 "1: Hole type ellipse\n2: Ellipse or circle with central strip\n3: Triangle"
+"holeconfig_P2"                 "Type 1& 2: Distance from LE to hole center in % chord\nType 3: Distance from LE to triangle in % chord"
+"holeconfig_P3"                 "Type 1& 2: Distance from the center of hole to the chord line in % of chord\nType 3: Distance from the center of the triangle corner to the chord line in % of chord"
+"holeconfig_P4"                 "Type 1& 2: Horizontal axis of the ellipse as % of chord\nType 3: Traingle base as % of chord"
+"holeconfig_P5"                 "Type 1& 2: Ellipse vertical axis as % of chord\nType 3: Triangle heigth as % of chord"
+"holeconfig_P6"                 "Type 1& 2: Rotation angle of the ellipse\nType 3: Rotation angle of the base"
+"holeconfig_P7"                 "Type 1: not used set to 0.\nType 2: Central strip width\nType 3: Radius of the smoothed corners"
+
 "##### Skin Tension"            "#####"
 "topPanelChordPerc"             "Distance in % of chord from the leading edge of the top panel."
 "topPanelOverWide"              "Over-wide corresponding in % of chord."

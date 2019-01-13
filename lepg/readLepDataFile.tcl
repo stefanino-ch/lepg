@@ -555,14 +555,16 @@ proc ReadAirfoilHoSectV2_52 {File} {
     set ConfigIt 1
     while {$ConfigIt <= $airfConfigNum} {
         # Initial rib for first lightening configuration
-        # holeRibNum1
         set holeRibNum1($ConfigIt) [gets $File]
+        Debug_rLDF "\nConfigIt - holeRibNum1 $ConfigIt - $holeRibNum1($ConfigIt)"
+
         # Final rib for first lightening configuration
-        # holeRibNum2
         set holeRibNum2($ConfigIt) [gets $File]
+        Debug_rLDF "\n ConfigIt - holeRibNum2 $holeRibNum2($ConfigIt) - $ConfigIt"
+
         # Number of holes for the first lightening configuration
-        # numHoles
         set numHoles($ConfigIt) [gets $File]
+        Debug_rLDF "\n ConfigIt numHoles $ConfigIt - $numHoles($ConfigIt)"
 
         set HoleIt 1
         while {$HoleIt <= $numHoles($ConfigIt)} {
@@ -571,7 +573,9 @@ proc ReadAirfoilHoSectV2_52 {File} {
                 set HoleGeom($HoleIt,$j) [lindex $DataLine $j]
             }
 
-            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,9) $HoleGeom($HoleIt,0)
+            set holeConfig($holeRibNum1($ConfigIt),$HoleIt,9)     $HoleGeom($HoleIt,0)
+            Debug_rLDF "\n  ConfigIt $ConfigIt - HoleIt $HoleIt - holeRibNum1(ConfigIt) $holeRibNum1($ConfigIt)"
+
             set holeConfig($holeRibNum1($ConfigIt),$HoleIt,2) $HoleGeom($HoleIt,1)
             set holeConfig($holeRibNum1($ConfigIt),$HoleIt,3) $HoleGeom($HoleIt,2)
             set holeConfig($holeRibNum1($ConfigIt),$HoleIt,4) $HoleGeom($HoleIt,3)
