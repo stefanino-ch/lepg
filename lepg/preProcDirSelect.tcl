@@ -1,4 +1,13 @@
-#-------
+#---------------------------------------------------------------------
+#
+#  Dialog window to configure where the PreProcessor is installed.
+#
+#  Stefan Feuz
+#  http://www.laboratoridenvol.com
+#
+#  General Public License GNU GPL 3.0
+#
+#---------------------------------------------------------------------
 # Globals
 global .ppds
 

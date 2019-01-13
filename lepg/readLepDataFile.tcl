@@ -1002,10 +1002,10 @@ proc ReadLeColSectV2_52 {File} {
             # leColRibNum
 			set leColRibNum($LeColIt) [lindex $DataLine 0]
             # numleColMark
-			set numleColMarks($LeColIt) [lindex $DataLine 1]
+			set numLeColMarks($LeColIt) [lindex $DataLine 1]
 
 			set i 1
-			while {$i <= $numleColMarks($LeColIt)} {
+			while {$i <= $numLeColMarks($LeColIt)} {
     			set DataLine [gets $File]
                 # leColMarkNum
                 set leColMarkNum($LeColIt,$i) [lindex $DataLine 0]

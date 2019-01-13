@@ -2,7 +2,6 @@
 #
 #  Window to edit the airfoil holes for each rib
 #
-#  Pere Casellas
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
 #
@@ -19,8 +18,8 @@ global  AllGlobalVars_wAHDE
 set     AllGlobalVars_wAHDE { airfConfigNum holeRibNum1 holeRibNum2 numHoles holeConfig }
 
 #----------------------------------------------------------------------
-#  wingSkinTensionDataEdit
-#  Displays a window to edit the wing skin tension data
+#  wingAirfoilHolesDataEdit
+#  Displays a window to edit the airfoil holes data
 #
 #  IN:      N/A
 #  OUT:     N/A
@@ -424,7 +423,7 @@ proc addEditTab_wAHDE {tabNum_wAHDE} {
     ttk::frame .wahde.dataBot.ntebk.config$tabNum_wAHDE
     .wahde.dataBot.ntebk add .wahde.dataBot.ntebk.config$tabNum_wAHDE -text [::msgcat::mc "Config $tabNum_wAHDE"]
 
-    label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.spacer1 -width 5 -text "X"
+    label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.spacer1 -width 5 -text ""
     grid        .wahde.dataBot.ntebk.config$tabNum_wAHDE.spacer1 -row 0 -column 0
 
     label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.firstRib -width 16 -text [::msgcat::mc "Initial Rib for config"]
@@ -439,7 +438,7 @@ proc addEditTab_wAHDE {tabNum_wAHDE} {
     SetHelpBind .wahde.dataBot.ntebk.config$tabNum_wAHDE.e_lastRib holeRibNum2   HelpText_wAHDE
     grid        .wahde.dataBot.ntebk.config$tabNum_wAHDE.e_lastRib -row 1 -column 2 -sticky e -pady 1
 
-    label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.spacer2 -width 5 -text "X"
+    label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.spacer2 -width 5 -text ""
     grid        .wahde.dataBot.ntebk.config$tabNum_wAHDE.spacer2 -row 2 -column 0
 
     #-------------
@@ -450,7 +449,7 @@ proc addEditTab_wAHDE {tabNum_wAHDE} {
     button      .wahde.dataBot.ntebk.config$tabNum_wAHDE.b_incItems     -width 10 -text [::msgcat::mc "inc Items"]  -command IncItemLines_wAHDE
     grid        .wahde.dataBot.ntebk.config$tabNum_wAHDE.b_incItems    -row 3 -column 2 -sticky e -padx 3 -pady 3
 
-    label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.spacer3 -width 5 -text "X"
+    label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.spacer3 -width 5 -text ""
     grid        .wahde.dataBot.ntebk.config$tabNum_wAHDE.spacer3 -row 4 -column 0
 
     #-------------
@@ -479,7 +478,7 @@ proc addEditTab_wAHDE {tabNum_wAHDE} {
     label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.p7 -width 10 -text "P7"
     grid        .wahde.dataBot.ntebk.config$tabNum_wAHDE.p7 -row 5 -column 8 -sticky e
 
-    label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.spacer4 -width 5 -text "X"
+    label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.spacer4 -width 5 -text ""
     grid        .wahde.dataBot.ntebk.config$tabNum_wAHDE.spacer4 -row 5 -column 9
 
     for { set i 1 } { $i <= $Lcl_numHoles($tabNum_wAHDE) } { incr i } {

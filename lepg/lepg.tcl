@@ -172,7 +172,6 @@ proc InitGui { root } {
     menu $base.menu.file -tearoff 0
     menu $base.menu.geometry -tearoff 0
     menu $base.menu.wing -tearoff 0
-    menu $base.menu.wing.colors -tearoff 0
     menu $base.menu.wingplan -tearoff 0
     menu $base.menu.settings -tearoff 0
     menu $base.menu.settings.language -tearoff 0
@@ -215,9 +214,8 @@ proc InitGui { root } {
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Brakes"]             -command xxx -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Ramification lengths"]             -command xxx -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "HV-VH Ribs"]             -command xxx -state disabled
-    $base.menu.wing add cascade -label [::msgcat::mc "Colors"] -menu $base.menu.wing.colors
-    $base.menu.wing.colors add command -underline 5 -label [::msgcat::mc "Leading Edge"]             -command xxx -state disabled
-    $base.menu.wing.colors add command -underline 5 -label [::msgcat::mc "Trailing Edge"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Leading Edge Colors"]    -command OpenWingLEColorDataEdit -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Trailing Edge Colors"]   -command OpenWingTEColorDataEdit -state disabled
 
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Additional rib points"]             -command xxx -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Elastic lines corr"]    -command OpenElasticLinesCorrEdit -state disabled
@@ -227,7 +225,7 @@ proc InitGui { root } {
     $base.menu add cascade -label [::msgcat::mc "Wing plan"] -underline 0 -menu $base.menu.wingplan
     $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "Sewing Allowances"]  -command OpenWingSewingAllowancesEdit -state disabled
     $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "Marks"]              -command OpenWingMarksEdit -state disabled
-    $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "DXF"]             -command xxx -state disabled
+    #$base.menu.wingplan add command -underline 5 -label [::msgcat::mc "DXF"]             -command xxx -state disabled
 
     # Settings menu
     $base.menu add cascade -label [::msgcat::mc "Settings"] -underline 0 -menu $base.menu.settings
@@ -803,6 +801,18 @@ proc OpenGlobalAoADataEdit { } {
     wingGlobalAoADataEdit
 }
 
+proc OpenWingLEColorDataEdit { } {
+    source "wingLEColorsDataEdit.tcl"
+
+    wingLeadingEdgeColorsDataEdit
+}
+
+proc OpenWingTEColorDataEdit { } {
+    source "wingTEColorsDataEdit.tcl"
+
+    wingTrailingEdgeColorsDataEdit
+}
+
 proc OpenWingSewingAllowancesEdit { } {
     source "wingSewingAllowancesEdit.tcl"
 
@@ -978,6 +988,8 @@ proc SetWingBtnStatus { a e op } {
 
         $base.menu.wing entryconfigure [::msgcat::mc "Skin Tension"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Global AoA"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "Leading Edge Colors"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "Trailing Edge Colors"] -state disabled
 
         $base.menu.wing entryconfigure [::msgcat::mc "Elastic lines corr"] -state disabled
 
@@ -992,6 +1004,9 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "Airfoil Holes"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Skin Tension"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Global AoA"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "Leading Edge Colors"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "Trailing Edge Colors"] -state active
+
         $base.menu.wing entryconfigure [::msgcat::mc "Elastic lines corr"] -state active
 
         $base.menu.wingplan entryconfigure [::msgcat::mc "Sewing Allowances"] -state active

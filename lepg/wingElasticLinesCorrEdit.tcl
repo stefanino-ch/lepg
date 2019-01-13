@@ -2,7 +2,6 @@
 #
 #  Window to edit the elastic lines correction
 #
-#  Pere Casellas
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
 #

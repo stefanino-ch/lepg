@@ -2,7 +2,6 @@
 #
 #  Global Wing variables used across lep and lepg including explanations
 #
-#  Pere Casellas
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
 #

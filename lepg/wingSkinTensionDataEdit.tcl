@@ -2,7 +2,6 @@
 #
 #  Window to edit the wing skin tension data
 #
-#  Pere Casellas
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
 #

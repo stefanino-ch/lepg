@@ -115,6 +115,22 @@
 "lineLength"                    "Länge der Leinen. (Hauptkarabiner zum Flügel)"
 "distTowP"                      "Distanz der Hauptkarabiner."
 
+"##### Leading Edge Colors"    "#####"
+"Leading Edge Colors"          "Farben Eintrittskante"
+"Leading edge color marks"     "Marker für Farben an der Eintrittskante"
+"Rib for config"                "Rippennummer"
+"hor dist"                      "Hor Dist"
+"ver dist"                      "Ver Dist"
+leColRibNum                     "Rippennummer für die Konfiguration."
+leColMarkXDist                  "Seitliche Verschiebung nach rechts der Rippe."
+leColMarkYDist                  "Distanz von der Flügelvorderkante in % der Profilsehnenlänge."
+
+"##### Trailing Edge Colors"    "#####"
+"Trailing Edge Colors"          "Farben Austrittskante"
+"Trailing edge color marks"     "Marker für Farben an der Austrittskante"
+teColRibNum                     "Rippennummer für die Konfiguration."
+teColMarkXDist                  "Seitliche Verschiebung nach rechts der Rippe."
+teColMarkYDist                  "Distanz von der Flügelhinterkante in % der Profilsehnenlänge."
 
 "##### Elastic lines corr"      "#####"
 "Elastic lines corr"            "Leinenelastizität"

@@ -105,14 +105,14 @@ set c_MiniRibSect_lFC_Id "section-id-120"
 #----------------------
 # Trailing edge  colors
 global c_TeColSect_lFC_Lbl
-set c_TeColSect_lFC_Lbl "15. Extrados"
+set c_TeColSect_lFC_Lbl "15. Extrados colors"
 global c_TeColSect_lFC_Id
 set c_TeColSect_lFC_Id "section-id-150"
 
 #--------------------
 # Leading edge colors
 global c_LeColSect_lFC_Lbl
-set c_LeColSect_lFC_Lbl "16. Intrados"
+set c_LeColSect_lFC_Lbl "16. Intrados colors"
 global c_LeColSect_lFC_Id
 set c_LeColSect_lFC_Id "section-id-160"
 

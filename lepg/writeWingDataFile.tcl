@@ -118,9 +118,19 @@ proc writeWingDataFile {FilePathName} {
 
     #----------------------
     # Trailing edge  colors
+    lassign [WriteTeColSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
 
     #--------------------
     # Leading edge colors
+    lassign [WriteLeColSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
 
     #----------------------
     # Additional rib points
@@ -488,6 +498,82 @@ proc WriteGlobalAoASectV2_52 {File} {
 
     puts $File "* Karabiners cm"
     puts $File "\t$distTowP"
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteTeColSectV2_52
+#  Writes the Trailing Edge color section in the V2.52 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteTeColSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_TeColSect_lFC_Lbl"
+    puts $File $Separator
+
+    # numTeCol
+    puts $File $numTeCol
+
+    for {set TeColIt 1} {$TeColIt <= $numTeCol} {incr TeColIt} {
+
+        puts -nonewline $File "$teColRibNum($TeColIt)"
+        puts            $File "\t$numTeColMarks($TeColIt)"
+
+        for {set i 1} {$i <= $numTeColMarks($TeColIt)} {incr i} {
+
+            puts -nonewline $File "$teColMarkNum($TeColIt,$i)"
+            puts -nonewline $File "\t$teColMarkYDist($TeColIt,$i)"
+            puts            $File "\t$teColMarkXDist($TeColIt,$i)"
+        }
+    }
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteLeColSectV2_52
+#  Writes the Leading Edge color section in the V2.52 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteLeColSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_LeColSect_lFC_Lbl"
+    puts $File $Separator
+
+    # numTeCol
+    puts $File $numLeCol
+
+    for {set LeColIt 1} {$LeColIt <= $numLeCol} {incr LeColIt} {
+
+        puts -nonewline $File "$leColRibNum($LeColIt)"
+        puts            $File "\t$numLeColMarks($LeColIt)"
+
+        for {set i 1} {$i <= $numLeColMarks($LeColIt)} {incr i} {
+
+            puts -nonewline $File "$leColMarkNum($LeColIt,$i)"
+            puts -nonewline $File "\t$leColMarkYDist($LeColIt,$i)"
+            puts            $File "\t$leColMarkXDist($LeColIt,$i)"
+        }
+    }
 
     return [list 0 $File]
 }

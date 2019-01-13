@@ -2,7 +2,6 @@
 #
 #  Window to edit the global AoA data
 #
-#  Pere Casellas
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
 #

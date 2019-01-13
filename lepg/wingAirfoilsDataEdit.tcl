@@ -2,7 +2,6 @@
 #
 #  Window to edit the wing airfoils data
 #
-#  Pere Casellas
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
 #

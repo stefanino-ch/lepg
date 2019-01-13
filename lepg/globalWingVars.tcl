@@ -184,7 +184,7 @@ global              teColMarkXDist      # xpc2e
 
 global              numLeCol            # npci
 global              leColRibNum         # npc1i
-global              numleColMarks       # npc2i
+global              numLeColMarks       # npc2i
 global              leColMarkNum        # npc3i
 global              leColMarkYDist      # xpc1i
 global              leColMarkXDist      # xpc2i

@@ -1,12 +1,13 @@
-# lepConfigFile.tcl --
+#---------------------------------------------------------------------
 #
-# This file implements the Tcl code for the management of the lep-gui
-# config file.
+#  Procedures to read and write the lepg config file
 #
-# Stefan Feuz
+#  Stefan Feuz
+#  http://www.laboratoridenvol.com
 #
-# General Public License GNU GPL 3.0
+#  General Public License GNU GPL 3.0
 #
+#---------------------------------------------------------------------
 
 package provide lepConfigFile   1.0
 package require Tcl             8.6

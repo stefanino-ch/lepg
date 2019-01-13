@@ -3,7 +3,6 @@
 #  Methods needed in all windows to display the help text in the
 #  yellow help field
 #
-#  Pere Casellas
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
 #
