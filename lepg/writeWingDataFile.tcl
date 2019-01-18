@@ -112,6 +112,12 @@ proc writeWingDataFile {FilePathName} {
 
     #---------------------
     # Ramification lengths
+    lassign [WriteRamLengthSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
 
     #----------------
     # H V and VH ribs => miniRib
@@ -498,6 +504,43 @@ proc WriteGlobalAoASectV2_52 {File} {
 
     puts $File "* Karabiners cm"
     puts $File "\t$distTowP"
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteRamLengthSectV2_52
+#  Writes the ramification length section in the V2.52 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteRamLengthSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_RamLengthSect_lFC_Lbl"
+    puts $File $Separator
+
+
+    puts -nonewline $File "$ramLength(3,1)"
+    puts            $File "\t$ramLength(3,3)"
+
+    puts -nonewline $File "$ramLength(4,1)"
+    puts -nonewline $File "\t$ramLength(4,3)"
+    puts            $File "\t$ramLength(4,4)"
+
+    puts -nonewline $File "$ramLength(5,1)"
+    puts            $File "\t$ramLength(5,3)"
+
+    puts -nonewline $File "$ramLength(6,1)"
+    puts -nonewline $File "\t$ramLength(6,3)"
+    puts            $File "\t$ramLength(6,4)"
 
     return [list 0 $File]
 }

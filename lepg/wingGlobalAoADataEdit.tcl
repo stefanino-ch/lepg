@@ -63,7 +63,7 @@ proc wingGlobalAoADataEdit {} {
     ttk::label  .wgade.data.spacer1_wGADE -text "" -width 20 -anchor e
     grid        .wgade.data.spacer1_wGADE -row 0 -column 0 -sticky e
 
-    ttk::label  .wgade.data.finesse   -text "Finesse goal" -width 20 -anchor e
+    ttk::label  .wgade.data.finesse   -text [::msgcat::mc "Finesse goal"] -width 20 -anchor e
     grid        .wgade.data.finesse   -row 1 -column 1 -sticky e
     ttk::label  .wgade.data.u_finesse -text "\[deg\]" -width 10 -anchor e
     grid        .wgade.data.u_finesse -row 1 -column 2 -sticky e
@@ -71,7 +71,7 @@ proc wingGlobalAoADataEdit {} {
     SetHelpBind .wgade.data.e_finesse finesse  HelpText_wGADE
     grid        .wgade.data.e_finesse -row 1 -column 3 -sticky e
 
-    ttk::label  .wgade.data.cop   -text "Center of pressure" -width 20 -anchor e
+    ttk::label  .wgade.data.cop   -text [::msgcat::mc "Center of pressure"] -width 20 -anchor e
     grid        .wgade.data.cop   -row 2 -column 1 -sticky e
     ttk::label  .wgade.data.u_cop -text "\[% chord\]" -width 10 -anchor e
     grid        .wgade.data.u_cop -row 2 -column 2 -sticky e
@@ -79,7 +79,7 @@ proc wingGlobalAoADataEdit {} {
     SetHelpBind .wgade.data.e_cop posCop  HelpText_wGADE
     grid        .wgade.data.e_cop -row 2 -column 3 -sticky e
 
-    ttk::label  .wgade.data.calage   -text "Calage" -width 20 -anchor e
+    ttk::label  .wgade.data.calage   -text [::msgcat::mc "Calage"] -width 20 -anchor e
     grid        .wgade.data.calage   -row 3 -column 1 -sticky e
     ttk::label  .wgade.data.u_calage -text "\[% chord\]" -width 10 -anchor e
     grid        .wgade.data.u_calage -row 3 -column 2 -sticky e
@@ -87,7 +87,7 @@ proc wingGlobalAoADataEdit {} {
     SetHelpBind .wgade.data.e_calage calage HelpText_wGADE
     grid        .wgade.data.e_calage -row 3 -column 3 -sticky e
 
-    ttk::label  .wgade.data.riser   -text "Riser length" -width 20 -anchor e
+    ttk::label  .wgade.data.riser   -text [::msgcat::mc "Riser length"] -width 20 -anchor e
     grid        .wgade.data.riser   -row 4 -column 1 -sticky e
     ttk::label  .wgade.data.u_riser -text "\[cm\]" -width 10 -anchor e
     grid        .wgade.data.u_riser -row 4 -column 2 -sticky e
@@ -95,7 +95,7 @@ proc wingGlobalAoADataEdit {} {
     SetHelpBind .wgade.data.e_riser riserLength  HelpText_wGADE
     grid        .wgade.data.e_riser -row 4 -column 3 -sticky e
 
-    ttk::label  .wgade.data.lines   -text "Length of lines" -width 20 -anchor e
+    ttk::label  .wgade.data.lines   -text [::msgcat::mc "Length of lines"] -width 20 -anchor e
     grid        .wgade.data.lines   -row 5 -column 1 -sticky e
     ttk::label  .wgade.data.u_lines -text "\[cm\]" -width 10 -anchor e
     grid        .wgade.data.u_lines -row 5 -column 2 -sticky e
@@ -103,7 +103,7 @@ proc wingGlobalAoADataEdit {} {
     SetHelpBind .wgade.data.e_lines lineLength  HelpText_wGADE
     grid        .wgade.data.e_lines -row 5 -column 3 -sticky e
 
-    ttk::label  .wgade.data.carab   -text "Main carabiners distance" -width 20 -anchor e
+    ttk::label  .wgade.data.carab   -text [::msgcat::mc "Main carabiners distance"] -width 20 -anchor e
     grid        .wgade.data.carab   -row 6 -column 1 -sticky e
     ttk::label  .wgade.data.u_carab -text "\[cm\]" -width 10 -anchor e
     grid        .wgade.data.u_carab -row 6 -column 2 -sticky e

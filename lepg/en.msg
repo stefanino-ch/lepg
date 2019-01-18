@@ -78,6 +78,12 @@
 "lineLength"                    "Length of lines. (From maillons to sail)"
 "distTowP"                      "Separation between main carabiners."
 
+"##### Ramification lengths"    "#####"
+"lines_t"                       "Distance from top ramification \nto the wing (l2)."
+"lines_4_m"                     "Distance from second to top \nramification to wing (l3)."
+"breakl_t"                      "Break lines: distance from top \nramification to the wing (l2)."
+"breakl_4_m"                    "Break lines: distance from second \nto top ramification to wing (l3)."
+
 "##### Elastic lines corr"      "#####"
 "loadTot"                       "Total in flight weight."
 "loadDistr"                     "Load distribution in [%]."

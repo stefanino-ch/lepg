@@ -115,6 +115,18 @@
 "lineLength"                    "Länge der Leinen. (Hauptkarabiner zum Flügel)"
 "distTowP"                      "Distanz der Hauptkarabiner."
 
+"##### Ramification lengths"    "#####"
+"Ramification lengths"          "Leinen-Verzweigungen"
+"Ramification lengths edit"     "Position der Leinen-Verzweigungen"
+"3 line levels"                 "3 Leinenebenen"
+"4 line levels"                 "4 Leinenebenen"
+"Dist Ramification 1 to wing"   "Distanz oberste Verzweigung - Flügel"
+"Dist Ramification 2 to wing"   "Distanz 2. oberste Verzweigung - Flügel"
+"lines_t"                       "Distanz von der obersten \nVerzweigung zum Flügel (l2)."
+"lines_4_m"                     "Distanz von der 2. obersten \nVerzweigung zum Flügel (l3)."
+"breakl_t"                      "Bremsleinen: Distanz von der obersten \nVerzweigung zum Flügel (l2)."
+"breakl_4_m"                    "Bremsleinen: Distanz von der 2. obersten \nVerzweigung zum Flügel (l3)."
+
 "##### Leading Edge Colors"    "#####"
 "Leading Edge Colors"          "Farben Eintrittskante"
 "Leading edge color marks"     "Marker für Farben an der Eintrittskante"
