@@ -78,6 +78,15 @@
 "lineLength"                    "Length of lines. (From maillons to sail)"
 "distTowP"                      "Separation between main carabiners."
 
+"##### Line path"               "#####"
+"lineMode"                      "0=Lower branches lined only by geometric mean of the anchor points\nOther modes not fully implemented"
+"linePath_L1"                   "Order at level 1 \n Put 0 if none"
+"linePath_L2"                   "Order at level 2 \n Put 0 if none"
+"linePath_L3"                   "Order at level 3 \n Put 0 if none"
+"linePath_L4"                   "Order at level 4 \n Put 0 if none"
+"linePath_A1"                   "Anchor line (1=A, 2=B, 3=C, 4=D, 5=E, 6=brake)"
+"linePath_A2"                   "Anchor rib number"
+
 "##### Ramification lengths"    "#####"
 "lines_t"                       "Distance from top ramification \nto the wing (l2)."
 "lines_4_m"                     "Distance from second to top \nramification to wing (l3)."

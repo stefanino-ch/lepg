@@ -210,7 +210,7 @@ proc InitGui { root } {
 
 
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Global AoA"]             -command OpenGlobalAoADataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Suspension Lines"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Suspension lines"]       -command OpenSuspensionLinesDataEdit -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Brakes"]             -command xxx -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Ramification lengths"]   -command OpenRamificationLengthDataEdit -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "HV-VH Ribs"]             -command xxx -state disabled
@@ -801,6 +801,12 @@ proc OpenGlobalAoADataEdit { } {
     wingGlobalAoADataEdit
 }
 
+proc OpenSuspensionLinesDataEdit { } {
+    source "wingSuspensionLinesDataEdit.tcl"
+
+    wingSuspensionLinesDataEdit
+}
+
 proc OpenRamificationLengthDataEdit { } {
     source "wingRamificationLengthDataEdit.tcl"
 
@@ -994,6 +1000,7 @@ proc SetWingBtnStatus { a e op } {
 
         $base.menu.wing entryconfigure [::msgcat::mc "Skin Tension"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Global AoA"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "Suspension lines"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Ramification lengths"] -state disabled
 
         $base.menu.wing entryconfigure [::msgcat::mc "Leading Edge Colors"] -state disabled
@@ -1012,6 +1019,7 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "Airfoil Holes"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Skin Tension"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Global AoA"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "Suspension lines"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Ramification lengths"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Leading Edge Colors"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Trailing Edge Colors"] -state active

@@ -106,6 +106,11 @@ proc writeWingDataFile {FilePathName} {
 
     #-----------------
     # Suspension lines
+    lassign [WriteSuspLinesSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
 
     #-------
     # Brakes
@@ -507,6 +512,61 @@ proc WriteGlobalAoASectV2_52 {File} {
 
     return [list 0 $File]
 }
+
+#----------------------------------------------------------------------
+#  WriteSuspLinesSectV2_52
+#  Writes the Suspension Lines section in the V2.52 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteSuspLinesSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_SuspLinesSect_lFC_Lbl"
+    puts $File $Separator
+
+    # Line Control Parameter
+    # lineMode
+    puts $File $lineMode
+
+    # numLinePlan
+    puts $File $numLinePlan
+
+    set LinePlanIt 1
+    for {set LinePlanIt 1} {$LinePlanIt <= $numLinePlan} {incr LinePlanIt} {
+
+        # numLinePath
+        puts $File $numLinePath($LinePlanIt)
+
+        # Line Paths
+        for {set i 1} {$i <= $numLinePath($LinePlanIt)} {incr i} {
+
+            # LinePath
+            puts -nonewline $File "$linePath($LinePlanIt,$i,1)\t"
+            puts -nonewline $File "$linePath($LinePlanIt,$i,2)\t"
+            puts -nonewline $File "$linePath($LinePlanIt,$i,3)\t"
+            puts -nonewline $File "$linePath($LinePlanIt,$i,4)\t"
+            puts -nonewline $File "$linePath($LinePlanIt,$i,5)\t"
+            puts -nonewline $File "$linePath($LinePlanIt,$i,6)\t"
+            puts -nonewline $File "$linePath($LinePlanIt,$i,7)\t"
+            puts -nonewline $File "$linePath($LinePlanIt,$i,8)\t"
+            puts -nonewline $File "$linePath($LinePlanIt,$i,9)\t"
+            puts -nonewline $File "$linePath($LinePlanIt,$i,14)\t"
+            puts            $File "$linePath($LinePlanIt,$i,15)"
+        }
+    }
+
+    return [list 0 $File]
+}
+
+
 
 #----------------------------------------------------------------------
 #  WriteRamLengthSectV2_52

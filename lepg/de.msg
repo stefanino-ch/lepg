@@ -115,6 +115,18 @@
 "lineLength"                    "Länge der Leinen. (Hauptkarabiner zum Flügel)"
 "distTowP"                      "Distanz der Hauptkarabiner."
 
+"##### Line path"               "#####"
+"Suspension lines"              "Aufhängeleinen"
+"Suspension lines configuration" "Konfiguration der Aufhängeleinen"
+"Control param"                 "Konfigurationsart"
+"lineMode"                      "0=Rein geometrische Definition über Leinenpfad\nAndere Modi sind nicht vollständig implementiert"
+"linePath_L1"                   "Pfad auf Level 1 \nAuf 0 setzen wenn nicht verwendet"
+"linePath_L2"                   "Pfad auf Level 2 \nAuf 0 setzen wenn nicht verwendet"
+"linePath_L3"                   "Pfad auf Level 3 \nAuf 0 setzen wenn nicht verwendet"
+"linePath_L4"                   "Pfad auf Level 4 \nAuf 0 setzen wenn nicht verwendet"
+"linePath_A1"                   "Ankerpunkt (1=A, 2=B, 3=C, 4=D, 5=E, 6=Bremse)"
+"linePath_A2"                   "Rippennummer des Ankerpunktes"
+
 "##### Ramification lengths"    "#####"
 "Ramification lengths"          "Leinen-Verzweigungen"
 "Ramification lengths edit"     "Position der Leinen-Verzweigungen"

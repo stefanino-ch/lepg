@@ -227,16 +227,19 @@ proc readLepDataFile {FilePathName} {
 
     #-----------------
     # Suspension lines
+    Debug_rLDF "Suspension lines: jump..."
     lassign [jumpToSection [set c_SuspLinesSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "read..."
     lassign [ReadSuspLinesSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
+    Debug_rLDF "done\n"
 
     #-------
     # Brakes
@@ -763,31 +766,35 @@ proc ReadSuspLinesSectV2_52 {File} {
     # Line Control Parameter
     # lineMode
     set lineMode [gets $File]
+    Debug_rLDF "lineMode $lineMode\n"
+
     # numLinePlan
-    set lineMode      [gets $File]
+    set numLinePlan      [gets $File]
+    Debug_rLDF "numLinePlan $numLinePlan\n"
 
     set LinePlanIt 1
-    while {$LinePlanIt <= $lineMode} {
+    while {$LinePlanIt <= $numLinePlan} {
 
         # numLinePath
         set numLinePath($LinePlanIt) [gets $File]
+        Debug_rLDF "numLinePath($LinePlanIt) $numLinePath($LinePlanIt)\n"
 
         # Read Line Paths
         set i 1
         while {$i <= $numLinePath($LinePlanIt)} {
             set DataLine [gets $File]
             # LinePath
-            set mc($LinePlanIt,$i,1)   [lindex $DataLine 0]
-            set mc($LinePlanIt,$i,2)   [lindex $DataLine 1]
-            set mc($LinePlanIt,$i,3)   [lindex $DataLine 2]
-            set mc($LinePlanIt,$i,4)   [lindex $DataLine 3]
-            set mc($LinePlanIt,$i,5)   [lindex $DataLine 4]
-            set mc($LinePlanIt,$i,6)   [lindex $DataLine 5]
-            set mc($LinePlanIt,$i,7)   [lindex $DataLine 6]
-            set mc($LinePlanIt,$i,8)   [lindex $DataLine 7]
-            set mc($LinePlanIt,$i,9)   [lindex $DataLine 8]
-            set mc($LinePlanIt,$i,14)  [lindex $DataLine 9]
-            set mc($LinePlanIt,$i,15)  [lindex $DataLine 10]
+            set linePath($LinePlanIt,$i,1)   [lindex $DataLine 0]
+            set linePath($LinePlanIt,$i,2)   [lindex $DataLine 1]
+            set linePath($LinePlanIt,$i,3)   [lindex $DataLine 2]
+            set linePath($LinePlanIt,$i,4)   [lindex $DataLine 3]
+            set linePath($LinePlanIt,$i,5)   [lindex $DataLine 4]
+            set linePath($LinePlanIt,$i,6)   [lindex $DataLine 5]
+            set linePath($LinePlanIt,$i,7)   [lindex $DataLine 6]
+            set linePath($LinePlanIt,$i,8)   [lindex $DataLine 7]
+            set linePath($LinePlanIt,$i,9)   [lindex $DataLine 8]
+            set linePath($LinePlanIt,$i,14)  [lindex $DataLine 9]
+            set linePath($LinePlanIt,$i,15)  [lindex $DataLine 10]
             incr i
         }
 
@@ -816,12 +823,12 @@ proc ReadBrakesSectV2_52 {File} {
 
     # brakeLength
     set brakeLength   [gets $File]
-    set numLinePath($LinePlanIt) [gets $File]
+    set numBrkLinePath($LinePlanIt) [gets $File]
 
 
     # Read 4 levels
     set i 1
-    while {$i <= $numLinePath($LinePlanIt)} {
+    while {$i <= $numBrkLinePath($LinePlanIt)} {
         set DataLine  [gets $File]
         set mc($LinePlanIt,$i,1)   [lindex $DataLine 0]
         set mc($LinePlanIt,$i,2)   [lindex $DataLine 1]
