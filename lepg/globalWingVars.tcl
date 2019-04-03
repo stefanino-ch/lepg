@@ -154,6 +154,7 @@ global              lineLength          # clengl
                     # Basic length of lines (maillons - sail) in cm
 global              distTowP            # clengk
                     # Separation between main carabiners in cm
+
 global              lineMode            # zcontrol
                     # 0 = lower branches lined only by geometric mean of the anchor points
                     # 1 = lower branches lined by weighting type 1 (not fully implemented yet)
@@ -163,10 +164,17 @@ global              numLinePlan         # slp
 global              numLinePath         # cam
                     # Paths number for plan
 global              linePath            # mc
-        # really used somewhere?
+                    # detailed description of the line path
+
 global              brakeLength         # clengb
+                    # Lenth of brake lines
+global              numBrakeLinePath
+                    # Number of brake paths
+global              brakeLinePath
+                    # detailed description of the brake line path
 global              brakeDistr          # bd
-        # really used somewhere?
+                    # brake distribution
+
 global              brake               # brake
 global              ramLength           # raml
 global              numMiniRibs         # nhvr

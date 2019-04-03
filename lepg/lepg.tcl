@@ -211,9 +211,9 @@ proc InitGui { root } {
 
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Global AoA"]             -command OpenGlobalAoADataEdit -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Suspension lines"]       -command OpenSuspensionLinesDataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Brakes"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Brake lines"]            -command OpenBrakeLinesDataEdit -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Ramification lengths"]   -command OpenRamificationLengthDataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "HV-VH Ribs"]             -command xxx -state disabled
+    $base.menu.wing add command -underline 5 -label [::msgcat::mc "HV-VH Ribs"]             -command OpenHV-VH-RibsDataEdit -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Leading Edge Colors"]    -command OpenWingLEColorDataEdit -state disabled
     $base.menu.wing add command -underline 5 -label [::msgcat::mc "Trailing Edge Colors"]   -command OpenWingTEColorDataEdit -state disabled
 
@@ -807,10 +807,22 @@ proc OpenSuspensionLinesDataEdit { } {
     wingSuspensionLinesDataEdit
 }
 
+proc OpenBrakeLinesDataEdit { } {
+    source "wingBrakeLinesDataEdit.tcl"
+
+    wingBrakeLinesDataEdit
+}
+
 proc OpenRamificationLengthDataEdit { } {
     source "wingRamificationLengthDataEdit.tcl"
 
     wingRamificationLengthDataEdit
+}
+
+proc OpenHV-VH-RibsDataEdit { } {
+    source "wing-hv-vh-ribs-DataEdit.tcl"
+
+    wingHV-VH-RibsDataEdit
 }
 
 proc OpenWingLEColorDataEdit { } {
@@ -997,17 +1009,15 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "Airfoils"]     -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Anchor Points"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Airfoil Holes"] -state disabled
-
         $base.menu.wing entryconfigure [::msgcat::mc "Skin Tension"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Global AoA"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Suspension lines"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Ramification lengths"] -state disabled
-
+        $base.menu.wing entryconfigure [::msgcat::mc "HV-VH Ribs"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "Brake lines"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Leading Edge Colors"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Trailing Edge Colors"] -state disabled
-
         $base.menu.wing entryconfigure [::msgcat::mc "Elastic lines corr"] -state disabled
-
         $base.menu.wingplan entryconfigure [::msgcat::mc "Sewing Allowances"] -state disabled
         $base.menu.wingplan entryconfigure [::msgcat::mc "Marks"] -state disabled
     } else {
@@ -1020,12 +1030,12 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "Skin Tension"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Global AoA"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Suspension lines"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "Brake lines"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Ramification lengths"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "HV-VH Ribs"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Leading Edge Colors"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Trailing Edge Colors"] -state active
-
         $base.menu.wing entryconfigure [::msgcat::mc "Elastic lines corr"] -state active
-
         $base.menu.wingplan entryconfigure [::msgcat::mc "Sewing Allowances"] -state active
         $base.menu.wingplan entryconfigure [::msgcat::mc "Marks"] -state active
     }

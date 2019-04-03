@@ -274,7 +274,7 @@ proc readLepDataFile {FilePathName} {
         close $File
         return $ReturnValue
     }
-    lassign [ReadMiniRibSectV2_52 $File] ReturnValue File
+    lassign [ReadHV-VH-RibSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -818,48 +818,43 @@ proc ReadSuspLinesSectV2_52 {File} {
 proc ReadBrakesSectV2_52 {File} {
     source "globalWingVars.tcl"
 
-    # be careful: works only if Suspension lines was read before!
-    set LinePlanIt [expr $lineMode+1]
-
     # brakeLength
-    set brakeLength   [gets $File]
-    set numBrkLinePath($LinePlanIt) [gets $File]
+    set brakeLength         [gets $File]
+    set numBrakeLinePath    [gets $File]
 
-
-    # Read 4 levels
-    set i 1
-    while {$i <= $numBrkLinePath($LinePlanIt)} {
+    # read the detailed path info
+    for {set i 1} {$i <= $numBrakeLinePath} {incr i} {
         set DataLine  [gets $File]
-        set mc($LinePlanIt,$i,1)   [lindex $DataLine 0]
-        set mc($LinePlanIt,$i,2)   [lindex $DataLine 1]
-        set mc($LinePlanIt,$i,3)   [lindex $DataLine 2]
-        set mc($LinePlanIt,$i,4)   [lindex $DataLine 3]
-        set mc($LinePlanIt,$i,5)   [lindex $DataLine 4]
-        set mc($LinePlanIt,$i,6)   [lindex $DataLine 5]
-        set mc($LinePlanIt,$i,7)   [lindex $DataLine 6]
-        set mc($LinePlanIt,$i,8)   [lindex $DataLine 7]
-        set mc($LinePlanIt,$i,9)   [lindex $DataLine 8]
-        set mc($LinePlanIt,$i,14)  [lindex $DataLine 9]
-        set brake($i,3)    [lindex $DataLine 10]
-        incr i
+        set brakeLinePath($i,1)   [lindex $DataLine 0]
+        set brakeLinePath($i,2)   [lindex $DataLine 1]
+        set brakeLinePath($i,3)   [lindex $DataLine 2]
+        set brakeLinePath($i,4)   [lindex $DataLine 3]
+        set brakeLinePath($i,5)   [lindex $DataLine 4]
+        set brakeLinePath($i,6)   [lindex $DataLine 5]
+        set brakeLinePath($i,7)   [lindex $DataLine 6]
+        set brakeLinePath($i,8)   [lindex $DataLine 7]
+        set brakeLinePath($i,9)   [lindex $DataLine 8]
+        set brakeLinePath($i,14)  [lindex $DataLine 9]
+        set brakeLinePath($i,15)  [lindex $DataLine 10]
     }
 
+    # jump over the subtitle
     set DataLine   [gets $File]
 
+    # read the brake distribution
     set DataLine   [gets $File]
-    # brakeDistr
-    set bd(1,1) [lindex $DataLine 0]
-    set bd(2,1) [lindex $DataLine 1]
-    set bd(3,1) [lindex $DataLine 2]
-    set bd(4,1) [lindex $DataLine 3]
-    set bd(5,1) [lindex $DataLine 4]
+    set brakeDistr(1,1) [lindex $DataLine 0]
+    set brakeDistr(1,2) [lindex $DataLine 1]
+    set brakeDistr(1,3) [lindex $DataLine 2]
+    set brakeDistr(1,4) [lindex $DataLine 3]
+    set brakeDistr(1,5) [lindex $DataLine 4]
 
     set DataLine   [gets $File]
-    set bd(1,2) [lindex $DataLine 0]
-    set bd(2,2) [lindex $DataLine 1]
-    set bd(3,2) [lindex $DataLine 2]
-    set bd(4,2) [lindex $DataLine 3]
-    set bd(5,2) [lindex $DataLine 4]
+    set brakeDistr(2,1) [lindex $DataLine 0]
+    set brakeDistr(2,2) [lindex $DataLine 1]
+    set brakeDistr(2,3) [lindex $DataLine 2]
+    set brakeDistr(2,4) [lindex $DataLine 3]
+    set brakeDistr(2,5) [lindex $DataLine 4]
 
     return [list 0 $File]
 }
@@ -901,7 +896,7 @@ proc ReadRamLengthSectV2_52 {File} {
 }
 
 #----------------------------------------------------------------------
-#  proc ReadMiniRibSectV2_52
+#  proc ReadHV-VH-RibSectV2_52
 #  Reads the Mini rib section of a lep data file
 #  Applicable versions 2.52 ...
 #
@@ -911,7 +906,7 @@ proc ReadRamLengthSectV2_52 {File} {
 #                       -1: problem during parameter loading
 #       ReturnValue2    Pointer to the first data line after the data section
 #----------------------------------------------------------------------
-proc ReadMiniRibSectV2_52 {File} {
+proc ReadHV-VH-RibSectV2_52 {File} {
     source "globalWingVars.tcl"
 
     # numMiniRibs

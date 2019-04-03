@@ -114,6 +114,11 @@ proc writeWingDataFile {FilePathName} {
 
     #-------
     # Brakes
+    lassign [WriteBrakesSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
 
     #---------------------
     # Ramification lengths
@@ -126,6 +131,11 @@ proc writeWingDataFile {FilePathName} {
 
     #----------------
     # H V and VH ribs => miniRib
+    lassign [WriteHV-VH-RibSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
 
     #----------------------
     # Trailing edge  colors
@@ -566,6 +576,54 @@ proc WriteSuspLinesSectV2_52 {File} {
     return [list 0 $File]
 }
 
+#----------------------------------------------------------------------
+#  WriteBrakesSectV2_52
+#  Writes the brake lines section in the V2.52 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteBrakesSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_BrakesSect_lFC_Lbl"
+    puts $File $Separator
+
+    # brakeLength
+    puts $File $brakeLength
+    puts $File $numBrakeLinePath
+
+    # write the detailed path info
+    for {set i 1} {$i <= $numBrakeLinePath} {incr i} {
+        foreach j {1 2 3 4 5 6 7 8 9 14} {
+            puts -nonewline $File "$brakeLinePath($i,$j)\t"
+        }
+        puts            $File "$brakeLinePath($i,15)"
+    }
+
+    puts $File "* Brake distribution"
+
+    # line 1
+    for {set i 1} {$i <= 4} {incr i} {
+            puts -nonewline $File "$brakeDistr(1,$i)\t"
+    }
+    puts $File "$brakeDistr(1,5)"
+
+    # line 1
+    for {set i 1} {$i <= 4} {incr i} {
+            puts -nonewline $File "$brakeDistr(2,$i)\t"
+    }
+    puts $File "$brakeDistr(2,5)"
+
+    return [list 0 $File]
+}
+
 
 
 #----------------------------------------------------------------------
@@ -604,6 +662,61 @@ proc WriteRamLengthSectV2_52 {File} {
 
     return [list 0 $File]
 }
+
+
+#----------------------------------------------------------------------
+#  WriteHV-VH-RibSectV2_52
+#  Writes the Mini rib section of a lep data file
+#  Applicable versions 2.52 ...
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteHV-VH-RibSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_MiniRibSect_lFC_Lbl"
+    puts $File $Separator
+
+    # numMiniRibs
+    puts $File $numMiniRibs
+
+    # miniRibXSep
+    puts $File $miniRibXSep
+
+    # miniRibYSep
+    puts $File $miniRibYSep
+
+    for {set i 1} {$i <= $numMiniRibs} {incr i} {
+
+        # first value
+        puts -nonewline $File $miniRib($i,1)
+
+        # rest of short parametersets
+        for {set j 2} {$j <= 10} {incr j} {
+            puts -nonewline $File "\t$miniRib($i,$j)"
+        }
+
+        # special type 6 handling
+        if {$miniRib($i,2) == 6} {
+            puts -nonewline $File "\t$miniRib($i,11)"
+            puts -nonewline $File "\t$miniRib($i,12)"
+        }
+
+        # terminate the line
+        puts $File ""
+    }
+
+    return [list 0 $File]
+}
+
+
 
 #----------------------------------------------------------------------
 #  WriteTeColSectV2_52
