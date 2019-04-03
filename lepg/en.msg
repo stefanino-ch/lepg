@@ -108,6 +108,10 @@
 "miniRib_P11"                   "Parameter 11: Depending of the configuration type.\nRefer to the manual."
 "miniRib_P12"                   "Parameter 12: Depending of the configuration type.\nRefer to the manual."
 
+"##### Additional rib points"   "#####"
+"addRipPoX"                     "X-coordinate % of chord"
+"addRipPoY"                     "Y-coordinate % of chord"
+
 "##### Elastic lines corr"      "#####"
 "loadTot"                       "Total in flight weight."
 "loadDistr"                     "Load distribution in [%]."

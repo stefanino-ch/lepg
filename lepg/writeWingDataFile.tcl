@@ -155,6 +155,13 @@ proc writeWingDataFile {FilePathName} {
 
     #----------------------
     # Additional rib points
+    #--------------------------
+    # Elastig lines corrections
+    lassign [WriteAddRibPoSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
 
     #--------------------------
     # Elastig lines corrections
@@ -793,6 +800,44 @@ proc WriteLeColSectV2_52 {File} {
 
     return [list 0 $File]
 }
+
+
+#----------------------------------------------------------------------
+#  WriteAddRibPoSectV2_52
+#  Writes the additional rib points section in the V2.52 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteAddRibPoSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_AddRibPoSect_lFC_Lbl"
+    puts $File $Separator
+
+    # numAddRipPo
+    puts $File $numAddRipPo
+
+    set i 1
+    while {$i <= $numAddRipPo} {
+
+        # addRipPoX
+        puts -nonewline $File $addRipPoX($i)
+        # addRipPoY
+        puts            $File "\t$addRipPoY($i)"
+        incr i
+    }
+
+    return [list 0 $File]
+}
+
+
 
 #----------------------------------------------------------------------
 #  WriteElLinesCorrSectV2_52

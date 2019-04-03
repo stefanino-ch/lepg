@@ -77,7 +77,7 @@ proc wingHV-VH-RibsDataEdit {} {
     grid columnconfigure .wRIBDE.dataBot 1 -weight 0
     grid rowconfigure .wRIBDE.dataBot 0 -weight 1
 
-    ttk::frame .wRIBDE.dataBot.scroll.widgets -borderwidth 1 -relief solid
+    ttk::frame .wRIBDE.dataBot.scroll.widgets -borderwidth 1
     grid .wRIBDE.dataBot.scroll.widgets -row 0 -column 0
 
     addEdit_wRIBDE
@@ -157,7 +157,7 @@ proc ExportLclVars_wRIBDE {} {
     set miniRibXSep    $Lcl_miniRibXSep
     set miniRibYSep    $Lcl_miniRibYSep
 
-    for {set i 1} {$i <= $numMiniRibs} {incr i} {
+    for {set i 1} {$i <= $Lcl_numMiniRibs} {incr i} {
         # make sure number is in
         set miniRib($i,1)   $i
 

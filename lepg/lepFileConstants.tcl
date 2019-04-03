@@ -119,7 +119,7 @@ set c_LeColSect_lFC_Id "section-id-160"
 #----------------------
 # Additional rib points
 global c_AddRibPoSect_lFC_Lbl
-set c_AddRibPoSect_lFC_Lbl "17. Aditional"
+set c_AddRibPoSect_lFC_Lbl "17. Aditional rib points" 
 global c_AddRibPoSect_lFC_Id
 set c_AddRibPoSect_lFC_Id "section-id-170"
 
