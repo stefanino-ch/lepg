@@ -21,6 +21,7 @@
 "Basic Data"                    "Basisdaten"
 "Airfoils"                      "Rippen"
 "Anchor Points"                 "Aufhängepunkte"
+"Calc Wing"                     "Flügel berechnen"
 
 "##### Basic Data Window"       "##### Fenster Basisdaten"
 "Wing Basic Data"               "Flügel Basisdaten"
@@ -204,11 +205,9 @@ teColMarkYDist                  "Distanz von der Flügelhinterkante in % der Pro
 "loadDistr"                       "Gewichtsanteil in [%]"
 "loadDeform"                      "Leinendeformation bei 10kg Belastung."
 
-"##### Wing Plan Menu"          "##### Flügelplan"
+"##### Wing Plan Menu"          "#####"
 "Wing plan"                     "Flügelplan"
 "Sewing Allowances"             "Nahtzugaben"
-
-
 
 "##### Sewing Allowances"       "#####"
 "Wing Sewing Allowances"        "Flügel Nahtzugaben"
@@ -245,51 +244,19 @@ teColMarkYDist                  "Distanz von der Flügelhinterkante in % der Pro
 "Cells number and distribution" "Zellenanzahl und Verteilung"
 "Geometry matrix inspection"    "Geometrie Matrix"
 
-"##### Vault Menu"              "##### Vault Menu"
-"Vault"                         "Vault"
-
-"##### Calage Menu"             "##### Calage Menu"
-"Calage"                        "Calage"
-
-"##### Skin Menu"               "##### Skin Menu"
-"Skin"                          "Skin"
-
-"##### VH-ribs Menu"            "##### VH-ribs Menu"
-"VH-ribs"                       "VH-ribs"
-
-"##### Lines Menu"              "##### Leinen Menu"
-"Lines"                         "Leinen"
-"Basic"                         "Grundlagen"
-"Lines A"                       "A-Leinen"
-"Lines B"                       "B-Leinen"
-"Lines C"                       "C-Leinen"
-"Lines D"                       "D-Leinen"
-"Lines E"                       "E-Leinen"
-"Brakes"                        "Bremsleinen"
-
-"##### Colors Menu"             "##### Farben Menu"
-"Colors"                        "Farben"
-
-"##### Parameters Menu"         "##### Parameter Menu"
-"Parameters"                    "Parameter"
-
-"##### DXF Menu"                "##### DXF Menu"
-"DXF"                           "DXF"
-
-"##### txt Menu"                "##### txt Menu"
-"txt"                           "txt"
-
-"##### Run Menu"           		"##### Ausführen Menu"
-"Run"							"Ausführen"
-"pre-Processor"					"pre-Prozessor"
-"Both"							"Beide"
-
-
 "##### Settings Menu"           "##### Einstellungen Menu"
 "Settings"                      "Einstellungen"
 "Language"                      "Sprache"
-"pre-Processor Directory"		"pre-Prozessor Installationsverzeichnis"
-"lep Directory"					"lep Installationsverzeichnis"
+"Geometry-Processor"		    "Geometrie Prozessor"
+"Wing-Processor"		        "Flügel Prozessor"
+
+"#####Setup Geometry Processor" "#####"
+"Setup Geometry Processor"      "Geometrie Prozessor definieren"
+"Geometry Processor"            "Geometrie Prozessor"
+
+"#####Setup Wing Processor"     "#####"
+"Setup lep Processor"           "lep Prozessor definieren"
+"lep Processor"                 "lep Prozessor"
 
 "##### Help Menu"               "##### Hilfe Menu"
 "Help"                          "Hilfe"
@@ -349,8 +316,11 @@ teColMarkYDist                  "Distanz von der Flügelhinterkante in % der Pro
 "cellDistrCoeff"        "0.0 (proportional)... 1.0 (gleiche Breite)"
 "numCellsPreProc"       "Totale Anzahl Zellen"
 
-"txt_writePreProcInputData" "Schreibe Daten für Geometrie Prozessor..."
-"txt_findPreProcOutputFilesIn" "Berechnete Daten sind im ....\\lepg\\process Verzeichnis"
+"Run Geometry Processor" "Geometrie Prozessor ausführen"
+"Run lep Processor"     "Flügel Prozessor ausführen"
 
+"txt_writeProcInputData" "Schreibe Daten für Geometrie Prozessor..."
+"txt_findProcOutputFilesIn" "Berechnete Daten sind im ....\\lepg\\process Verzeichnis"
+"txt_copyAirfoilFiles"  "Bitte alle Rippen Profildateien in  \\lepg\\process kopieren und mit OK bestätigen."
 
 }

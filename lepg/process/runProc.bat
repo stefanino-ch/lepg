@@ -1,6 +1,6 @@
 ECHO OFF
 
-REM Pere Casellas, Stefan Feuz
+REM Stefan Feuz
 REM http://www.laboratoridenvol.com
 REM General Public License GNU GPL 3.0
 
@@ -13,4 +13,3 @@ cd %~dp0
 
 REM execute the pre processor full path and name is passed as the first command line parameter
 %1
-

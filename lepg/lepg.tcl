@@ -65,11 +65,10 @@ set data_le(c0) 10.11
 #---------------------------------------------------------------------
 #
 #  LEparagliding GUI
-set LepVersioNumber "2.52"
-set LepgNumber "V0.3.5"
-set VersionDate   "2018-02-04"
+set LepVersioNumber "2.60"
+set LepgNumber "V0.99"
+set VersionDate   "2019-04-10"
 #
-#  Pere Casellas
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
 #
@@ -143,7 +142,7 @@ proc InitGui { root } {
 
     source "preProcDataEdit.tcl"
     source "preProcRun.tcl"
-
+    source "lepProcRun.tcl"
 
     source "userHelp.tcl"
 
@@ -188,7 +187,7 @@ proc InitGui { root } {
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "New Geometry..."]    -command NewGeometry
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Open Geometry..."]   -command OpenPreProcFile
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Save Geometry"]      -command SavePreProcFile    -state disabled
-    $base.menu.geometry add command -underline 5 -label [::msgcat::mc "Save Geometry As"]   -command SavePreProcFileAs  -state disabled
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Save Geometry As"]   -command SavePreProcFileAs  -state disabled
     $base.menu.geometry add separator
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Edit Geometry"]      -command editPreProcData    -state disabled
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Calc Geometry"]      -command preProcRun         -state disabled
@@ -199,23 +198,24 @@ proc InitGui { root } {
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Wing Geometry"]   -command ImportWingGeometry
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "Open Wing..."]           -command OpenWingFile
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing"]              -command SaveWingFile -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Save Wing As"]           -command SaveWingFileAs -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing As"]           -command SaveWingFileAs -state disabled
     $base.menu.wing add separator
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Basic Data"]             -command OpenWingBasicDataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Airfoils"]               -command OpenWingAirfoilsDataEdit  -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Anchor Points"]          -command OpenWingAnchorsDataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Airfoil Holes"]          -command OpenWingAirfoilHolesDataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Skin Tension"]           -command OpenWingSkinTensionDataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Global AoA"]             -command OpenGlobalAoADataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Suspension lines"]       -command OpenSuspensionLinesDataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Brake lines"]            -command OpenBrakeLinesDataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Ramification lengths"]   -command OpenRamificationLengthDataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "HV-VH Ribs"]             -command OpenHV-VH-RibsDataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Leading Edge Colors"]    -command OpenWingLEColorDataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Trailing Edge Colors"]   -command OpenWingTEColorDataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Additional rib points"]  -command OpenWingAddRibPointsDataEdit -state disabled
-    $base.menu.wing add command -underline 5 -label [::msgcat::mc "Elastic lines corr"]     -command OpenElasticLinesCorrEdit -state disabled
-
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Basic Data"]             -command OpenWingBasicDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Airfoils"]               -command OpenWingAirfoilsDataEdit  -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Anchor Points"]          -command OpenWingAnchorsDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Airfoil Holes"]          -command OpenWingAirfoilHolesDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Skin Tension"]           -command OpenWingSkinTensionDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Global AoA"]             -command OpenGlobalAoADataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Suspension lines"]       -command OpenSuspensionLinesDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Brake lines"]            -command OpenBrakeLinesDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Ramification lengths"]   -command OpenRamificationLengthDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "HV-VH Ribs"]             -command OpenHV-VH-RibsDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Leading Edge Colors"]    -command OpenWingLEColorDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Trailing Edge Colors"]   -command OpenWingTEColorDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Additional rib points"]  -command OpenWingAddRibPointsDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Elastic lines corr"]     -command OpenElasticLinesCorrEdit -state disabled
+    $base.menu.wing add separator
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Calc Wing"]              -command lepProcRun -state disabled
 
     # Wing plan menu
     $base.menu add cascade -label [::msgcat::mc "Wing plan"] -underline 0 -menu $base.menu.wingplan
@@ -232,7 +232,7 @@ proc InitGui { root } {
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "German"] -command {SetLanguage "de"}
 
     $base.menu.settings add cascade -label [::msgcat::mc "Geometry-Processor"] -underline 0 -command PreProcDirSelect_lepg
-    $base.menu.settings add cascade -label [::msgcat::mc "Wing-Processor"] -underline 0 -command LepDirSelect -state disabled
+    $base.menu.settings add cascade -label [::msgcat::mc "Wing-Processor"] -underline 0 -command LepDirSelect
 
     # Help menu
     $base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
@@ -901,7 +901,7 @@ proc HelpAbout { } {
     label .helplep.fr1.lb2 -text " "
     label .helplep.fr1.lb3 -text "LEparagliding $LepVersioNumber GUI-$LepgNumber ($VersionDate)"
     label .helplep.fr1.lb4 -text "General Public License GNU GPL3.0"
-    label .helplep.fr1.lb5 -text "Pere Casellas"
+    label .helplep.fr1.lb5 -text "Pere Casellas, Stefan Feuz"
     label .helplep.fr1.lb6 -text "http://www.laboratoridenvol.com"
 
     pack .helplep.fr1.lb2 .helplep.fr1.lb3 .helplep.fr1.lb4 .helplep.fr1.lb5 \
@@ -946,7 +946,9 @@ proc SetLanguage {Lang} {
 #  Lep Directory selection
 #---------------------------------------------------------------------
 proc LepDirSelect {} {
-    dict set ::GlobalConfig LepDirectory [tk_chooseDirectory -title [::msgcat::mc "title_SelectLepDirectory"] ]
+    source "lepDirSelect.tcl"
+
+    lepDirSelect_lDS
 }
 
 #---------------------------------------------------------------------
@@ -1021,6 +1023,7 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "Trailing Edge Colors"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Additional rib points"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Elastic lines corr"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "Calc Wing"] -state disabled
         $base.menu.wingplan entryconfigure [::msgcat::mc "Sewing Allowances"] -state disabled
         $base.menu.wingplan entryconfigure [::msgcat::mc "Marks"] -state disabled
     } else {
@@ -1040,6 +1043,7 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "Trailing Edge Colors"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Additional rib points"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Elastic lines corr"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "Calc Wing"] -state active
         $base.menu.wingplan entryconfigure [::msgcat::mc "Sewing Allowances"] -state active
         $base.menu.wingplan entryconfigure [::msgcat::mc "Marks"] -state active
     }

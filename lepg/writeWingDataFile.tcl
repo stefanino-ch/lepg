@@ -694,11 +694,8 @@ proc WriteHV-VH-RibSectV2_52 {File} {
     # numMiniRibs
     puts $File $numMiniRibs
 
-    # miniRibXSep
-    puts $File $miniRibXSep
-
-    # miniRibYSep
-    puts $File $miniRibYSep
+    # miniRibXSep miniRibYSep
+    puts $File "$miniRibXSep\t$miniRibYSep"
 
     for {set i 1} {$i <= $numMiniRibs} {incr i} {
 
