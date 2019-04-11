@@ -339,7 +339,7 @@ proc CancelButtonPress_wELC {} {
 proc HelpButtonPress_wELC {} {
     source "userHelp.tcl"
 
-    displayHelpfile "wing-elastic-lines-correction"
+    displayHelpfile "elastic-lines-correction"
 }
 
 #----------------------------------------------------------------------

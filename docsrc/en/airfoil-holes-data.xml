@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	lep-gui documentation
+	Pere Casellas (www.laboratoridenvol.com), Stefan Feuz
+	General Public License GNU GPL3.0
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "../../dtd/technicalContent/dtd/concept.dtd">
+<concept id="en-airfoil-holes-data" xml:lang="en-us">
+	<title>Lightening in the ribs (Rib holes)</title>
+	<shortdesc>...</shortdesc>
+	<conbody>
+		<p>...</p>
+		<p>... </p>
+	</conbody>
+	<related-links>
+		<link href="editWindowIntroduction.xml" format="dita" type="concept"></link>
+	</related-links>
+</concept>
