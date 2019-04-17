@@ -73,6 +73,8 @@ proc importPreProcOutFile {FilePathName} {
         return $ReturnValue
     }
 
+    InitializeOtherWingVars
+
     return 0
 }
 
@@ -123,6 +125,8 @@ proc DetectFileVersion_pPOFI {FilePathName} {
 #----------------------------------------------------------------------
 proc ReadGeometrySectV1_4 {File} {
     source "globalWingVars.tcl"
+
+    global numRibsHalf
 
     # Read the column titles
     set DataLine [gets $File]
@@ -196,4 +200,121 @@ proc ReadMainGeometrySectV1_4  {File} {
     set numRibsTot [expr $numRibsTot *2 ]
 
     return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  InitializeOtherWingVars
+#  Initializes all Wing variables not yet set by the import, but after
+#  wards needed to further define the wing.
+#
+#  IN:  n/a
+#  OUT: n/a
+#----------------------------------------------------------------------
+proc InitializeOtherWingVars {} {
+
+    global numRibsHalf
+    global airfoilName
+    global ribConfig
+    global airfConfigNum
+    global strainMiniRibs
+    global numStrainPoints
+    global strainCoef
+    global lineMode
+    global numLinePlan
+    global numBrakeLinePath
+    global brakeDistr
+    global lineLength
+    global ramLength
+    global numMiniRibs
+    global miniRibXSep
+    global miniRibYSep
+    global numLeCol
+    global numTeCol
+    global numAddRipPo
+    global loadDistr
+    global loadDeform
+
+    # Airfoils
+    source "globalWingVars.tcl"
+
+    global Lcl_ribConfig
+    global Lcl_airfoilName
+
+    for {set i 1} {$i <= $numRibsHalf} {incr i} {
+        # Airfoil filenames
+        set airfoilName($i) ""
+
+        foreach j {1 11 12 14 15 16 17 18 19 20 21 50 22 56} {
+            set ribConfig($i,$j) 0
+        }
+    }
+
+    # Airfoil holes
+    set airfConfigNum 0
+
+    # Skin tension
+    set strainMiniRibs 0.0114
+    set numStrainPoints 1000
+    set strainCoef 1.0
+
+    # Suspension lines
+    set lineMode 0
+    set numLinePlan 0
+
+    # Brake lines
+    set numBrakeLinePath 0
+    for {set i 1} {$i <= 2} {incr i} {
+        for {set j 1} {$j <= 5} {incr j} {
+            set brakeDistr($i,$j) 0
+        }
+    }
+
+    # Ramification lengths
+    set ramLength(3,1) 0
+    set ramLength(3,3) 0
+    set ramLength(4,1) 0
+    set ramLength(4,3) 0
+    set ramLength(4,4) 0
+    set ramLength(5,1) 0
+    set ramLength(5,3) 0
+    set ramLength(6,1) 0
+    set ramLength(6,3) 0
+    set ramLength(6,4) 0
+
+    # HV- VH Ribs
+    set numMiniRibs 0
+    set miniRibXSep 80
+    set miniRibYSep 150
+
+    # Leading edge Colors
+    set numLeCol 0
+
+    # Trailing edge Colors
+    set numTeCol 0
+
+    # Additional rib points
+    set numAddRipPo 0
+
+    # Elastic lines correction
+    set loadDistr(1,1) 0
+    set loadDistr(1,2) 0
+    set loadDistr(2,1) 0
+    set loadDistr(2,2) 0
+    set loadDistr(2,3) 0
+    set loadDistr(3,1) 0
+    set loadDistr(3,2) 0
+    set loadDistr(3,3) 0
+    set loadDistr(3,4) 0
+    set loadDistr(4,1) 0
+    set loadDistr(4,2) 0
+    set loadDistr(4,3) 0
+    set loadDistr(4,4) 0
+    set loadDistr(4,5) 0
+
+    for {set i 1} {$i <=5} {incr i} {
+        set loadDeform($i,1) 0
+        set loadDeform($i,2) 0
+        set loadDeform($i,3) 0
+        set loadDeform($i,4) 0
+    }
 }

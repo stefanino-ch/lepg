@@ -66,8 +66,8 @@ set data_le(c0) 10.11
 #
 #  LEparagliding GUI
 set LepVersioNumber "2.60"
-set LepgNumber "V0.99"
-set VersionDate   "2019-04-10"
+set LepgNumber      "V0.99.1"
+set VersionDate     "2019-04-17"
 #
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com

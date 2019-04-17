@@ -19,7 +19,7 @@ set SingleWingVariables { brandName wingName drawScale wingScale \
                         strainCoef seamUp seamUpLe seamUpTe seamLo seamLoLe \
                         seamLoTe seamRib seamVRib markSpace markRad markDisp \
                         finesse posCop calage riserLength lineLength distTowP \
-                        lineMode numLinePlan brakeLength brakeDistr \
+                        lineMode numLinePlan brakeLength \
                           numMiniRibs miniRibXSep miniRibYSep \
                          numTeCol    \
                          numLeCol \
@@ -32,7 +32,7 @@ set SingleWingVariables { brandName wingName drawScale wingScale \
 #                       miniRib ribConfig teColRibNum numTeColMarks teColMarkNum
 #                       teColMarkYDist teColMarkXDist  leColRibNum
 #                       numleColMarks leColMarkNum leColMarkYDist leColMarkXDist
-#                       addRipPoX addRipPoY holeConfig skinTens
+#                       addRipPoX addRipPoY holeConfig skinTens brakeDistr
 
 #   old names       new name            old name
 global              brandName           # bname
