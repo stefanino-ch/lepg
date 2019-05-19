@@ -66,8 +66,8 @@ set data_le(c0) 10.11
 #
 #  LEparagliding GUI
 set LepVersioNumber "2.60"
-set LepgNumber      "V0.99.1"
-set VersionDate     "2019-04-17"
+set LepgNumber      "V0.99.2"
+set VersionDate     "2019-05-19"
 #
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
@@ -225,14 +225,13 @@ proc InitGui { root } {
 
     # Settings menu
     $base.menu add cascade -label [::msgcat::mc "Settings"] -underline 0 -menu $base.menu.settings
-
     $base.menu.settings add cascade -label [::msgcat::mc "Language"] -underline 0 -menu $base.menu.settings.language
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Catalan"] -command {SetLanguage "ca"}
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "English"] -command {SetLanguage "en"}
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "German"] -command {SetLanguage "de"}
 
-    $base.menu.settings add cascade -label [::msgcat::mc "Geometry-Processor"] -underline 0 -command PreProcDirSelect_lepg
-    $base.menu.settings add cascade -label [::msgcat::mc "Wing-Processor"] -underline 0 -command LepDirSelect
+    $base.menu.settings add command -underline 0 -label [::msgcat::mc "Geometry-Processor"] -command PreProcDirSelect_lepg
+    $base.menu.settings add command -underline 0 -label [::msgcat::mc "Wing-Processor"] -command LepDirSelect
 
     # Help menu
     $base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
