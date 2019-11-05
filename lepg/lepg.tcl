@@ -954,7 +954,7 @@ proc LepDirSelect {} {
 #  pre-Processsor Directory selection
 #---------------------------------------------------------------------
 proc PreProcDirSelect_lepg {} {
-    source "PreProcDirSelect.tcl"
+    source "preProcDirSelect.tcl"
 
     PreProcDirSelect_pPDS
 }
