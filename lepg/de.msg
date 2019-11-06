@@ -321,6 +321,6 @@ teColMarkYDist                  "Distanz von der Flügelhinterkante in % der Pro
 
 "txt_writeProcInputData" "Schreibe Daten für Geometrie Prozessor..."
 "txt_findProcOutputFilesIn" "Berechnete Daten sind im ....\\lepg\\process Verzeichnis"
-"txt_copyAirfoilFiles"  "Bitte alle Rippen Profildateien in  \\lepg\\process kopieren und mit OK bestätigen."
+"txt_copyAirfoilFiles"  "Bitte alle Rippen Profildateien MANUELL in  \\lepg\\process kopieren und mit OK bestätigen."
 
 }

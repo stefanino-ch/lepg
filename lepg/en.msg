@@ -135,5 +135,5 @@
 
 "txt_writeProcInputData" "Writing input data for processor..."
 "txt_findProcOutputFilesIn" "Output files can be found in ....\\lepg\\process directory"
-"txt_copyAirfoilFiles"  "Copy all airfoils definition files into \\lepg\\process and confirm by pressing OK"
+"txt_copyAirfoilFiles"  "Copy all airfoils definition files MANUALLY into \\lepg\\process and confirm by pressing OK"
 }
