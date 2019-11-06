@@ -66,8 +66,8 @@ set data_le(c0) 10.11
 #
 #  LEparagliding GUI
 set LepVersioNumber "2.60"
-set LepgNumber      "V0.99.2"
-set VersionDate     "2019-05-19"
+set LepgNumber      "V0.99.3"
+set VersionDate     "2019-11-06"
 #
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
@@ -229,6 +229,7 @@ proc InitGui { root } {
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Catalan"] -command {SetLanguage "ca"}
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "English"] -command {SetLanguage "en"}
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "German"] -command {SetLanguage "de"}
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Polish"] -command {SetLanguage "pl"}
 
     $base.menu.settings add command -underline 0 -label [::msgcat::mc "Geometry-Processor"] -command PreProcDirSelect_lepg
     $base.menu.settings add command -underline 0 -label [::msgcat::mc "Wing-Processor"] -command LepDirSelect
