@@ -6,7 +6,18 @@
 
 # .sh file to execute the preprocessor
 # go into the process directory
-cd process
+#cd process
 
-# cd $1
-/bin/bash $1
+#cd $1
+#./a.out
+
+dire=$1
+
+# Select executable name
+lep_out=${dire##*/}
+# Select folder name
+lep_dir=${dire%/*}
+# Go
+cd $lep_dir
+# Run
+./$lep_out

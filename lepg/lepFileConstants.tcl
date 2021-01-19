@@ -31,7 +31,6 @@ set c_AirfoilSect_lFC_Lbl "2. AIRFOILS"
 global c_AirfoilSect_lFC_Id
 set c_AirfoilSect_lFC_Id "section-id-020"
 
-
 #--------------
 # Anchor points
 global c_AnchorPoSect_lFC_Lbl
@@ -130,11 +129,101 @@ set c_ElLinesCorrSect_lFC_Lbl "18. Elastic lines corrections"
 global c_ElLinesCorrSect_lFC_Id
 set c_ElLinesCorrSect_lFC_Id "section-id-180"
 
+#----------------------
+# DXF layer names
+global c_DXFLayNaSect_lFC_Lbl
+set c_DXFLayNaSect_lFC_Lbl "19. DXF layer names" 
+global c_DXFLayNaSect_lFC_Id
+set c_DXFLayNaSect_lFC_Id "section-id-190"
+
+#----------------------
+# Marks types
+global c_MarksTySect_lFC_Lbl
+set c_MarksTySect_lFC_Lbl "20. Marks types" 
+global c_MarksTySect_lFC_Id
+set c_MarksTySect_lFC_Id "section-id-200"
+
+#----------------------
+# Joncs definition
+global c_JoncsDefSect_lFC_Lbl
+set c_JoncsDefSect_lFC_Lbl "21. JONCS DEFINITIONS (NYLON RODS)" 
+global c_JoncsDefSect_lFC_Id
+set c_JoncsDefSect_lFC_Id "section-id-210"
+
+#----------------------
+# Nose mylars definition
+global c_NoseMySect_lFC_Lbl
+set c_NoseMySect_lFC_Lbl "22. NOSE MYLARS DEFINITION" 
+global c_NoseMySect_lFC_Id
+set c_NoseMySect_lFC_Id "section-id-220"
+
+#----------------------
+# Tab reinforcements
+global c_TabReinfSect_lFC_Lbl
+set c_TabReinfSect_lFC_Lbl "23. TAB REINFORCEMENTS" 
+global c_TabReinfSect_lFC_Id
+set c_TabReinfSect_lFC_Id "section-id-230"
+
+#----------------------
+# General 2D DXF options
+global c_Ge2DopSect_lFC_Lbl
+set c_Ge2DopSect_lFC_Lbl "24. GENERAL 2D DXF OPTIONS" 
+global c_Ge2DopSect_lFC_Id
+set c_Ge2DopSect_lFC_Id "section-id-240"
+
+#----------------------
+# General 3D DXF options
+global c_Ge3DopSect_lFC_Lbl
+set c_Ge3DopSect_lFC_Lbl "25. GENERAL 3D DXF OPTIONS" 
+global c_Ge3DopSect_lFC_Id
+set c_Ge3DopSect_lFC_Id "section-id-250"
+
+#----------------------
+# Glue vents
+global c_GlueVenSect_lFC_Lbl
+set c_GlueVenSect_lFC_Lbl "26. GLUE VENTS" 
+global c_GlueVenSect_lFC_Id
+set c_GlueVenSect_lFC_Id "section-id-260"
+
+#----------------------
+# Special wing tip
+global c_SpecWtSect_lFC_Lbl
+set c_SpecWtSect_lFC_Lbl "27. SPECIAL WING TIP" 
+global c_SpecWtSect_lFC_Id
+set c_SpecWtSect_lFC_Id "section-id-270"
+
+#----------------------
+# Parameters for calage variation
+global c_CalagVarSect_lFC_Lbl
+set c_CalagVarSect_lFC_Lbl "28. PARAMETERS FOR CALAGE VARIATION" 
+global c_CalagVarSect_lFC_Id
+set c_CalagVarSect_lFC_Id "section-id-280"
+
+#----------------------
+# 3D SHAPING
+global c_P3DShapingSect_lFC_Lbl
+set c_P3DShapingSect_lFC_Lbl "29. 3D SHAPING" 
+global c_P3DShapingSect_lFC_Id
+set c_P3DShapingSect_lFC_Id "section-id-290"
+
+#----------------------
+# Airfoil thickness modification
+global c_AirThickSect_lFC_Lbl
+set c_AirThickSect_lFC_Lbl "30. AIRFOIL THICKNESS MODIFICATION"
+global c_AirThickSect_lFC_Id
+set c_AirThickSect_lFC_Id "section-id-300"
+
+#----------------------
+# New skin tension module
+global c_NewSkinSect_lFC_Lbl
+set c_NewSkinSect_lFC_Lbl "31. NEW SKIN TENSION MODULE"
+global c_NewSkinSect_lFC_Id
+set c_NewSkinSect_lFC_Id "section-id-310"
+
 #--------------------------
 # DXF
 global c_DxfSect_lFC_Id
-set c_DxfSect_lFC_Id "section-id-190"
-
+set c_DxfSect_lFC_Id "section-id-320"
 
 
 #---------------------------------------------------------------------

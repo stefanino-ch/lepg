@@ -104,7 +104,7 @@ proc readLepDataFile {FilePathName} {
     }
 
     #---------
-    # Geometry
+    # 1. Geometry
     Debug_rLDF "Geometry: jump..."
     lassign [jumpToSection [set c_GeometrySect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
@@ -120,7 +120,7 @@ proc readLepDataFile {FilePathName} {
     Debug_rLDF "done\n"
 
     #--------
-    # Airfoil
+    # 2. Airfoil
     Debug_rLDF "Airfoil: jump..."
     lassign [jumpToSection [set c_AirfoilSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
@@ -136,7 +136,7 @@ proc readLepDataFile {FilePathName} {
     Debug_rLDF "done\n"
 
     #--------------
-    # Anchor points
+    # 3. Anchor points
     Debug_rLDF "Anchor points: jump..."
     lassign [jumpToSection [set c_AnchorPoSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
@@ -152,7 +152,7 @@ proc readLepDataFile {FilePathName} {
     Debug_rLDF "done\n"
 
     #--------------
-    # Airfoil holes
+    # 4. Airfoil holes
     Debug_rLDF "Airfoil holes: jump..."
     lassign [jumpToSection [set c_AirfoilHoSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
@@ -168,7 +168,7 @@ proc readLepDataFile {FilePathName} {
     Debug_rLDF "done\n"
 
     #-------------
-    # Skin tension
+    # 5. Skin tension
     Debug_rLDF "Skin tension: jump..."
     lassign [jumpToSection [set c_SkinTensSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
@@ -184,7 +184,7 @@ proc readLepDataFile {FilePathName} {
     Debug_rLDF "done\n"
 
     #------------------
-    # Sewing allowances
+    # 6. Sewing allowances
     Debug_rLDF "Sewing allowances: jump..."
     lassign [jumpToSection [set c_SewingSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
@@ -200,7 +200,7 @@ proc readLepDataFile {FilePathName} {
     Debug_rLDF "done\n"
 
     #------
-    # Marks
+    # 7. Marks
     lassign [jumpToSection [set c_MarksSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -213,7 +213,7 @@ proc readLepDataFile {FilePathName} {
     }
 
     #-----------------------
-    # Global angle of attack
+    # 8. Global angle of attack
     lassign [jumpToSection [set c_GlobalAoASect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -226,7 +226,7 @@ proc readLepDataFile {FilePathName} {
     }
 
     #-----------------
-    # Suspension lines
+    # 9. Suspension lines
     Debug_rLDF "Suspension lines: jump..."
     lassign [jumpToSection [set c_SuspLinesSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
@@ -242,7 +242,7 @@ proc readLepDataFile {FilePathName} {
     Debug_rLDF "done\n"
 
     #-------
-    # Brakes
+    # 10. Brakes
     lassign [jumpToSection [set c_BrakesSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -255,7 +255,7 @@ proc readLepDataFile {FilePathName} {
     }
 
     #---------------------
-    # Ramification lengths
+    # 11. Ramification lengths
     lassign [jumpToSection [set c_RamLengthSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -268,7 +268,7 @@ proc readLepDataFile {FilePathName} {
     }
 
     #----------------
-    # H V and VH ribs => miniRib
+    # 12. H V and VH ribs => miniRib
     lassign [jumpToSection [set c_MiniRibSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -281,7 +281,7 @@ proc readLepDataFile {FilePathName} {
     }
 
     #----------------------
-    # Trailing edge  colors
+    # 15. Extrados colors (TE?)
     lassign [jumpToSection [set c_TeColSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -294,8 +294,9 @@ proc readLepDataFile {FilePathName} {
     }
 
     #--------------------
-    # Leading edge colors
+    # 16. Intrados colors (LE?)
     lassign [jumpToSection [set c_LeColSect_lFC_$Suffix] $Offset $File] ReturnValue File
+
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -307,8 +308,9 @@ proc readLepDataFile {FilePathName} {
     }
 
     #----------------------
-    # Additional rib points
+    # 17. Additional rib points
     lassign [jumpToSection [set c_AddRibPoSect_lFC_$Suffix] $Offset $File] ReturnValue File
+
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
@@ -320,7 +322,7 @@ proc readLepDataFile {FilePathName} {
     }
 
     #--------------------------
-    # Elastig lines corrections
+    # 18. Elastig lines corrections
     Debug_rLDF "Elastig lines corrections: jump..."
     lassign [jumpToSection [set c_ElLinesCorrSect_lFC_$Suffix] $Offset $File] ReturnValue File
     if {$ReturnValue < 0} {
@@ -335,7 +337,220 @@ proc readLepDataFile {FilePathName} {
     }
     Debug_rLDF "done\n"
 
-# add DXF
+    #--------------------------    
+    # 19. DXF layer names
+    lassign [jumpToSection [set c_DXFLayNaSect_lFC_$Suffix] $Offset $File] ReturnValue File
+
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+    lassign [ReadDXFLayNaSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+
+    #--------------------------    
+    # 20. Marks types
+    lassign [jumpToSection [set c_MarksTySect_lFC_$Suffix] $Offset $File] ReturnValue File
+
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+    lassign [ReadMarksTySectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+
+    #--------------------------    
+    # 21. Joncs definition
+    lassign [jumpToSection [set c_JoncsDefSect_lFC_$Suffix] $Offset $File] ReturnValue File
+
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+    lassign [ReadJoncsDefSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+
+    #--------------------------    
+    # 22. Nose Mylars
+    lassign [jumpToSection [set c_NoseMySect_lFC_$Suffix] $Offset $File] ReturnValue File
+
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+    lassign [ReadNoseMySectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+
+    #--------------------------    
+    # 23. Tab reinforcements
+    lassign [jumpToSection [set c_TabReinfSect_lFC_$Suffix] $Offset $File] ReturnValue File
+
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+    lassign [ReadTabReinfSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+
+    #--------------------------    
+    # 24. General 2D DXF options
+    lassign [jumpToSection [set c_Ge2DopSect_lFC_$Suffix] $Offset $File] ReturnValue File
+
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+    lassign [ReadGe2DopSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+
+    #--------------------------    
+    # 25. General 3D DXF options
+    lassign [jumpToSection [set c_Ge3DopSect_lFC_$Suffix] $Offset $File] ReturnValue File
+
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+    lassign [ReadGe3DopSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+
+    #--------------------------    
+    # 26. Glue vents
+    lassign [jumpToSection [set c_GlueVenSect_lFC_$Suffix] $Offset $File] ReturnValue File
+
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+    lassign [ReadGlueVenSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+
+    #--------------------------    
+    # 27. Special wingtip
+    lassign [jumpToSection [set c_SpecWtSect_lFC_$Suffix] $Offset $File] ReturnValue File
+
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+    lassign [ReadSpecWtSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+
+    #--------------------------    
+    # 28. Calage variations
+    lassign [jumpToSection [set c_CalagVarSect_lFC_$Suffix] $Offset $File] ReturnValue File
+
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+    lassign [ReadCalagVarSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+
+    #--------------------------    
+    # 30. Airfoil thickness
+    lassign [jumpToSection [set c_P3DShapingSect_lFC_$Suffix] $Offset $File] ReturnValue File
+
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+    lassign [ReadP3DShapingSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+
+    #--------------------------    
+    # 30. Airfoil thickness
+    lassign [jumpToSection [set c_AirThickSect_lFC_$Suffix] $Offset $File] ReturnValue File
+
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+    lassign [ReadAirThickSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+
+    #--------------------------    
+    # 31. New skin tension
+    lassign [jumpToSection [set c_NewSkinSect_lFC_$Suffix] $Offset $File] ReturnValue File
+
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+    lassign [ReadNewSkinSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+
+
+#    ADD MORE SECTIONS HERE!!!!!!!!!!!!
+
+
+
+
 
     #----------
     # Well read
@@ -343,11 +558,9 @@ proc readLepDataFile {FilePathName} {
     return 0
 }
 
-
-
 #----------------------------------------------------------------------
 #  ReadGeometrySectV2_52
-#  Reads the Geometry section of a lep data file
+#  Reads the Geometry section 1 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -457,12 +670,15 @@ proc ReadGeometrySectV2_52 {File} {
         set alphaMax $RibGeom($numRibsHalf,8)
     }
 
+    # Set num ribs for section 01C matrix edit
+    set numRibsGeo $numRibsHalf
+
     return [list 0 $File]
 }
 
 #----------------------------------------------------------------------
 #  proc ReadAirfoilSectV2_52
-#  Reads the Airfoli section of a lep data file
+#  Reads the Airfoils section 2 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -502,7 +718,7 @@ proc ReadAirfoilSectV2_52 {File} {
 
 #----------------------------------------------------------------------
 #  proc ReadAnchorPoSectV2_52
-#  Reads the Anchor point section of a lep data file
+#  Reads the Anchor point section 3 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -540,7 +756,7 @@ proc ReadAnchorPoSectV2_52 {File} {
 
 #----------------------------------------------------------------------
 #  proc ReadAirfoilHoSectV2_52
-#  Reads the Airfoil holes section of a lep data file
+#  Reads the Airfoil holes section 4 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -598,7 +814,7 @@ proc ReadAirfoilHoSectV2_52 {File} {
 
 #----------------------------------------------------------------------
 #  proc ReadSkinTensSectV2_52
-#  Reads the Airfoil holes section of a lep data file
+#  Reads the skin tension section 5 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -638,7 +854,7 @@ proc ReadSkinTensSectV2_52 {File} {
 
 #----------------------------------------------------------------------
 #  proc ReadSewingSectV2_52
-#  Reads the Sewing section of a lep data file
+#  Reads the Sewing section 6 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -679,7 +895,7 @@ proc ReadSewingSectV2_52 {File} {
 
 #----------------------------------------------------------------------
 #  proc ReadMarksSectV2_52
-#  Reads the Marks section of a lep data file
+#  Reads the Marks section 7 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -704,7 +920,7 @@ proc ReadMarksSectV2_52 {File} {
 
 #----------------------------------------------------------------------
 #  proc ReadGlobalAoASectV2_52
-#  Reads the Global AoA section of a lep data file
+#  Reads the Global AoA section 8 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -751,7 +967,7 @@ proc ReadGlobalAoASectV2_52 {File} {
 
 #----------------------------------------------------------------------
 #  proc ReadSuspLinesSectV2_52
-#  Reads the Suspension lines section of a lep data file
+#  Reads the Suspension lines section 9 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -806,7 +1022,7 @@ proc ReadSuspLinesSectV2_52 {File} {
 
 #----------------------------------------------------------------------
 #  proc ReadBrakesSectV2_52
-#  Reads the Brakes section of a lep data file
+#  Reads the Brakes section 10 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -861,7 +1077,7 @@ proc ReadBrakesSectV2_52 {File} {
 
 #----------------------------------------------------------------------
 #  proc ReadRamLengthSectV2_52
-#  Reads the Ramification length section of a lep data file
+#  Reads the Ramification length section 11 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -897,7 +1113,7 @@ proc ReadRamLengthSectV2_52 {File} {
 
 #----------------------------------------------------------------------
 #  proc ReadHV-VH-RibSectV2_52
-#  Reads the Mini rib section of a lep data file
+#  Reads the Mini rib section 12 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -940,7 +1156,7 @@ proc ReadHV-VH-RibSectV2_52 {File} {
 
 #----------------------------------------------------------------------
 #  proc ReadTeColSectV2_52
-#  Reads the Trailind edge section of a lep data file
+#  Reads the extrados colors section 15 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -952,7 +1168,7 @@ proc ReadHV-VH-RibSectV2_52 {File} {
 proc ReadTeColSectV2_52 {File} {
     source "globalWingVars.tcl"
 
-    # numTeCol
+    # numTeCol (extrados colors)
     set numTeCol  [gets $File]
 
     set TeColIt 1
@@ -983,7 +1199,7 @@ proc ReadTeColSectV2_52 {File} {
 
 #----------------------------------------------------------------------
 #  proc ReadLeColSectV2_52
-#  Reads the Leading edge section of a lep data file
+#  Reads the intrados colors section 16 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -995,7 +1211,7 @@ proc ReadTeColSectV2_52 {File} {
 proc ReadLeColSectV2_52 {File} {
     source "globalWingVars.tcl"
 
-    # numLeCol
+    # numLeCol (intrados colors)
     set numLeCol  [gets $File]
 
     set LeColIt 1
@@ -1025,7 +1241,7 @@ proc ReadLeColSectV2_52 {File} {
 
 #----------------------------------------------------------------------
 #  proc ReadAddRibPoSectV2_52
-#  Reads the Rib points section of a lep data file
+#  Reads the Rib points section 17 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -1055,7 +1271,7 @@ proc ReadAddRibPoSectV2_52 {File} {
 
 #----------------------------------------------------------------------
 #  proc ReadElLinesCorrSectV2_52
-#  Reads the elastic lines correction section of a lep data file
+#  Reads the elastic lines correction section 18 of a lep data file
 #  Applicable versions 2.52 ...
 #
 #  IN:  File            Pointer to the first data line of the data section
@@ -1104,6 +1320,754 @@ proc ReadElLinesCorrSectV2_52 {File} {
     return [list 0 $File]
 }
 
+
+
+#----------------------------------------------------------------------
+#  proc ReadDXFLayNaSectV2_52
+#  Reads the dxf layer names section 19 of a lep data file
+#  Applicable versions 3.14 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadDXFLayNaSectV2_52 {File} {
+    source "globalWingVars.tcl"
+
+    # numDXFLayNa
+    set numDXFLayNa [gets $File]
+
+    set i 1
+    while {$i <= $numDXFLayNa} {
+        set DataLine [gets $File]
+        # addRipPoX
+        set dxfLayNaX($i) [lindex $DataLine 0]
+        # addRipPoY
+        set dxfLayNaY($i) [lindex $DataLine 1]
+        incr i
+    }
+
+    return [list 0 $File]
+}
+
+
+#----------------------------------------------------------------------
+#  proc ReadMarksTySectV2_52
+#  Reads the Marks types section 20 of a lep data file
+#  Applicable versions 3.14 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadMarksTySectV2_52 {File} {
+    source "globalWingVars.tcl"
+
+    # numMarksTy
+    set numMarksTy [gets $File]
+
+    set i 1
+    while {$i <= $numMarksTy} {
+        set DataLine [gets $File]
+        # marksType0
+        set marksType0($i) [lindex $DataLine 0]
+        # marksType1
+        set marksType1($i) [lindex $DataLine 1]
+        # marksType2
+        set marksType2($i) [lindex $DataLine 2]
+        # marksType3
+        set marksType3($i) [lindex $DataLine 3]
+        # marksType4
+        set marksType4($i) [lindex $DataLine 4]
+        # marksType5
+        set marksType5($i) [lindex $DataLine 5]
+        # marksType6
+        set marksType6($i) [lindex $DataLine 6]
+
+        incr i
+    }
+
+    return [list 0 $File]
+}
+
+
+#----------------------------------------------------------------------
+#  proc ReadAirThickSectV2_52
+#  Reads data for joncs definition section 21 of a lep data file
+#  Applicable versions 3.14 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadJoncsDefSectV2_52 {File} { 
+    source "globalWingVars.tcl"
+
+    # k_section21 (scheme)
+    set k_section21 [gets $File]
+
+    # Case scheme 0
+    if {$k_section21 == 0 } {
+    #  Stop reading
+    #  set data blocs number to 0
+    set numGroupsJDdb 0
+    #  set data blocs number to 0
+    set numGroupsJDdb 0
+    # set data bloc number and type
+    set numDataBlocJD(1,1) 0
+    set numDataBlocJD(1,2) 0
+    }
+
+    # Case scheme 1
+    if {$k_section21 == 1 } {
+    #  set data blocs number to 1
+    set numGroupsJDdb 1
+    # set data bloc number and type
+    set numDataBlocJD(1,1) 1
+    set numDataBlocJD(1,2) 1
+
+    # set number of groups
+    set numGroupsJD(1) [gets $File]
+
+    # read each group type 1
+    set gr 1
+    while {$gr <= $numGroupsJD(1)} {
+
+    	 set DataLine [gets $File]
+   	 set numJoncsDef(1,$gr,1) [lindex $DataLine 0]
+   	 set numJoncsDef(1,$gr,2) [lindex $DataLine 1]
+   	 set numJoncsDef(1,$gr,3) [lindex $DataLine 2]
+
+   	 foreach i {1 2 3} {
+   	 set DataLine [gets $File]
+    	 set lineJoncsDef1(1,$gr,$i,1) [lindex $DataLine 0]
+    	 set lineJoncsDef1(1,$gr,$i,2) [lindex $DataLine 1]
+   	 set lineJoncsDef1(1,$gr,$i,3) [lindex $DataLine 2]
+    	 set lineJoncsDef1(1,$gr,$i,4) [lindex $DataLine 3]
+         }
+
+    incr gr
+    }
+    # end scheme 1
+    }
+
+    # Case scheme 2
+    if {$k_section21 == 2 } { 
+    #  set data blocs number
+    set numGroupsJDdb [gets $File]
+
+    # iterate in each data bloc
+    set db 1
+    while {$db <= $numGroupsJDdb} { 
+
+    # set data bloc number and type
+    set DataLine [gets $File]
+    set numDataBlocJD($db,1) [lindex $DataLine 0]
+    set numDataBlocJD($db,2) [lindex $DataLine 1]
+
+    # set number of groups
+    set numGroupsJD($db) [gets $File]
+
+    # iterate in each group
+    set gr 1
+    while {$gr <= $numGroupsJD($db)} {
+
+    # read group type 1
+    if {$numDataBlocJD($db,2) == 1} {
+
+    	 set DataLine [gets $File]
+   	 set numJoncsDef($db,$gr,1) [lindex $DataLine 0]
+   	 set numJoncsDef($db,$gr,2) [lindex $DataLine 1]
+   	 set numJoncsDef($db,$gr,3) [lindex $DataLine 2]
+
+   	 foreach i {1 2 3} {
+   	 set DataLine [gets $File]
+    	 set lineJoncsDef1($db,$gr,$i,1) [lindex $DataLine 0]
+    	 set lineJoncsDef1($db,$gr,$i,2) [lindex $DataLine 1]
+   	 set lineJoncsDef1($db,$gr,$i,3) [lindex $DataLine 2]
+    	 set lineJoncsDef1($db,$gr,$i,4) [lindex $DataLine 3]
+         }
+
+#     puts "group 1 from $numJoncsDef($db,$gr,2) to $numJoncsDef($db,$gr,3)"
+     }
+    # read group type 2
+    if {$numDataBlocJD($db,2) == 2} {
+
+    	 set DataLine [gets $File]
+   	 set numJoncsDef($db,$gr,1) [lindex $DataLine 0]
+   	 set numJoncsDef($db,$gr,2) [lindex $DataLine 1]
+   	 set numJoncsDef($db,$gr,3) [lindex $DataLine 2]
+
+   	 set DataLine [gets $File]
+    	 set lineJoncsDef2($db,$gr,1,1) [lindex $DataLine 0]
+    	 set lineJoncsDef2($db,$gr,1,2) [lindex $DataLine 1]
+   	 set lineJoncsDef2($db,$gr,1,3) [lindex $DataLine 2]
+    	 set lineJoncsDef2($db,$gr,1,4) [lindex $DataLine 3]
+    	 set lineJoncsDef2($db,$gr,1,5) [lindex $DataLine 4]
+
+         set DataLine [gets $File]
+    	 set lineJoncsDef2($db,$gr,2,1) [lindex $DataLine 0]
+    	 set lineJoncsDef2($db,$gr,2,2) [lindex $DataLine 1]
+   	 set lineJoncsDef2($db,$gr,2,3) [lindex $DataLine 2]
+    	 set lineJoncsDef2($db,$gr,2,4) [lindex $DataLine 3]
+
+#     puts "group 2 from $numJoncsDef($db,$gr,2) to $numJoncsDef($db,$gr,3)"
+
+     }
+    # end groups in data bloc
+    incr gr
+    } 
+    # end data blocs
+    incr db
+    } 
+    # end scheme 2
+    } 
+
+    return [list 0 $File]
+} 
+
+
+#----------------------------------------------------------------------
+#  proc ReadAirThickSectV2_52
+#  Reads data for nose mylars section 22 of a lep data file
+#  Applicable versions 3.14 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadNoseMySectV2_52 {File} {
+    source "globalWingVars.tcl"
+
+    # k_section22
+    set k_section22 [gets $File]
+
+    # Case 0
+    if {$k_section22 == 0 } {
+    #  Stop reading
+    set numGroupsMY 8
+    foreach i {1 2 3 4 5 6 7 8 9 10} {
+    foreach j {1 2 3 4 5 6 7 8 9 10} {
+    set numNoseMy($i,$j) 1
+    set lineNoseMy($i,$j) 1
+    }
+    }
+    }
+
+    # Case 1
+    if {$k_section22 == 1 } {
+
+        # Number of groups
+        set numGroupsMY [gets $File]
+
+        # iterate in each group
+    	set i 1
+    	while {$i <= $numGroupsMY} {
+                # data line
+        	set DataLine [gets $File]
+        	set numNoseMy($i,1) [lindex $DataLine 0]
+        	set numNoseMy($i,2) [lindex $DataLine 1]
+        	set numNoseMy($i,3) [lindex $DataLine 2]
+                # read parameters
+        	set DataLine [gets $File]
+        	set lineNoseMy($i,1) [lindex $DataLine 0]
+                set lineNoseMy($i,2) [lindex $DataLine 1]
+                set lineNoseMy($i,3) [lindex $DataLine 2]
+                set lineNoseMy($i,4) [lindex $DataLine 3]
+                set lineNoseMy($i,5) [lindex $DataLine 4]
+                set lineNoseMy($i,6) [lindex $DataLine 5]
+                incr i
+        }
+    }
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  proc ReadAirThickSectV2_52
+#  Reads data for tab reinforcements section 23 of a lep data file
+#  Applicable versions 3.14 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadTabReinfSectV2_52 {File} {
+    source "globalWingVars.tcl"
+
+    # k_section22
+    set k_section23 [gets $File]
+
+    # Case 0
+    if {$k_section23 == 0 } {
+    #  Stop reading
+    set numGroupsTR 1
+    }
+
+    # Case 1
+    if {$k_section23 == 1 } {
+        # Number of groups
+        set numGroupsTR [gets $File]
+
+        # iterate in each group
+    	set i 1
+    	while {$i <= $numGroupsTR} {
+                # data line
+        	set DataLine [gets $File]
+        	set numTabReinf($i,1) [lindex $DataLine 0]
+        	set numTabReinf($i,2) [lindex $DataLine 1]
+        	set numTabReinf($i,3) [lindex $DataLine 2]
+                # read parameters
+        	set DataLine [gets $File]
+        	set lineTabReinf($i,1) [lindex $DataLine 0]
+                set lineTabReinf($i,2) [lindex $DataLine 1]
+                set lineTabReinf($i,3) [lindex $DataLine 2]
+                set lineTabReinf($i,4) [lindex $DataLine 3]
+                set lineTabReinf($i,5) [lindex $DataLine 4]
+                incr i
+        }
+
+        # schemes
+        set DataLine [gets $File]
+        # schemes data
+        foreach i {1 2 3 4 5} {
+        set DataLine [gets $File]
+        foreach j {1 2 3 4 5 6 7} {
+        set schemesTR($i,$j) [lindex $DataLine [expr ($j - 1)]]
+        }
+        }
+    }
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  proc ReadMarksTySectV2_52
+#  Reads general 2D DXF options section 24 of a lep data file
+#  Applicable versions 3.14 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadGe2DopSectV2_52 {File} {
+    source "globalWingVars.tcl"
+
+    set numGe2Dop 6
+
+    # k_section24
+    set k_section24 [gets $File]
+
+    set i 1
+    while {$i <= $numGe2Dop} {
+        set DataLine [gets $File]
+        # value0
+        set dxf2DopA($i) [lindex $DataLine 0]
+        # value1
+        set dxf2DopB($i) [lindex $DataLine 1]
+        # value2
+        set dxf2DopC($i) [lindex $DataLine 2]
+        # value3
+        incr i
+    }
+
+    return [list 0 $File]
+}
+
+
+#----------------------------------------------------------------------
+#  proc ReadMarksTySectV2_52
+#  Reads general 3D DXF options section 25 of a lep data file
+#  Applicable versions 3.14 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadGe3DopSectV2_52 {File} {
+    source "globalWingVars.tcl"
+
+    set numGe3Dop 6
+    set numGe3Dopm 3
+
+    # k_section25
+    set k_section25 [gets $File]
+
+    # Fisrt bloc
+    set i 1
+    while {$i <= $numGe3Dop} {
+        set DataLine [gets $File]
+        # value0
+        set dxf3DopA($i) [lindex $DataLine 0]
+        # value1
+        set dxf3DopB($i) [lindex $DataLine 1]
+        # value2
+        set dxf3DopC($i) [lindex $DataLine 2]
+        # value3
+#        set dxf3DopD($i) [lindex $DataLine 3]
+        # value3
+
+        incr i
+    }
+
+    # Second bloc
+    set i [expr $numGe3Dop + 1]
+    while {$i <= [expr $numGe3Dop + $numGe3Dopm] } {
+        set DataLine [gets $File]
+        # value0
+        set dxf3DopA($i) [lindex $DataLine 0]
+        # value1
+        set dxf3DopB($i) [lindex $DataLine 1]
+        # value2
+        set dxf3DopC($i) [lindex $DataLine 2]
+        # value3
+        set dxf3DopD($i) [lindex $DataLine 3]
+        # value4
+        incr i
+    }
+
+    return [list 0 $File]
+}
+
+
+#----------------------------------------------------------------------
+#  proc ReadGlueVenSectV2_52
+#  Reads data for glue vents section 26 of a lep data file
+#  Applicable versions 3.14 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadGlueVenSectV2_52 {File} {
+    source "globalWingVars.tcl"
+
+    # k_section26
+    set k_section26 [gets $File]
+
+    if {$k_section26 == 0} {
+#   Nothing
+    }
+
+    if {$k_section26 == 1} {
+    set i 1
+    while {$i <= $numRibsHalf} {
+        set DataLine [gets $File]
+        # value0
+        set glueVenA($i) [lindex $DataLine 0]
+        # value1
+        set glueVenB($i) [lindex $DataLine 1]
+        incr i
+        }
+    }
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  proc ReadAirThickSectV2_52
+#  Reads data for special wingtip section 27 of a lep data file
+#  Applicable versions 3.14 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadSpecWtSectV2_52 {File} {
+    source "globalWingVars.tcl"
+
+    # k_section27
+    set k_section27 [gets $File]
+
+    # Wingtip type 0, do nothing
+    if {$k_section27 == 0 } {
+    #  Stop reading
+    }
+
+    # Wingtip type 1
+    if {$k_section27 == 1 } {
+    	set i 1
+    	while {$i <= 2} {
+        	set DataLine [gets $File]
+        	# value0
+        	set specWtA($i) [lindex $DataLine 0]
+        	# value1
+        	set specWtB($i) [lindex $DataLine 1]
+        	incr i
+    	}
+    }
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  proc ReadAirThickSectV2_52
+#  Reads data for calage variations section 28 of a lep data file
+#  Applicable versions 3.14 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadCalagVarSectV2_52 {File} {
+    source "globalWingVars.tcl"
+
+    # k_section28
+    set k_section28 [gets $File]
+
+    # Calage variation type 0, do nothing
+    if {$k_section28 == 0 } {
+    #  Stop reading
+    }
+
+    # Calage variation type 1
+    if {$k_section28 == 1 } {
+
+    	# numCalagVar
+    	set numRisersC [gets $File]
+
+        # Points position %
+        set DataLine [gets $File]
+        	# value0
+        	set calagVarA(1) [lindex $DataLine 0]
+        	# value1
+        	set calagVarB(1) [lindex $DataLine 1]
+        	# value2
+        	set calagVarC(1) [lindex $DataLine 2]
+        	# value3
+        	set calagVarD(1) [lindex $DataLine 3]
+        	# value4
+        	set calagVarE(1) [lindex $DataLine 4]
+        	# value5
+        	set calagVarF(1) [lindex $DataLine 5]
+        	
+    	# Speed-trim
+        set DataLine [gets $File]
+        	# value0
+        	set speedVarA(1) [lindex $DataLine 0]
+        	# value1
+        	set speedVarB(1) [lindex $DataLine 1]
+        	# value2
+        	set speedVarC(1) [lindex $DataLine 2]
+        	# value3
+        	set speedVarD(1) [lindex $DataLine 3]
+
+    }
+    return [list 0 $File]
+}
+
+
+
+
+#----------------------------------------------------------------------
+#  proc ReadAirThickSectV2_52
+#  Reads data for 3D-Sphaping section 29 of a lep data file
+#  Applicable versions 3.14 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadP3DShapingSectV2_52 {File} {
+    source "globalWingVars.tcl"
+
+    # k_section29
+    set k_section29 [gets $File]
+
+    # Case 0
+    if {$k_section29 == 0 } {
+    #  Stop reading
+    set k_section29b 1
+    set numGroups3DS(1) groups
+    set numGroups3DS(2) 0
+
+    # set values pp by default
+    }
+
+    # Case 1
+    if {$k_section29 == 1 } {
+
+    # k_section29b
+    set k_section29b [gets $File]
+
+    # Number of groups
+    set DataLine [gets $File]
+    set numGroups3DS(1) [lindex $DataLine 0]
+    set numGroups3DS(2) [lindex $DataLine 1]
+
+        # iterate in each group
+    	set i 1
+    	while {$i <= $numGroups3DS(2)} {
+                # data line 1
+        	set DataLine [gets $File]
+        	set num3DS($i,1) [lindex $DataLine 0]
+        	set num3DS($i,2) [lindex $DataLine 1]
+        	set num3DS($i,3) [lindex $DataLine 2]
+        	set num3DS($i,4) [lindex $DataLine 3]
+                # data line 2
+        	set DataLine [gets $File]
+        	set num3DS($i,5) [lindex $DataLine 0]
+        	set num3DS($i,6) [lindex $DataLine 1]
+        	set num3DS($i,7) [lindex $DataLine 2]
+                # read parameters extrados
+                      set j 1
+                      while {$j <= $num3DS($i,6)} {
+                      set DataLine [gets $File]
+        	      set line3DSu($i,$j,1) [lindex $DataLine 0]
+        	      set line3DSu($i,$j,2) [lindex $DataLine 1]
+        	      set line3DSu($i,$j,3) [lindex $DataLine 2]
+        	      set line3DSu($i,$j,4) [lindex $DataLine 3]
+                      incr j
+                      }
+                # data line 3
+        	set DataLine [gets $File]
+        	set num3DS($i,8) [lindex $DataLine 0]
+        	set num3DS($i,9) [lindex $DataLine 1]
+        	set num3DS($i,10) [lindex $DataLine 2]
+                # read parameters intrados
+                      set j 1
+                      while {$j <= $num3DS($i,9)} {
+                      set DataLine [gets $File]
+        	      set line3DSl($i,$j,1) [lindex $DataLine 0]
+        	      set line3DSl($i,$j,2) [lindex $DataLine 1]
+        	      set line3DSl($i,$j,3) [lindex $DataLine 2]
+        	      set line3DSl($i,$j,4) [lindex $DataLine 3]
+                      incr j
+                      }
+                incr i
+        }
+                # read constant bloc of five lines
+                      set DataLine [gets $File]
+                      set j 1
+                      while {$j <= 5} {
+                      set DataLine [gets $File]
+        	      set line3DSpp($j,1) [lindex $DataLine 0]
+        	      set line3DSpp($j,2) [lindex $DataLine 1]
+        	      set line3DSpp($j,3) [lindex $DataLine 2]
+        	      set line3DSpp($j,4) [lindex $DataLine 3]
+        	      set line3DSpp($j,5) [lindex $DataLine 4]
+                      incr j
+                      }
+    }
+    return [list 0 $File]
+}
+
+
+#----------------------------------------------------------------------
+#  proc ReadAirThickSectV2_52
+#  Reads data for airfoil thickness section 30 of a lep data file
+#  Applicable versions 3.14 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadAirThickSectV2_52 {File} {
+    source "globalWingVars.tcl"
+
+    # k_section30
+    set k_section30 [gets $File]
+
+    if {$k_section30 == 0 } {
+    #  Stop reading
+    }
+
+    if {$k_section30 == 1 } {
+    	set i 1
+    	while {$i <= $numRibsHalf} {
+        	set DataLine [gets $File]
+        	# value0
+        	set airThickA($i) [lindex $DataLine 0]
+        	# value1
+        	set airThickB($i) [lindex $DataLine 1]
+        	incr i
+    	}
+    }
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  proc ReadAirThickSectV2_52
+#  Reads data for new skin tension section 31 of a lep data file
+#  Applicable versions 3.14 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadNewSkinSectV2_52 {File} {
+    source "globalWingVars.tcl"
+
+    # k_section31
+    set k_section31 [gets $File]
+
+    # Case 0
+    if {$k_section31 == 0 } {
+    #  Stop reading
+    set numGroupsNS 0
+    }
+
+    # Case 1
+    if {$k_section31 == 1 } {
+
+        # Number of groups
+        set numGroupsNS [gets $File]
+
+        # iterate in each group
+    	set i 1
+    	while {$i <= $numGroupsNS} {
+                # comment line
+                set Dataline [gets $File]
+                # data line
+        	set DataLine [gets $File]
+        	set numNewSkin($i,1) [lindex $DataLine 0]
+        	set numNewSkin($i,2) [lindex $DataLine 1]
+        	set numNewSkin($i,3) [lindex $DataLine 2]
+        	set numNewSkin($i,4) [lindex $DataLine 3]
+        	set numNewSkin($i,5) [lindex $DataLine 4]
+        # iterate in the number of points
+        set j 1
+    	while {$j <= $numNewSkin($i,4)} {
+        	set DataLine [gets $File]
+        	set lineNeSk($i,$j,1) [lindex $DataLine 0]
+                set lineNeSk($i,$j,2) [lindex $DataLine 1]
+                set lineNeSk($i,$j,3) [lindex $DataLine 2]
+                set lineNeSk($i,$j,4) [lindex $DataLine 3]
+                set lineNeSk($i,$j,5) [lindex $DataLine 4]
+                incr j
+        }
+                incr i
+    	}
+    }
+    return [list 0 $File]
+}
+
+
+#----------------------------------------------------------------------
+
 proc Debug_rLDF { MessageString } {
 
     set debug_rLDF 0
@@ -1115,3 +2079,6 @@ proc Debug_rLDF { MessageString } {
     return
 
 }
+
+
+

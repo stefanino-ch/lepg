@@ -30,6 +30,17 @@ proc DetectFileVersion {FilePathName} {
             close $file
             return "1.4"
         }
+        # The default 1.5 file has a version indicator in the header
+        if { [string first "1.5" $DataLine] >= 0 } {
+            close $file
+            return "1.5"
+        }
+        # The default 1.6 file has a version indicator in the header
+        if { [string first "1.6" $DataLine] >= 0 } {
+            close $file
+            return "1.6"
+        }
+
         incr i
     }
 
@@ -78,7 +89,7 @@ proc readPreProcDataFile {FilePathName} {
     set File [open $FilePathName r+]
 
     # setup the suffix
-    if { $FileVersion <= 1.4 } {
+    if { $FileVersion <= 1.6 } {
         set Suffix "Lbl"
         set Offset 1
     } else {
@@ -193,6 +204,9 @@ proc ReadLeadingEdgeSect {File} {
     source "globalPreProcVars.tcl"
 
     set DataLine  [gets $File]
+    set typeLE [lindex $DataLine 0]
+
+    set DataLine  [gets $File]
     set a1LE [lindex $DataLine 1]
 
     set DataLine  [gets $File]
@@ -202,17 +216,34 @@ proc ReadLeadingEdgeSect {File} {
     set x1LE [lindex $DataLine 1]
 
     set DataLine  [gets $File]
+    set x2LE [lindex $DataLine 1]
+
+    set DataLine  [gets $File]
     set xmLE [lindex $DataLine 1]
 
     set DataLine  [gets $File]
-    set c0LE [lindex $DataLine 1]
+    set c01LE [lindex $DataLine 1]
+
+    set DataLine  [gets $File]
+    set ex1LE [lindex $DataLine 1]
+
+    set DataLine  [gets $File]
+    set c02LE [lindex $DataLine 1]
+
+    set DataLine  [gets $File]
+    set ex2LE [lindex $DataLine 1]
+
 
     # DEBUG code
+    if {$EnableDebugPreProc} {DebugVariable typeLE}
     if {$EnableDebugPreProc} {DebugVariable a1LE}
     if {$EnableDebugPreProc} {DebugVariable b1LE}
     if {$EnableDebugPreProc} {DebugVariable x1LE}
     if {$EnableDebugPreProc} {DebugVariable xmLE}
-    if {$EnableDebugPreProc} {DebugVariable c0LE}
+    if {$EnableDebugPreProc} {DebugVariable c01LE}
+    if {$EnableDebugPreProc} {DebugVariable ex1LE}
+    if {$EnableDebugPreProc} {DebugVariable c02LE}
+    if {$EnableDebugPreProc} {DebugVariable ex2LE}
     # end DEBUG code
 
     return [list 0 $File]
@@ -232,6 +263,9 @@ proc ReadTrailingEdgeSect {File} {
     source "globalPreProcVars.tcl"
 
     set DataLine  [gets $File]
+    set typeTE [lindex $DataLine 0]
+
+    set DataLine  [gets $File]
     set a1TE [lindex $DataLine 1]
 
     set DataLine  [gets $File]
@@ -249,13 +283,18 @@ proc ReadTrailingEdgeSect {File} {
     set DataLine  [gets $File]
     set y0TE [lindex $DataLine 1]
 
+    set DataLine  [gets $File]
+    set ex1TE [lindex $DataLine 1]
+
     # DEBUG code
+    if {$EnableDebugPreProc} {DebugVariable typeTE}
     if {$EnableDebugPreProc} {DebugVariable a1TE}
     if {$EnableDebugPreProc} {DebugVariable b1TE}
     if {$EnableDebugPreProc} {DebugVariable x1TE}
     if {$EnableDebugPreProc} {DebugVariable xmTE}
     if {$EnableDebugPreProc} {DebugVariable c0TE}
     if {$EnableDebugPreProc} {DebugVariable y0TE}
+    if {$EnableDebugPreProc} {DebugVariable ex1TE}
     # end DEBUG code
 
     return [list 0 $File]
@@ -328,8 +367,41 @@ proc ReadCellsDistribSect {File} {
     source "globalPreProcVars.tcl"
 
     set cellDistrType [gets $File]
-    set cellDistrCoeff [gets $File]
-    set numCellsPreProc  [gets $File]
+
+    # Case 1
+    if { $cellDistrType == 1 } {
+        set numCellsPreProc  [gets $File]
+    }
+
+    # Case 2
+    if { $cellDistrType == 2 } {
+        set cellDistrCoeff [gets $File]
+        set numCellsPreProc  [gets $File]
+    }
+
+    # Case 3
+    if { $cellDistrType == 3 } {
+        set cellDistrCoeff [gets $File]
+        set numCellsPreProc  [gets $File]
+    }
+
+    # Case 4
+    if { $cellDistrType == 4 } { 
+        set numRibsHalfPre  [gets $File]
+
+        set semi_span 0.0
+        set i 1
+        while { $i <= $numRibsHalfPre } {
+            set Dataline [gets $File]
+            set cellsWidth($i,2) [lindex $Dataline 1]
+            set semi_span [expr ($semi_span + $cellsWidth($i,2))]
+
+#       puts "$i $cellsWidth($i,2)"
+
+            incr i
+        }
+    # Normalize because semi_span != XM (!)
+    }
 
     # DEBUG code
     if {$EnableDebugPreProc} {DebugVariable cellDistrType}

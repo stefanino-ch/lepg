@@ -26,6 +26,8 @@
 #----------------------------------------------------------------------
 proc importPreProcOutFile {FilePathName} {
 
+#    puts "Filename $FilePathName"
+
     source "preProcOutFileConstants.tcl"
     source "fileReadHelpers.tcl"
 
@@ -34,12 +36,14 @@ proc importPreProcOutFile {FilePathName} {
     # Check what file version to be read
     set FileVersion [DetectFileVersion_pPOFI $FilePathName]
 
+    puts "FileV $FileVersion"
+
     # open data file
     # as we know the version number=> file is there and readable=> we don't need to do error handling anymore
     set File [open $FilePathName r+]
 
     # setup the suffix
-    if { $FileVersion == 1.4 } {
+    if { $FileVersion == 1.6 } {
         set Suffix "Lbl"
         set Offset 1
     } else {
@@ -73,7 +77,8 @@ proc importPreProcOutFile {FilePathName} {
         return $ReturnValue
     }
 
-    InitializeOtherWingVars
+#    WARNIG: No initialize other variables!!!
+#    InitializeOtherWingVars
 
     return 0
 }
@@ -99,14 +104,40 @@ proc DetectFileVersion_pPOFI {FilePathName} {
     # check first for the 1.4 data file
     set i 1
     while {$i <= 10} {
-        set DataLine [gets $file]
+        #set DataLine [gets $file]
         # The default 1.4 file has a version indicator in the header
-        if { [string first "1.4" $DataLine] >= 0 } {
+        #if { [string first "1.4" $DataLine] >= 0 } {
+        #    close $file
+        #    return "1.4"
+        #}
+        incr i
+    }
+
+    # check for the 1.5 data file
+    set i 1
+    while {$i <= 10} {
+        #set DataLine [gets $file]
+        # The default 1.4 file has a version indicator in the header
+        #if { [string first "1.5" $DataLine] >= 0 } {
+        #    close $file
+        #    return "1.5"
+        #}
+        incr i
+    }
+
+    # check for the 1.6 data file
+    # Number 40??? WARNING BECAUSE SOME GEOMETRIES WILL BE NOT OPEN!!!
+    set i 1
+    while {$i <= 40} {
+        set DataLine [gets $file]
+        # The default 1.6 file has a version indicator in the header
+        if { [string first "1.6" $DataLine] >= 0 } {
             close $file
-            return "1.4"
+            return "1.6"
         }
         incr i
     }
+
 
     # no valid file version found
     return -1
@@ -137,6 +168,8 @@ proc ReadGeometrySectV1_4 {File} {
     set l [string length $numRibsHalf]
     # NumberRibs
     set numRibsHalf [string range $numRibsHalf 0 [expr $l-3]]
+
+    puts "NumRibsHalf $numRibsHalf"
 
     # Read matrix of geometry
     set i 1
@@ -179,6 +212,9 @@ proc ReadMainGeometrySectV1_4  {File} {
 
     source "globalWingVars.tcl"
 
+    # parameter necessary to set new default global values
+    set numRibsHalfPrev $numRibsHalf
+
     # NumCells
     set DataLine  [gets $File]
     set numCells  [lindex $DataLine 1]
@@ -187,17 +223,29 @@ proc ReadMainGeometrySectV1_4  {File} {
     set DataLine  [gets $File]
     set EvenOdd   [lindex $DataLine 0]
 
+    # New procedure (2021-01-11)
+    set numRibsTot [expr ($numCells +1)]
+
     if { $EvenOdd == 0 } {
-        # Even number of cells
-        set DataLine  [gets $File]
-        set numRibsTot [lindex $DataLine 4]
-    } else {
-        # Odd number of cells
-        set DataLine  [gets $File]
-        set numRibsTot [lindex $DataLine 3]
+    # Even number of cells
+    set numRibsHalfNew [expr ($numCells / 2)]
     }
-    # The preprocessor gives the number of ribs per side. We need tu multiply
-    set numRibsTot [expr $numRibsTot *2 ]
+
+    if { $EvenOdd == 1 } {
+    # Even number of cells
+    set numRibsHalfNew [expr (($numCells + 1) / 2)]
+    }
+
+    # Initialize new variables
+    if { $numRibsHalfPrev < $numRibsHalfNew } {
+
+       source "InitializeNewVarsNewCells.tcl"
+       InitializeNVNC
+
+    }
+
+    set numRibsHalf $numRibsHalfPrev
+
 
     return [list 0 $File]
 }
@@ -231,6 +279,7 @@ proc InitializeOtherWingVars {} {
     global numLeCol
     global numTeCol
     global numAddRipPo
+    global numDXFLayNa
     global loadDistr
     global loadDeform
 
@@ -318,3 +367,7 @@ proc InitializeOtherWingVars {} {
         set loadDeform($i,4) 0
     }
 }
+
+    # DXF layer names
+    set numDXFLayNa 0
+

@@ -18,8 +18,8 @@ global  Lcl_wBDE_DataChanged
 set     Lcl_wBDE_DataChanged    0
 
 global  AllGlobalVars_wBDE
-set     AllGlobalVars_wBDE {brandName wingName drawScale wingScale}
-
+set     AllGlobalVars_wBDE {brandName wingName drawScale wingScale \
+                           numCells numRibsTot paraType }
 
 #----------------------------------------------------------------------
 #  wingBasicDataEdit
@@ -39,6 +39,13 @@ proc wingBasicDataEdit {} {
     global Lcl_wingName
     global Lcl_drawScale
     global Lcl_wingScale
+    global Lcl_numCells
+    global Lcl_numRibsTot
+    global Lcl_paraType
+    global Lcl_numRibsHalf
+    global Lcl_ribConfig
+
+
 
     SetLclVars_wBDE
 
@@ -47,7 +54,7 @@ proc wingBasicDataEdit {} {
 
     wm protocol .wbde WM_DELETE_WINDOW { CancelButtonPress_wBDE }
 
-    wm title .wbde [::msgcat::mc "Wing Basic Data"]
+    wm title .wbde [::msgcat::mc "01A. Wing Basic Data"]
 
     #-------------
     # Frames and grids
@@ -58,37 +65,72 @@ proc wingBasicDataEdit {} {
     grid .wbde.data         -row 0 -column 0 -sticky e
     grid .wbde.help         -row 1 -column 0 -sticky e
     grid .wbde.btn          -row 2 -column 0 -sticky e
-    #
+
     #-------------
     # Data fields setup
+
+    ttk::label .wbde.data.spacer00 -text "" -width 10
+    grid .wbde.data.spacer00   -row 0 -column 2 -sticky e -padx 10 -pady 3
+
+    # Brand name
     ttk::label .wbde.data.brandName -text [::msgcat::mc "Brand Name"] -width 20
-    ttk::entry .wbde.data.e_brandName -width 30 -textvariable Lcl_brandName
-    ttk::label .wbde.data.wingName -text [::msgcat::mc "Wing Name"] -width 20
-    ttk::entry .wbde.data.e_wingName -width 30 -textvariable Lcl_wingName
-    ttk::label .wbde.data.drawScale -text [::msgcat::mc "Draw Scale"] -width 20
-    ttk::entry .wbde.data.e_drawScale -width 30 -textvariable Lcl_drawScale
-    ttk::label .wbde.data.wingScale -text [::msgcat::mc "Wing Scale"] -width 20
-    ttk::entry .wbde.data.e_wingScale -width 30 -textvariable Lcl_wingScale
-
-    SetHelpBind .wbde.data.e_brandName brandName HelpText_wBDE
-    SetHelpBind .wbde.data.e_wingName  wingName  HelpText_wBDE
-    SetHelpBind .wbde.data.e_drawScale drawScale HelpText_wBDE
-    SetHelpBind .wbde.data.e_wingScale wingScale HelpText_wBDE
-
-    #-------------
-    # Add data fields to grid
     grid .wbde.data.brandName   -row 0 -column 0 -sticky e -padx 10 -pady 3
+
+    ttk::entry .wbde.data.e_brandName -width 30 -textvariable Lcl_brandName
+    SetHelpBind .wbde.data.e_brandName [::msgcat::mc "brand name"] HelpText_wBDE
     grid .wbde.data.e_brandName -row 0 -column 1 -sticky w -padx 10 -pady 3
+
+    # Wing name
+    ttk::label .wbde.data.wingName -text [::msgcat::mc "Wing Name"] -width 20
     grid .wbde.data.wingName    -row 1 -column 0 -sticky e -padx 10 -pady 3
+
+    ttk::entry .wbde.data.e_wingName -width 30 -textvariable Lcl_wingName
+    SetHelpBind .wbde.data.e_wingName  [::msgcat::mc "wing name"] HelpText_wBDE
     grid .wbde.data.e_wingName  -row 1 -column 1 -sticky w -padx 10 -pady 3
+
+    # Draw scale
+    ttk::label .wbde.data.drawScale -text [::msgcat::mc "Draw Scale"] -width 20
     grid .wbde.data.drawScale   -row 2 -column 0 -sticky e -padx 10 -pady 3
+
+    ttk::entry .wbde.data.e_drawScale -width 30 -textvariable Lcl_drawScale
+    SetHelpBind .wbde.data.e_drawScale [::msgcat::mc "draw scale"] HelpText_wBDE
     grid .wbde.data.e_drawScale -row 2 -column 1 -sticky w -padx 10 -pady 3
+
+    # Wing scale
+    ttk::label .wbde.data.wingScale -text [::msgcat::mc "Wing Scale"] -width 20
     grid .wbde.data.wingScale   -row 3 -column 0 -sticky e -padx 10 -pady 3
+
+    ttk::entry .wbde.data.e_wingScale -width 30 -textvariable Lcl_wingScale
+    SetHelpBind .wbde.data.e_wingScale [::msgcat::mc "wing scale"] HelpText_wBDE
     grid .wbde.data.e_wingScale -row 3 -column 1 -sticky w -padx 10 -pady 3
+
+    # Cells number
+    ttk::label .wbde.data.numCells -text [::msgcat::mc "Cells number"] -width 20
+    grid .wbde.data.numCells   -row 4 -column 0 -sticky e -padx 10 -pady 3
+
+    ttk::entry .wbde.data.e_numCells -width 30 -textvariable Lcl_numCells
+    SetHelpBind .wbde.data.e_numCells [::msgcat::mc "cells number\nWARNING!\nYou must change all other sections consistently"] HelpText_wBDE
+    grid .wbde.data.e_numCells -row 4 -column 1 -sticky w -padx 10 -pady 3
+
+    # Ribs number
+    ttk::label .wbde.data.numRibsTot -text [::msgcat::mc "Ribs number"] -width 20
+    grid .wbde.data.numRibsTot   -row 5 -column 0 -sticky e -padx 10 -pady 3
+
+    ttk::entry .wbde.data.e_numRibsTot -width 30 -textvariable Lcl_numRibsTot
+    SetHelpBind .wbde.data.e_numRibsTot [::msgcat::mc "ribs number = cells number + 1\nWARNING!\nYou must change all other sections consistently"] HelpText_wBDE
+    grid .wbde.data.e_numRibsTot -row 5 -column 1 -sticky w -padx 10 -pady 3
+
+    # Wing Type
+    ttk::label .wbde.data.paraType -text [::msgcat::mc "Wing type"] -width 20
+    grid .wbde.data.paraType   -row 6 -column 0 -sticky e -padx 10 -pady 3
+
+    ttk::entry .wbde.data.e_paraType -width 30 -textvariable Lcl_paraType
+    SetHelpBind .wbde.data.e_paraType [::msgcat::mc "available values: ds = double surface,\nss = single skin, pc = parachute"] HelpText_wBDE
+    grid .wbde.data.e_paraType -row 6 -column 1 -sticky w -padx 10 -pady 3
 
     #-------------
     # explanations
-    label .wbde.help.e_help -width 40 -height 3 -background LightYellow -textvariable HelpText_wBDE
+    label .wbde.help.e_help -width 80 -height 3 -background LightYellow -textvariable HelpText_wBDE
     grid  .wbde.help.e_help -row 0 -column 0 -sticky nesw -padx 10 -pady 10
 
     #-------------
@@ -122,10 +164,18 @@ proc SetLclVars_wBDE {} {
     global Lcl_drawScale
     global Lcl_wingScale
 
+    global Lcl_numCells
+    global Lcl_numRibsTot
+    global Lcl_paraType
+
     set Lcl_brandName   $brandName
     set Lcl_wingName    $wingName
     set Lcl_drawScale   $drawScale
     set Lcl_wingScale   $wingScale
+
+    set Lcl_numCells    $numCells
+    set Lcl_numRibsTot  $numRibsTot
+    set Lcl_paraType    $paraType
 
 }
 
@@ -144,10 +194,19 @@ proc ExportLclVars_wBDE {} {
     global Lcl_drawScale
     global Lcl_wingScale
 
+    global Lcl_numCells
+    global Lcl_numRibsTot
+    global Lcl_paraType
+
     set brandName   $Lcl_brandName
     set wingName    $Lcl_wingName
     set drawScale   $Lcl_drawScale
     set wingScale   $Lcl_wingScale
+
+    set numCells    $Lcl_numCells
+    set numRibsTot  $Lcl_numRibsTot
+    set paraType    $Lcl_paraType
+
 }
 
 #----------------------------------------------------------------------

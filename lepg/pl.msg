@@ -14,10 +14,17 @@
 "Copy"                          "Kopiuj"
 "Paste"                         "Wklej"
 
+"Draw"                          "Remis"
+"Wing type"                     "Typ skrzyd¿a"
+"Wing surface"                  "Powierzchnia skrzyde¿"
+"Wing span"                     "Rozpi¿to¿¿"
+"Wing aspect ratio"             "Wspó¿czynnik proporcji"
+"Run"                           "Biega¿"
+
 "##### Planform Menu"           "##### Kszta³t Menu"
 "Planform"                      "Kszta³t"
-"Leading edge"                  "KrawêdŸ natarcia"
-"Trailing edge"                 "KrawêdŸ sp³ywu"
+"Leading edge"                  "Krawêd natarcia"
+"Trailing edge"                 "Krawêd sp³ywu"
 "Cells number and distribution" "Numeracja komór i rozk³ad"
 "Geometry matrix inspection"    "Geometria Macierz"
 
@@ -66,6 +73,9 @@
 "Help"                          "Pomoc"
 "Version"                       "Versja"
 "About"                         "O mnie"
+"Apply"                          "Zastosowa¿"
+"OK"                            "Dobrze!"
+"Cancel"                        "Anuluj"
 
 "lbl_LangChanged"               "Zmiana jêzyka"
 "txt_PlsRestart"                "Proszê ponownie uruchomiæ"

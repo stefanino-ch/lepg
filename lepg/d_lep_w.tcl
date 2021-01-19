@@ -15,7 +15,8 @@ proc myApp_lep_w { } {
     clengb brake bd raml nhvr xrsep yrsep hvr \
     npce npc1e npc2e npc3e xpc1e xpc2e \
     npci npc1i npc2i npc3i xpc1i xpc2i \
-    narp xarp yarp csusl cdis
+    narp xarp yarp csusl cdis \
+    ndxfln xdxfln ydxfln
 
     set file [open "lep/leparagliding_new.txt" w+]
 
@@ -576,6 +577,24 @@ proc myApp_lep_w { } {
     puts -nonewline $file $cdis(5,3) ; puts -nonewline $file "     "
     puts -nonewline $file $cdis(5,4) ; puts -nonewline $file "     "
     puts            $file $cdis(5,5)
+
+#---------------------------------------------------------------------
+#   19. DXF layer names
+#---------------------------------------------------------------------
+
+    puts $file $estels
+    puts $file "*          19. DXF layer names                         *" 
+    puts $file $estels
+
+    puts $file $ndxfln
+
+    set i 1
+    while {$i <= $ndxfln} {
+
+    puts -nonewline $file $xdxfln($i) ; puts -nonewline $file "     "
+    puts            $file $ydxfln($i)
+
+    incr i }
 
 #----------------------------------------------------------------------
     close $file

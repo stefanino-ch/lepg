@@ -26,7 +26,11 @@ global VaultMode2
 set VaultMode2 ""
 
 global CellMode3
+set CellMode1 ""
+set CellMode2 ""
 set CellMode3 ""
+
+global cellsWidth
 
 #----------------------------------------------------------------------
 #  ToRad
@@ -64,6 +68,9 @@ proc editPreProcData {} {
     global VaultMode2
     global HelpText_pPDE
 
+    global numRibsHalfPre
+    global cellsWidth
+
     global g_PreProcDataAvailable
 
     foreach {e} $AllPreProcVars {
@@ -77,18 +84,18 @@ proc editPreProcData {} {
 
     wm protocol .ppde WM_DELETE_WINDOW { CancelButtonPress_pPDE_pPDE }
 
-    wm title .ppde [::msgcat::mc "Edit Geometry data"]
+    wm title .ppde [::msgcat::mc "Edit Geometry data using pre-processor v1.6"]
 
     ttk::labelframe .ppde.name -text [::msgcat::mc "Wing name"]
 
     ttk::labelframe .ppde.le -text [::msgcat::mc "Leading edge"]
-    canvas .ppde.c_le -width 300 -height 150 -bg white
+    canvas .ppde.c_le -width 600 -height 300 -bg white
 
     ttk::labelframe .ppde.te -text [::msgcat::mc "Trailing edge"]
-    canvas .ppde.c_te -width 300 -height 150 -bg white
+    canvas .ppde.c_te -width 300 -height 5 -bg yellow
 
     ttk::labelframe .ppde.vault -text [::msgcat::mc "Vault"]
-    canvas .ppde.c_vault -width 300 -height 150 -bg white
+    canvas .ppde.c_vault -width 600 -height 200 -bg white
 
     ttk::labelframe .ppde.cells -text [::msgcat::mc "Cell distribution"]
 
@@ -98,9 +105,9 @@ proc editPreProcData {} {
 
     grid .ppde.name         -row 0 -column 0 -sticky e
     grid .ppde.le           -row 1 -column 0 -sticky e
-    grid .ppde.c_le         -row 1 -column 1 -sticky nesw
+    grid .ppde.c_le         -row 1 -column 1 -rowspan 2 -sticky nw
     grid .ppde.te           -row 2 -column 0 -sticky e
-    grid .ppde.c_te         -row 2 -column 1 -sticky nesw
+#    grid .ppde.c_te         -row 2 -column 1 -sticky nesw 
     grid .ppde.vault        -row 3 -column 0 -sticky e
     grid .ppde.c_vault      -row 3 -column 1 -sticky nesw
     grid .ppde.cells        -row 4 -column 0 -sticky e
@@ -128,76 +135,110 @@ proc editPreProcData {} {
 
     #-------------
     # Leading edge
+    ttk::label .ppde.le.typeLE -text [::msgcat::mc "LE type"] -width 20
     ttk::label .ppde.le.a1LE -text [::msgcat::mc "a1 \[cm\]"] -width 20
     ttk::label .ppde.le.b1LE -text [::msgcat::mc "b1 \[cm\]"] -width 20
     ttk::label .ppde.le.x1LE -text [::msgcat::mc "x1 \[cm\]"] -width 20
+    ttk::label .ppde.le.x2LE -text [::msgcat::mc "x2 \[cm\]"] -width 20
     ttk::label .ppde.le.xmLE -text [::msgcat::mc "xm \[cm\]"] -width 20
-    ttk::label .ppde.le.c0LE -text [::msgcat::mc "c0 \[cm\]"] -width 20
+    ttk::label .ppde.le.c01LE -text [::msgcat::mc "c01 \[cm\]"] -width 20
+    ttk::label .ppde.le.ex1LE -text [::msgcat::mc "ex1 \[coeff\]"] -width 20
+    ttk::label .ppde.le.c02LE -text [::msgcat::mc "c02 \[cm\]"] -width 20
+    ttk::label .ppde.le.ex2LE -text [::msgcat::mc "ex2 \[coeff\]"] -width 20
 
+    ttk::entry .ppde.le.e_typeLE -width 8 -textvariable Lcl_typeLE
     ttk::entry .ppde.le.e_a1LE -width 8 -textvariable Lcl_a1LE
     ttk::entry .ppde.le.e_b1LE -width 8 -textvariable Lcl_b1LE
     ttk::entry .ppde.le.e_x1LE -width 8 -textvariable Lcl_x1LE
+    ttk::entry .ppde.le.e_x2LE -width 8 -textvariable Lcl_x2LE
     ttk::entry .ppde.le.e_xmLE -width 8 -textvariable Lcl_xmLE
-    ttk::entry .ppde.le.e_c0LE -width 8 -textvariable Lcl_c0LE
+    ttk::entry .ppde.le.e_c01LE -width 8 -textvariable Lcl_c01LE
+    ttk::entry .ppde.le.e_ex1LE -width 8 -textvariable Lcl_ex1LE
+    ttk::entry .ppde.le.e_c02LE -width 8 -textvariable Lcl_c02LE
+    ttk::entry .ppde.le.e_ex2LE -width 8 -textvariable Lcl_ex2LE
 
+    SetHelpBind .ppde.le.e_typeLE typeLE HelpText_pPDE
     SetHelpBind .ppde.le.e_a1LE a1LE HelpText_pPDE
     SetHelpBind .ppde.le.e_b1LE b1LE HelpText_pPDE
     SetHelpBind .ppde.le.e_x1LE x1LE HelpText_pPDE
+    SetHelpBind .ppde.le.e_x2LE x2LE HelpText_pPDE
     SetHelpBind .ppde.le.e_xmLE xmLE HelpText_pPDE
-    SetHelpBind .ppde.le.e_c0LE c0LE HelpText_pPDE
+    SetHelpBind .ppde.le.e_c01LE c01LE HelpText_pPDE
+    SetHelpBind .ppde.le.e_ex1LE ex1LE HelpText_pPDE
+    SetHelpBind .ppde.le.e_c02LE c02LE HelpText_pPDE
+    SetHelpBind .ppde.le.e_ex2LE ex2LE HelpText_pPDE
 
-
-    grid .ppde.le.a1LE -row 0 -column 0 -sticky e
-    grid .ppde.le.e_a1LE -row 0 -column 1 -sticky w
-    grid .ppde.le.b1LE -row 1 -column 0 -sticky e
-    grid .ppde.le.e_b1LE -row 1 -column 1 -sticky w
-    grid .ppde.le.x1LE -row 2 -column 0 -sticky e
-    grid .ppde.le.e_x1LE -row 2 -column 1 -sticky w
-    grid .ppde.le.xmLE -row 3 -column 0 -sticky e
-    grid .ppde.le.e_xmLE -row 3 -column 1 -sticky w
-    grid .ppde.le.c0LE -row 4 -column 0 -sticky e
-    grid .ppde.le.e_c0LE -row 4 -column 1 -sticky w
+    grid .ppde.le.typeLE -row 0 -column 0 -sticky e
+    grid .ppde.le.e_typeLE -row 0 -column 1 -sticky w
+    grid .ppde.le.a1LE -row 1 -column 0 -sticky e
+    grid .ppde.le.e_a1LE -row 1 -column 1 -sticky w
+    grid .ppde.le.b1LE -row 2 -column 0 -sticky e
+    grid .ppde.le.e_b1LE -row 2 -column 1 -sticky w
+    grid .ppde.le.x1LE -row 3 -column 0 -sticky e
+    grid .ppde.le.e_x1LE -row 3 -column 1 -sticky w
+    grid .ppde.le.x2LE -row 4 -column 0 -sticky e
+    grid .ppde.le.e_x2LE -row 4 -column 1 -sticky w
+    grid .ppde.le.xmLE -row 5 -column 0 -sticky e
+    grid .ppde.le.e_xmLE -row 5 -column 1 -sticky w
+    grid .ppde.le.c01LE -row 6 -column 0 -sticky e
+    grid .ppde.le.e_c01LE -row 6 -column 1 -sticky w
+    grid .ppde.le.ex1LE -row 7 -column 0 -sticky e
+    grid .ppde.le.e_ex1LE -row 7 -column 1 -sticky w
+    grid .ppde.le.c02LE -row 8 -column 0 -sticky e
+    grid .ppde.le.e_c02LE -row 8 -column 1 -sticky w
+    grid .ppde.le.ex2LE -row 9 -column 0 -sticky e
+    grid .ppde.le.e_ex2LE -row 9 -column 1 -sticky w
 
     #-------------
     # Trailing edge
+    ttk::label .ppde.te.typeTE -text [::msgcat::mc "TE type"] -width 20
     ttk::label .ppde.te.a1TE -text [::msgcat::mc "a1 \[cm\]"] -width 20
     ttk::label .ppde.te.b1TE -text [::msgcat::mc "b1 \[cm\]"] -width 20
     ttk::label .ppde.te.x1TE -text [::msgcat::mc "x1 \[cm\]"] -width 20
     ttk::label .ppde.te.xmTE -text [::msgcat::mc "xm \[cm\]"] -width 20
     ttk::label .ppde.te.c0TE -text [::msgcat::mc "c0 \[cm\]"] -width 20
     ttk::label .ppde.te.y0TE -text [::msgcat::mc "y0 \[cm\]"] -width 20
+    ttk::label .ppde.te.ex1TE -text [::msgcat::mc "exp \[coeff\]"] -width 20
 
+    ttk::entry .ppde.te.e_typeTE -width 8 -textvariable Lcl_typeTE
     ttk::entry .ppde.te.e_a1TE -width 8 -textvariable Lcl_a1TE
     ttk::entry .ppde.te.e_b1TE -width 8 -textvariable Lcl_b1TE
     ttk::entry .ppde.te.e_x1TE -width 8 -textvariable Lcl_x1TE
     ttk::entry .ppde.te.e_xmTE -width 8 -textvariable Lcl_xmTE
     ttk::entry .ppde.te.e_c0TE -width 8 -textvariable Lcl_c0TE
     ttk::entry .ppde.te.e_y0TE -width 8 -textvariable Lcl_y0TE
+    ttk::entry .ppde.te.e_ex1TE -width 8 -textvariable Lcl_ex1TE
 
+    SetHelpBind .ppde.te.e_typeTE typeTE HelpText_pPDE
     SetHelpBind .ppde.te.e_a1TE a1TE HelpText_pPDE
     SetHelpBind .ppde.te.e_b1TE b1TE HelpText_pPDE
     SetHelpBind .ppde.te.e_x1TE x1TE HelpText_pPDE
     SetHelpBind .ppde.te.e_xmTE xmTE HelpText_pPDE
     SetHelpBind .ppde.te.e_c0TE c0TE HelpText_pPDE
     SetHelpBind .ppde.te.e_y0TE y0TE HelpText_pPDE
+    SetHelpBind .ppde.te.e_ex1TE ex1TE HelpText_pPDE
 
-    grid .ppde.te.a1TE -row 0 -column 0 -sticky e
-    grid .ppde.te.e_a1TE -row 0 -column 1 -sticky w
-    grid .ppde.te.b1TE -row 1 -column 0 -sticky e
-    grid .ppde.te.e_b1TE -row 1 -column 1 -sticky w
-    grid .ppde.te.x1TE -row 2 -column 0 -sticky e
-    grid .ppde.te.e_x1TE -row 2 -column 1 -sticky w
-    grid .ppde.te.xmTE -row 3 -column 0 -sticky e
-    grid .ppde.te.e_xmTE -row 3 -column 1 -sticky w
-    grid .ppde.te.c0TE -row 4 -column 0 -sticky e
-    grid .ppde.te.e_c0TE -row 4 -column 1 -sticky w
-    grid .ppde.te.y0TE -row 5 -column 0 -sticky e
-    grid .ppde.te.e_y0TE -row 5 -column 1 -sticky w
+    grid .ppde.te.typeTE -row 0 -column 0 -sticky e
+    grid .ppde.te.e_typeTE -row 0 -column 1 -sticky w
+    grid .ppde.te.a1TE -row 1 -column 0 -sticky e
+    grid .ppde.te.e_a1TE -row 1 -column 1 -sticky w
+    grid .ppde.te.b1TE -row 2 -column 0 -sticky e
+    grid .ppde.te.e_b1TE -row 2 -column 1 -sticky w
+    grid .ppde.te.x1TE -row 3 -column 0 -sticky e
+    grid .ppde.te.e_x1TE -row 3 -column 1 -sticky w
+    grid .ppde.te.xmTE -row 4 -column 0 -sticky e
+    grid .ppde.te.e_xmTE -row 4 -column 1 -sticky w
+    grid .ppde.te.c0TE -row 5 -column 0 -sticky e
+    grid .ppde.te.e_c0TE -row 5 -column 1 -sticky w
+    grid .ppde.te.y0TE -row 6 -column 0 -sticky e
+    grid .ppde.te.e_y0TE -row 6 -column 1 -sticky w
+    grid .ppde.te.ex1TE -row 7 -column 0 -sticky e
+    grid .ppde.te.e_ex1TE -row 7 -column 1 -sticky w
 
     #-------------
     # Vault
     ttk::radiobutton .ppde.vault.ra -variable vaultType -value 1 -text [::msgcat::mc "Sin-Cos modif"]
-    ttk::radiobutton .ppde.vault.rb -variable vaultType -value 2 -text [::msgcat::mc "Radius/ Angle"]
+    ttk::radiobutton .ppde.vault.rb -variable vaultType -value 2 -text [::msgcat::mc "Radius, Angle"]
 
     bind .ppde.vault.ra <ButtonPress> { SetVaultType 1 }
     bind .ppde.vault.rb <ButtonPress> { SetVaultType 2 }
@@ -254,13 +295,28 @@ proc editPreProcData {} {
     }
 
 
+
+
     #-------------
     # Cell distribution
+    ttk::radiobutton .ppde.cells.rc -variable cellDistrType -value 1 -text [::msgcat::mc "Equal width cells"]
+    ttk::radiobutton .ppde.cells.rd -variable cellDistrType -value 2 -text [::msgcat::mc "Linear distribution"]
     ttk::radiobutton .ppde.cells.ra -variable cellDistrType -value 3 -text [::msgcat::mc "Cell width proportional to chord"]
     ttk::radiobutton .ppde.cells.rb -variable cellDistrType -value 4 -text [::msgcat::mc "Explicit width of each cell"]
 
+    button .ppde.cells.setb  -width 10 -text "Widths"  -command SetpreCellsDis4DataEdit
+
+    bind .ppde.cells.rc <ButtonPress> { SetCellType 1 }
+    bind .ppde.cells.rd <ButtonPress> { SetCellType 2 }
     bind .ppde.cells.ra <ButtonPress> { SetCellType 3 }
     bind .ppde.cells.rb <ButtonPress> { SetCellType 4 }
+
+    grid .ppde.cells.rc -row 0 -column 0 -columnspan 2 -sticky w
+    grid .ppde.cells.rd -row 1 -column 0 -columnspan 2 -sticky w
+    grid .ppde.cells.ra -row 2 -column 0 -columnspan 2 -sticky w
+    grid .ppde.cells.rb -row 3 -column 0 -columnspan 2 -sticky w
+
+    grid .ppde.cells.setb -row 3 -column 2 -columnspan 2 -sticky w
 
     ttk::label .ppde.cells.cellDistrCoeff -text [::msgcat::mc "Cell distribution coef"] -width 20
     ttk::label .ppde.cells.numCellsPreProc -text [::msgcat::mc "Number of cells"] -width 20
@@ -271,13 +327,13 @@ proc editPreProcData {} {
     SetHelpBind .ppde.cells.e_cellDistrCoeff cellDistrCoeff HelpText_pPDE
     SetHelpBind .ppde.cells.e_numCellsPreProc numCellsPreProc HelpText_pPDE
 
-    grid .ppde.cells.ra -row 0 -column 0 -columnspan 2 -sticky w
-    grid .ppde.cells.rb -row 1 -column 0 -columnspan 2 -sticky w
+    grid .ppde.cells.cellDistrCoeff -row 4 -column 0 -sticky e
+    grid .ppde.cells.e_cellDistrCoeff -row 4 -column 1 -sticky w
+    grid .ppde.cells.numCellsPreProc -row 5 -column 0 -sticky e
+    grid .ppde.cells.e_numCellsPreProc -row 5 -column 1 -sticky w
 
-    grid .ppde.cells.cellDistrCoeff -row 2 -column 0 -sticky e
-    grid .ppde.cells.e_cellDistrCoeff -row 2 -column 1 -sticky w
-    grid .ppde.cells.numCellsPreProc -row 3 -column 0 -sticky e
-    grid .ppde.cells.e_numCellsPreProc -row 3 -column 1 -sticky w
+
+
 
     #-------------
     # explanations
@@ -360,21 +416,64 @@ proc SetVaultType { Mode } {
 #  Returns: N/A
 #----------------------------------------------------------------------
 proc SetCellType { Mode } {
+    global CellMode1
+    global CellMode2
     global CellMode3
+
     global Lcl_cellDistrType
+
+    if { $Mode == 1 } {
+        # proportional cell width
+        set CellMode1 "disabled"
+        set CellMode2 "disabled"
+        set CellMode3 "disabled"
+        set Lcl_cellDistrType 1
+    }
+
+    if { $Mode == 2 } {
+        # proportional cell width
+        set CellMode1 "enabled"
+        set CellMode2 "enabled"
+        set CellMode3 "disabled"
+        set Lcl_cellDistrType 2
+    }
 
     if { $Mode == 3 } {
         # proportional cell width
-        set CellMode3 "enabled"
-        set Lcl_cellDistrType 3
-    } else {
+        set CellMode1 "enabled"
+        set CellMode2 "enabled"
         set CellMode3 "disabled"
+        set Lcl_cellDistrType 3
+    }
+
+    if { $Mode == 4 } {
+        # proportional cell width
+        set CellMode1 "disabled"
+        set CellMode2 "disabled"
+        set CellMode3 "active"
         set Lcl_cellDistrType 4
     }
 
-    .ppde.cells.cellDistrCoeff configure -state $CellMode3
-    .ppde.cells.e_cellDistrCoeff configure -state $CellMode3
+#   Enable distribution coefficients and buttons
+    .ppde.cells.cellDistrCoeff configure -state $CellMode1
+    .ppde.cells.e_cellDistrCoeff configure -state $CellMode2
+    .ppde.cells.setb configure -state $CellMode3
 }
+
+
+#----------------------------------------------------------------------
+# Test!!!
+#----------------------------------------------------------------------
+proc SetpreCellsDis4DataEdit {} {
+
+        source "preCellsDis4DataEdit.tcl"
+
+        preCellsDis4DataEdit
+}
+#----------------------------------------------------------------------
+
+
+
 
 #----------------------------------------------------------------------
 #  SetLclVars_pPDE
@@ -422,6 +521,7 @@ proc SetLclVarsAndDraw { a e op } {
     DrawLeadingEdge
     DrawTrailingEdge
     DrawVault
+    DrawCells 
 }
 
 #----------------------------------------------------------------------
@@ -545,7 +645,7 @@ proc UnsetGlobalPreProcVarTrace {} {
 #  OUT:     N/A
 #  Returns: Scale Factor
 #----------------------------------------------------------------------
-proc CalcPreProcScaleFactor { A1LE A1TE B1LE B1TE } {
+proc CalcPreProcScaleFactor { A1LE A1TE B1LE B1TE XMLE } {
 
     source "globalPreProcVars.tcl"
     # drawing canvas has always the same size!
@@ -559,7 +659,9 @@ proc CalcPreProcScaleFactor { A1LE A1TE B1LE B1TE } {
 
     set SpanVault [ GetSpanVault ]
 
-    set Span [ ::tcl::mathfunc::max $A1LE $A1TE $SpanVault ]
+#    set Span [ ::tcl::mathfunc::max $A1LE $A1TE $SpanVault ]
+#   Increase scale, only based in xmLE
+    set Span [ ::tcl::mathfunc::max $XMLE $SpanVault ]
 
     # scale factor
     set XSF [expr $MidX/ [::tcl::mathfunc::double $Span] ]
@@ -583,33 +685,110 @@ proc CalcPreProcScaleFactor { A1LE A1TE B1LE B1TE } {
 }
 
 #----------------------------------------------------------------------
-#  proc CalcY-LE
+#  proc CalcY-LE type 1
 #  Calculates the LE Y value
 #
 #  IN:      A   a1 parameter of the LE
 #           B   b1 parameter of the LE
 #           X   x value for which y must be calculated
 #           X1  x1 parameter of the LE
+#           X2  x2 parameter of the LE
 #           XM  Xm wing half span
-#           C0  c0 parameter of the LE
+#           C01  c01 parameter of the LE
+#           ex1  ex1 parameter of the LE
+#           C02  c02 parameter of the LE
+#           ex2  ex2 parameter of the LE
 #  OUT:     N/A
 #  Returns: Y value
 #----------------------------------------------------------------------
-proc CalcY-LE { A B X X1 XM C0 } {
+proc CalcY-LE { A B X X1 X2 XM C01 EX1 C02 EX2 } {
 
-    # first do the calculation for X < X1
+    # for X < X1 ellipse line
     set YVal [expr $B* sqrt( 1-($X**2.)/($A**2.) ) ]
 
-    # check if the advanced calc is needed
-    if { $X > $X1 } {
+    # for X >= X1 add first exponetial correction
+    if { $X >= $X1 } {
 
-        set XKVal [expr $C0/(($XM-$X1)**2.)]
+        set XK1Val [expr $C01/(($XM-$X1)**$EX1)]
 
-        set YVal [expr $YVal-$XKVal* ( ($X-$X1)**2. )]
+        set YVal [expr $YVal-$XK1Val* ( ($X-$X1)**$EX1 )]
+    }
+
+    # for X >= X2 add second exponetial correction
+    if { $X >= $X2 } {
+
+        set XK2Val [expr $C02/(($XM-$X2)**$EX2)]
+
+        set YVal [expr $YVal-$XK2Val* ( ($X-$X2)**$EX2 )]
     }
 
     return $YVal
 }
+
+
+
+#----------------------------------------------------------------------
+#  DrawCells
+#  Draws the cells
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc DrawCells {} {
+    source "globalPreProcVars.tcl"
+    global .ppde.c_le
+
+    foreach e {a1LE a1TE b1LE b1TE x1LE x2LE xmLE c01LE ex1LE c02LE ex2LE \
+              a1TE x1TE xmTE c0TE y0TE ex1TE } {
+
+        global Lcl_$e
+    }
+
+    global cellsWidth
+    global numCellsPreProc
+    global cellsOddEven
+
+#    .ppde.c_le delete "all"
+
+
+    # midX half the way on the x coordinate in the canvas
+    set MidX [expr [winfo width .ppde.c_le] /2]
+    set MidY [expr [winfo height .ppde.c_le] /2]
+
+    set SF [CalcPreProcScaleFactor $Lcl_a1LE $Lcl_a1TE $Lcl_b1LE $Lcl_b1TE $Lcl_xmLE]
+
+    # detect if number of cells is odd or even
+    # if cellsOddEven 1 -> odd
+    # if cellsOddEven 0 -> even
+#    set cellsOddEven [expr {$numCellsPreProc%2}]
+    set cellsOddEven [expr {$numCellsPreProc&1}]
+    # Set numRibsHalfPre
+    if { $cellsOddEven == 1 } {
+        set numRibsHalfPre [expr (($numCellsPreProc + 1)/2)]
+        }
+    if { $cellsOddEven == 0 } {
+        set numRibsHalfPre [expr (1+($numCellsPreProc/2))]
+       }
+
+    # Set cells x-position
+    Calc-CellsDis $numRibsHalfPre
+
+    # For each cell fron center to wingtip
+    set k 1
+    while { $k <= $numRibsHalfPre } {
+    set i $cellsWidth($k,1)
+    # draw chord lines between LE and LE
+        set YLEVal [CalcY-LE $Lcl_a1LE $Lcl_b1LE  $i $Lcl_x1LE $Lcl_x2LE $Lcl_xmLE $Lcl_c01LE $Lcl_ex1LE $Lcl_c02LE $Lcl_ex2LE]
+        set YTEVal [CalcY-TE $Lcl_a1TE $Lcl_b1TE  $i $Lcl_x1TE $Lcl_xmTE $Lcl_c0TE $y0TE $ex1TE]
+
+        .ppde.c_le create line [expr $MidX + $SF*$i] [expr $MidY - $SF*$YLEVal] [expr $MidX + $SF*$i] [expr $MidY - $SF*$YTEVal] -fill green
+        .ppde.c_le create line [expr $MidX - $SF*$i] [expr $MidY - $SF*$YLEVal] [expr $MidX - $SF*$i] [expr $MidY - $SF*$YTEVal] -fill red
+    incr k
+    }
+  
+}
+
 
 #----------------------------------------------------------------------
 #  DrawLeadingEdge
@@ -623,7 +802,7 @@ proc DrawLeadingEdge {} {
     source "globalPreProcVars.tcl"
     global .ppde.c_le
 
-    foreach e {a1LE a1TE b1LE b1TE x1LE xmLE c0LE a1TE } {
+    foreach e {a1LE a1TE b1LE b1TE x1LE x2LE xmLE c01LE ex1LE c02LE ex2LE a1TE ex1TE } {
         global Lcl_$e
     }
 
@@ -633,28 +812,419 @@ proc DrawLeadingEdge {} {
     set MidX [expr [winfo width .ppde.c_le] /2]
     set MidY [expr [winfo height .ppde.c_le] /2]
 
-    set SF [CalcPreProcScaleFactor $Lcl_a1LE $Lcl_a1TE $Lcl_b1LE $Lcl_b1TE ]
+    set SF [CalcPreProcScaleFactor $Lcl_a1LE $Lcl_a1TE $Lcl_b1LE $Lcl_b1TE $Lcl_xmLE]
 
     # draw axes
-    .ppde.c_le create line $MidX    $MidY 1                     $MidY               -fill red
-    .ppde.c_le create line $MidX    $MidY [expr (2*$MidX)-1]    $MidY               -fill green
-    .ppde.c_le create line $MidX    1     $MidX                 [expr (2*$MidY)-1]  -fill black
+    .ppde.c_le create line $MidX    $MidY 1                     $MidY               -fill grey
+    .ppde.c_le create line $MidX    $MidY [expr (2*$MidX)-1]    $MidY               -fill grey
+    .ppde.c_le create line $MidX    1     $MidX                 [expr (2*$MidY)-1]  -fill grey
 
     # draw the LE
     set i 1
     while {$i <= $Lcl_xmLE} {
         #           x       y
-        set YVal [CalcY-LE $Lcl_a1LE $Lcl_b1LE  $i $Lcl_x1LE $Lcl_xmLE $Lcl_c0LE]
+        set YVal [CalcY-LE $Lcl_a1LE $Lcl_b1LE  $i $Lcl_x1LE $Lcl_x2LE $Lcl_xmLE $Lcl_c01LE $Lcl_ex1LE $Lcl_c02LE $Lcl_ex2LE]
 
         .ppde.c_le create line [expr $MidX + $SF*$i] [expr $MidY - $SF*$YVal] [expr $MidX + $SF*$i] [expr $MidY-1 - $SF*$YVal] -fill green
         .ppde.c_le create line [expr $MidX - $SF*$i] [expr $MidY - $SF*$YVal] [expr $MidX - $SF*$i] [expr $MidY-1 - $SF*$YVal] -fill red
 
         incr i
     }
+
+   set x_le_wt [expr $SF*$Lcl_xmLE]
+   set y_le_wt [expr $SF*$YVal]
+
 }
 
+
 #----------------------------------------------------------------------
-#  proc CalcY-TE
+#  proc Calc cells distribution
+#  Calculates the TE Y value
+#
+#  IN:      XM  Xm wing half span
+#           NR  numRibsHalfPre
+#  OUT:     N/A
+#  Returns: Y value
+#----------------------------------------------------------------------
+proc Calc-CellsDis { NR } {
+
+    source "globalPreProcVars.tcl"
+
+    global cellDistrType
+    global cellDistrCoeff
+    global numCellsPreProc
+    global cellsOddEven
+    global cellsWidth
+   
+    global numRibsHalfPre
+
+    # Local variables for leading edge
+    foreach e {a1LE a1TE b1LE b1TE x1LE x2LE xmLE c01LE ex1LE c02LE ex2LE a1TE ex1TE } {
+        global Lcl_$e
+    }
+
+    # Local variables for trailing edge
+    foreach e { a1LE a1TE b1LE b1TE x1TE xmTE c0TE y0TE ex1TE} {
+        global Lcl_$e
+    }
+
+    set XM $Lcl_xmLE
+
+       
+#    puts "Cells $numCellsPreProc $cellsOddEven $NR $cellDistrType"
+
+
+    #--------------
+    # Case 1 equal width cells
+    if { $cellDistrType == 1 } {
+
+        set cellUnifWidth [expr (2.*$Lcl_xmLE/$numCellsPreProc)]
+
+        # Case odd
+        if { $cellsOddEven == 1 } {
+
+            set coeffGlobal [expr $Lcl_xmLE/($NR*$cellUnifWidth - $cellUnifWidth/2.)]
+
+            set k 1
+            while { $k <= $NR } {
+            set cellsWidth($k,1) [expr ($cellUnifWidth*$k - $cellUnifWidth/2.)*$coeffGlobal]
+            set cellsWidth($k,2) [expr $cellUnifWidth*$coeffGlobal]
+            incr k
+            }
+        }
+
+        # Case even
+        if { $cellsOddEven == 0 } {
+
+            set coeffGlobal [expr $Lcl_xmLE/(($NR -1)*$cellUnifWidth)]
+
+            set cellsWidth(1,1) 0.0
+            set cellsWidth(1,2) 0.0
+            set k 2
+            while { $k <= $NR } {
+            set cellsWidth($k,1) [expr ($cellUnifWidth*$k - $cellUnifWidth)*$coeffGlobal]
+            set cellsWidth($k,2) [expr $cellUnifWidth*$coeffGlobal]
+            incr k
+            }
+        }
+    # Type 1
+    }
+
+
+    #--------------
+    # Case 2
+    if { $cellDistrType == 2 } {
+
+        # Change coefficient for coherence with section 3
+        set cellDistrCoeff [expr (1 - $cellDistrCoeff)]
+        # Prevents from incorrect coefficient > 1 or < 0
+        if { $cellDistrCoeff > 1.0 } {
+        set $cellDistrCoeff 1.0
+        }
+        if { $cellDistrCoeff < 0.0 } {
+        set $cellDistrCoeff 0.0
+        }
+
+        # Set lineal coefficient 0 -> uniform 1 -> 0 wdth last cell
+        set k_cells [expr ($cellDistrCoeff*2./$numCellsPreProc)]
+
+#        puts "kcells $k_cells $cellDistrCoeff"
+
+        set cellUnifWidth [expr (2.*$Lcl_xmLE/$numCellsPreProc)]
+
+        # Case odd-senar-ungerade
+        if { $cellsOddEven == 1 } {
+
+            set coeffGlobal [expr $Lcl_xmLE/($NR*$cellUnifWidth - $cellUnifWidth/2.)]
+            
+            # Set uniform width
+            set k 1
+            while { $k <= $NR } {
+            set cellsWidth($k,1) [expr ($cellUnifWidth*$k - $cellUnifWidth/2.)*$coeffGlobal]
+            set cellsWidth($k,2) [expr $cellUnifWidth*$coeffGlobal]
+            incr k
+            }
+
+            # Format using linear decrement in each cell
+            set k 1
+            while { $k <= $NR } {
+            set cellsWidth($k,1) [expr ($cellUnifWidth*$k - $cellUnifWidth/2.)]
+            set cellsWidth($k,2) [expr ($cellsWidth($k,2) - $k_cells*$cellsWidth($k,1))]
+            incr k
+            }
+
+            # Recompute x-position
+            set cellsWidth(1,1) [expr $cellsWidth(1,2)/2.]
+            set k 2
+            while { $k <= $NR } {
+            set cellsWidth($k,1) [expr ($cellsWidth([expr ($k -1)],1)+$cellsWidth($k,2))]
+            incr k
+            }
+
+            # Normalize to total span
+            set coeffGlobal [expr ($Lcl_xmLE/$cellsWidth($NR,1))]
+
+            set k 1
+            while { $k <= $NR } {
+            set cellsWidth($k,1) [expr ($cellsWidth($k,1)*$coeffGlobal)]
+            set cellsWidth($k,2) [expr ($cellsWidth($k,2)*$coeffGlobal)]
+            incr k
+            }
+        # case odd
+        }
+
+        # Case even-parell-gerade
+        if { $cellsOddEven == 0 } {
+
+            set coeffGlobal [expr $Lcl_xmLE/([expr $NR -1]*$cellUnifWidth)]
+            
+            # Set uniform width
+            set cellsWidth(1,1) 0.0
+            set cellsWidth(1,1) 0.0
+            set k 2
+            while { $k <= $NR } {
+            set cellsWidth($k,1) [expr ($cellUnifWidth*($k -1)*$coeffGlobal)]
+            set cellsWidth($k,2) [expr $cellUnifWidth*$coeffGlobal]
+            incr k
+            }
+
+            # Format using linear decrement in each cell
+            set k 2
+            while { $k <= $NR } {
+            set cellsWidth($k,1) [expr ($cellUnifWidth*($k -1))]
+            set cellsWidth($k,2) [expr ($cellsWidth($k,2) - $k_cells*$cellsWidth($k,1))]
+            incr k
+            }
+
+            # Recompute x-position (REVISAR!!!!!!!!)
+            set k 2
+            while { $k <= $NR } {
+            set cellsWidth($k,1) [expr ($cellsWidth([expr ($k -1)],1)+$cellsWidth($k,2))]
+            incr k
+            }
+
+            # Normalize to total span
+            set coeffGlobal [expr ($Lcl_xmLE/$cellsWidth($NR,1))]
+
+            set k 2
+            while { $k <= $NR } {
+            set cellsWidth($k,1) [expr ($cellsWidth($k,1)*$coeffGlobal)]
+            set cellsWidth($k,2) [expr ($cellsWidth($k,2)*$coeffGlobal)]
+            incr k
+            }
+        # case even
+        }
+    # Type 2
+    }
+
+
+    #--------------
+    # Case 3 cells width proportional to chord
+    # WARNING! Be sure calculus is exactly as in pre-procesor 1.6 ! (verify numbers or DXF)
+    # Review again this section
+    if { $cellDistrType == 3 } {
+
+        # Set chordMax
+        set x 0.0
+           # Call Y-LE
+           set YValLE [CalcY-LE $Lcl_a1LE $Lcl_b1LE  $x $Lcl_x1LE $Lcl_x2LE $Lcl_xmLE $Lcl_c01LE $Lcl_ex1LE $Lcl_c02LE $Lcl_ex2LE]
+           # Call Y-TE
+           set YValTE [CalcY-TE $Lcl_a1TE $Lcl_b1TE  $x $Lcl_x1TE $Lcl_xmTE $Lcl_c0TE $y0TE $ex1TE]
+        set chordMax [expr $YValTE - $YValLE]
+
+        #-------------
+        # Case even
+        #-------------
+        if { $cellsOddEven == 0 } {
+           # First computes uniform rib distribution
+           set cellsWidth(1,1) 0.0
+           set cellsWidth(1,2) 0.0
+           set i 2
+           while { $i <= $NR} {
+           set cellsWidth($i,2) [expr $Lcl_xmLE/($NR - 1)]
+           set cellsWidth($i,1) [expr ($i - 1)*($Lcl_xmLE/($NR - 1))]
+           incr i
+           }
+
+           # Widths corrections usig chord coefficients
+           # Convergence in five steps!
+           foreach ic { 1 2 3 4 5 } {
+
+           set i 1
+           while { $i <= $NR } {
+
+           # Set point of calculus in iteration $i
+           set x $cellsWidth($i,1)
+
+           # Call Y-LE
+           set YValLE [CalcY-LE $Lcl_a1LE $Lcl_b1LE  $x $Lcl_x1LE $Lcl_x2LE $Lcl_xmLE $Lcl_c01LE $Lcl_ex1LE $Lcl_c02LE $Lcl_ex2LE]
+
+           # Call Y-TE
+           set YValTE [CalcY-TE $Lcl_a1TE $Lcl_b1TE  $i $Lcl_x1TE $Lcl_xmTE $Lcl_c0TE $y0TE $ex1TE]
+
+           # Chord
+           set chordLocal [expr $YValTE - $YValLE]
+
+           # Local coefficient proportional to local chord, and new width
+           set coefl [expr ((($chordMax - $chordLocal)*$cellDistrCoeff + $chordLocal)/$chordMax)]
+           set cellsWidth($i,2) [expr ($cellsWidth($i,2)*$coefl)]
+
+           incr i
+           }
+
+           # Recompute span and set global coefficient
+           # New span
+           set spanNew 0.0
+           set i 2
+           while { $i <= $NR} {
+           set spanNew [expr $spanNew + $cellsWidth($i,2)]  
+           incr i
+           }
+           set coefg [expr $Lcl_xmLE/$spanNew]
+
+           # Normalize widths and x-positions
+           set i 2
+           while { $i <= $NR} {
+           set cellsWidth($i,2) [expr $cellsWidth($i,2)*$coefg]
+           incr i
+           }
+
+           # iteration ic
+           }
+
+           # Set final cell x-coordinates
+           set cellsWidth(1,1) [expr ($cellsWidth(1,2)/2.)]
+           set i 2
+           while { $i <= $NR} {
+           set cellsWidth($i,1) [expr ($cellsWidth([expr ($i -1)],1) + $cellsWidth($i,2))]
+           incr i
+           }
+        # Case even
+        }
+
+        #-------------
+        # Case odd
+        #-------------
+        if { $cellsOddEven == 1 } {
+ 
+           # First computes uniform rib distribution
+           set cellsWidth(1,1) [expr ($Lcl_xmLE/$numCellsPreProc)]
+           set cellsWidth(1,2) [expr (2.*$Lcl_xmLE/$numCellsPreProc)]
+           set i 2
+           while { $i <= $NR} {
+           set cellsWidth($i,2) [expr (2.*$Lcl_xmLE/$numCellsPreProc)]
+           set cellsWidth($i,1) [expr $cellsWidth([expr ($i - 1)],1) + $cellsWidth($i,2)]
+           incr i
+           }
+
+           # Widths corrections usig chord coefficients
+           # Convergence in five steps!
+           foreach ic { 1 2 3 4 5 } {
+
+           set i 1
+           while { $i <= $NR } {
+
+           # Set point of calculus in iteration $i
+           set x $cellsWidth($i,1)
+
+           # Call Y-LE
+           set YValLE [CalcY-LE $Lcl_a1LE $Lcl_b1LE  $x $Lcl_x1LE $Lcl_x2LE $Lcl_xmLE $Lcl_c01LE $Lcl_ex1LE $Lcl_c02LE $Lcl_ex2LE]
+
+           # Call Y-TE
+           set YValTE [CalcY-TE $Lcl_a1TE $Lcl_b1TE  $i $Lcl_x1TE $Lcl_xmTE $Lcl_c0TE $y0TE $ex1TE]
+
+           # Chord
+           set chordLocal [expr $YValTE - $YValLE]
+
+           # Local coefficient proportional to local chord, and new width
+           # WARNING! Calulus not seem exactly as in pre-procesor 1.6 !!!!!!!!!!!!!!!!!!!!!!
+           # Review again this section
+           set coefl [expr ((($chordMax - $chordLocal)*$cellDistrCoeff + $chordLocal)/$chordMax)]
+           set cellsWidth($i,2) [expr ($cellsWidth($i,2)*$coefl)]
+
+           incr i
+           }
+
+           # Recompute span and set global coefficient
+           # New span
+           set spanNew [expr 0.5*$cellsWidth(1,2)]
+           set i 2
+           while { $i <= $NR} {
+           set spanNew [expr $spanNew + $cellsWidth($i,2)]  
+           incr i
+           }
+           set coefg [expr $Lcl_xmLE/$spanNew]
+
+           # Normalize widths and x-positions
+           set i 1
+           while { $i <= $NR} {
+           set cellsWidth($i,2) [expr $cellsWidth($i,2)*$coefg]
+           incr i
+           }
+
+           # iteration ic
+           }
+
+           # Set final cell x-coordinates
+           set cellsWidth(1,1) [expr ($cellsWidth(1,2)/2.)]
+           set i 2
+           while { $i <= $NR} {
+           set cellsWidth($i,1) [expr ($cellsWidth([expr ($i -1)],1) + $cellsWidth($i,2))]
+           incr i
+           }
+        # Case odd
+        }
+
+    # Case 3
+    }
+
+    
+    #--------------
+    # Case 4
+    if { $cellDistrType == 4 } {
+
+    # Compute x-position
+    set cellsWidth(1,1) [expr $cellsWidth(1,2)/2.]
+    set i 2
+    while { $i <= $NR } {
+    set cellsWidth($i,1) [expr $cellsWidth([expr ($i -1)],1) + $cellsWidth($i,2)]
+    incr i
+    }
+
+    # Global coefficient
+    set coeffGlobal [expr $xmLE/$cellsWidth($NR,1)]
+
+    # Normalize cells
+    set i 1
+    while { $i <= $NR } {
+    set cellsWidth($i,1) [expr $cellsWidth($i,1)*$coeffGlobal]
+    set cellsWidth($i,2) [expr $cellsWidth($i,2)*$coeffGlobal]
+    incr i
+    }
+
+    # Set more parameters
+    if { $cellsWidth(1,1) > 0.0 } {
+    set cellsOddEven 1
+    } else {
+    set cellsOddEven 0
+    }
+    
+    # Set numCellsPreProc
+    if { $cellsOddEven == 0 } {
+    set numCellsPreProc [expr (($NR -1)*2.0)]
+    } else {
+    set numCellsPreProc [expr (($NR*2.0) -1)]
+    }
+    # Case 4
+
+    puts "here $cellsOddEven $numCellsPreProc"
+    }
+
+}
+
+
+#----------------------------------------------------------------------
+#  proc CalcY-TE type 1
 #  Calculates the TE Y value
 #
 #  IN:      A   a1 parameter of the TE
@@ -664,20 +1234,21 @@ proc DrawLeadingEdge {} {
 #           XM  Xm wing half span
 #           C0  c0 parameter of the TE
 #           Y0  y0 parameter of the TE
+#           EX1 EX1 parameter of the TE
 #  OUT:     N/A
 #  Returns: Y value
 #----------------------------------------------------------------------
-proc CalcY-TE { A B X X1 XM C0 Y0 } {
+proc CalcY-TE { A B X X1 XM C0 Y0 EX1 } {
 
-    # first do the calculation for X < X1
+    # for X < X1 ellipse line
     set YVal [expr $Y0 - $B* sqrt( 1-($X**2.)/($A**2.) ) ]
 
-    # check if the advanced calc is needed
-    if { $X > $X1 } {
+    # for X >= X1 add first exponetial correction
+    if { $X >= $X1 } {
 
-        set XKVal [expr $C0/(($XM-$X1)**2.)]
+        set XKVal [expr $C0/(($XM-$X1)**$EX1)]
 
-        set YVal [expr $YVal+$XKVal* ( ($X-$X1)**2. ) ]
+        set YVal [expr $YVal+$XKVal* ( ($X-$X1)**$EX1 ) ]
     }
 
     return $YVal
@@ -695,31 +1266,31 @@ proc DrawTrailingEdge {} {
     source "globalPreProcVars.tcl"
     global .ppde.c_te
 
-    foreach e { a1LE a1TE b1LE b1TE x1TE xmTE c0TE y0TE } {
+    foreach e { a1LE a1TE b1LE b1TE x1TE xmTE c0TE y0TE ex1TE} {
         global Lcl_$e
     }
 
     .ppde.c_te delete "all"
 
     # midX half the way on the x coordinate in the canvas
-    set MidX [expr [winfo width .ppde.c_te] /2]
-    set MidY [expr [winfo height .ppde.c_te] /2]
+    set MidX [expr [winfo width .ppde.c_le] /2]
+    set MidY [expr [winfo height .ppde.c_le] /2]
 
-    set SF [CalcPreProcScaleFactor $Lcl_a1LE $Lcl_a1TE $Lcl_b1LE $Lcl_b1TE ]
+    set SF [CalcPreProcScaleFactor $Lcl_a1LE $Lcl_a1TE $Lcl_b1LE $Lcl_b1TE $xmTE]
 
     # draw axes
-    .ppde.c_te create line $MidX    $MidY 1                     $MidY               -fill red
-    .ppde.c_te create line $MidX    $MidY [expr (2*$MidX)-1]    $MidY               -fill green
-    .ppde.c_te create line $MidX    1     $MidX                 [expr (2*$MidY)-1]  -fill black
+    #.ppde.c_te create line $MidX    $MidY 1                     $MidY               -fill red
+    #.ppde.c_te create line $MidX    $MidY [expr (2*$MidX)-1]    $MidY               -fill green
+    #.ppde.c_te create line $MidX    1     $MidX                 [expr (2*$MidY)-1]  -fill black
 
-    # draw the te
+    # draw the te (moved to the canvas of le, because te canvas not necessary)
     set i 1
     while {$i <= $Lcl_xmTE} {
         #           x       y
-        set YVal [CalcY-TE $Lcl_a1TE $Lcl_b1TE  $i $Lcl_x1TE $Lcl_xmTE $Lcl_c0TE $y0TE]
+        set YVal [CalcY-TE $Lcl_a1TE $Lcl_b1TE  $i $Lcl_x1TE $Lcl_xmTE $Lcl_c0TE $y0TE $ex1TE]
 
-        .ppde.c_te create line [expr $MidX + $SF*$i] [expr $MidY - $SF*$YVal] [expr $MidX + $SF*$i] [expr $MidY-1 - $SF*$YVal] -fill green
-        .ppde.c_te create line [expr $MidX - $SF*$i] [expr $MidY - $SF*$YVal] [expr $MidX - $SF*$i] [expr $MidY-1 - $SF*$YVal] -fill red
+        .ppde.c_le create line [expr $MidX + $SF*$i] [expr $MidY - $SF*$YVal] [expr $MidX + $SF*$i] [expr $MidY-1 - $SF*$YVal] -fill green
+        .ppde.c_le create line [expr $MidX - $SF*$i] [expr $MidY - $SF*$YVal] [expr $MidX - $SF*$i] [expr $MidY-1 - $SF*$YVal] -fill red
 
         incr i
     }
@@ -957,12 +1528,12 @@ proc DrawVault {} {
     set MidX [expr [winfo width .ppde.c_vault] /2]
     set MidY [expr [winfo height .ppde.c_vault] /2]
     #
-    set SF [CalcPreProcScaleFactor $Lcl_a1LE $Lcl_a1TE $Lcl_b1LE $Lcl_b1TE ]
+    set SF [CalcPreProcScaleFactor $Lcl_a1LE $Lcl_a1TE $Lcl_b1LE $Lcl_b1TE $xmTE]
 
     # draw axes
-    .ppde.c_vault create line $MidX    $MidY 1                     $MidY               -fill red
-    .ppde.c_vault create line $MidX    $MidY [expr (2*$MidX)-1]    $MidY               -fill green
-    .ppde.c_vault create line $MidX    1     $MidX                 [expr (2*$MidY)-1]  -fill black
+    .ppde.c_vault create line $MidX    $MidY 1                     $MidY               -fill grey
+    .ppde.c_vault create line $MidX    $MidY [expr (2*$MidX)-1]    $MidY               -fill grey
+    .ppde.c_vault create line $MidX    1     $MidX                 [expr (2*$MidY)-1]  -fill grey
 
     if { $Lcl_vaultType == 1 } {
         # draw the sin/ cos vault
@@ -972,10 +1543,10 @@ proc DrawVault {} {
             set XVal [CalcXVault $Lcl_a1Vault $Lcl_b1Vault $Lcl_x1Vault $Lcl_c1Vault $i ]
             #                          x                     y
             .ppde.c_vault create line [expr $MidX + $SF*$XVal] [expr $MidY - $SF*$i] \
-                                      [expr $MidX + $SF*$XVal] [expr $MidY-1 - $SF*$i] -fill green
+                                      [expr $MidX + $SF*$XVal] [expr $MidY-1 - $SF*$i] -fill blue
 
             .ppde.c_vault create line [expr $MidX - $SF*$XVal] [expr $MidY - $SF*$i] \
-                                      [expr $MidX - $SF*$XVal] [expr $MidY-1 - $SF*$i] -fill red
+                                      [expr $MidX - $SF*$XVal] [expr $MidY-1 - $SF*$i] -fill blue
 
             incr i
         }
@@ -1035,6 +1606,7 @@ proc ApplyButtonPress_pPDE {} {
     DrawLeadingEdge
     DrawTrailingEdge
     DrawVault
+    DrawCells 
 }
 
 #----------------------------------------------------------------------

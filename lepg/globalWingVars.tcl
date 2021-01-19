@@ -12,7 +12,10 @@
 
 global SingleWingVariables
 set SingleWingVariables { brandName wingName drawScale wingScale \
+                        wingSurface wingSurface_p wingSpan wingSpan_p wingAR wingAR_p \
                         numCells numRibsTot numRibsHalf alphaMax \
+                        numRibsHalfPrev \
+                        numRibsGeo \
                         washinMode alphaCenter paraType rotLeTriang \
                         airfConfigNum  \
                          strainMiniRibs numStrainPoints \
@@ -23,8 +26,41 @@ set SingleWingVariables { brandName wingName drawScale wingScale \
                           numMiniRibs miniRibXSep miniRibYSep \
                          numTeCol    \
                          numLeCol \
-                        numAddRipPo  loadTot
-                    }
+                        numAddRipPo numDXFLayNa loadTot \
+                        numMarksTy \
+                        k_section23 numGroupsTR \
+                        k_section24 numGe2Dop \
+                        k_section25 numGe3Dop numG3Dopm \
+                        k_section26 \
+                        k_section27 numSpecWt \
+                        k_section28 numCalagVar numRisersC \
+                        k_section29 k_section29b \
+                        k_section30 \
+                        k_section31 numGroupsNS \
+                        k_section21 numGroupsJDdb \
+                        k_section22 numGroupsMY 
+                        }
+
+# Variables mogudes:
+#                        dxf2DopA dxf2DopB dxf2DopC \
+#                        dxf3DopA dxf3DopB dxf3DopC dxf3DopD \
+# glueVenA glueVenB \
+# calagVarA calagVarB calagVarC calagVarD calagVarE calagVarF \
+#                         speedVarA speedVarB speedVarC speedVarD \
+# numGroups3DS num3DS line3DSu line3DSl line3DSpp \
+# airThickA airThickB \
+# numNewSkin lineNeSk \
+# numGroupsJD numDataBlocJD \
+#                         numJoncsDef lineJoncsDef1 lineJoncsDef2 \
+# numNoseMy lineNoseMy 
+# numTabReinf lineTabReinf schemesTR \
+# specWtA specWtB \
+
+
+
+
+
+
 
 # Complex wing variables to handle differently
 #                       airfoilName holeRibNum1 holeRibNum2 numHoles numLinePath
@@ -39,9 +75,20 @@ global              brandName           # bname
 global              wingName            # wname
 global              drawScale           # xkf
 global              wingScale           # xwf
+
+global              wingSurface
+global              wingSurface_p 
+global              wingSpan 
+global              wingSpan_p 
+global              wingAR 
+global              wingAR_p
+
 global              numCells            # ncells
 global              numRibsTot          # nribst
 global              numRibsHalf         # nribss
+global              numRibsHalfPrev
+global              numRibsHalfNew
+global              numRibsGeo
 global              alphaMax            # alpham
 global              washinMode          # kbbb
                     # 0: the washin will be done manually
@@ -205,6 +252,111 @@ global              loadTot             # csusl
 global              loadDistr           # cdis
 global              loadDeform
 
+# Section 19
+global              numDXFLayNa         # ndxfln
+global              dxfLayNaX           # xdxfln
+global              dxfLayNaY           # ydxfln
+
+# Section 20
+global              numMarksTy
+global              marksType0          # typm0
+global              marksType1
+global              marksType2
+global              marksType3
+global              marksType4
+global              marksType5
+global              marksType6
+
+# Section 21
+global              k_section21
+global              numGroupsJDdb
+global              numGroupsJD
+global              numDataBlocJD
+global              numJoncsDef
+global              lineJoncsDef1
+global              lineJoncsDef2
+
+# Section 22
+global              k_section22
+global              numGroupsMY 
+global              numNoseMy
+global              lineNoseMy
+
+# Section 23
+global              k_section23
+global              numGroupsTR 
+global              numTabReinf
+global              lineTabReinf
+global              schemesTR
+
+# Section 24
+global              k_section24
+global              numGe2Dop
+global              dxf2DopA
+global              dxf2DopB
+global              dxf2DopC
+
+# Section 25
+global              k_section25
+global              numGe3Dop
+global              numGe3Dopm
+global              dxf3DopA
+global              dxf3DopB
+global              dxf3DopC
+global              dxf3DopD
+
+# Section 26
+global              k_section26
+global              glueVenA
+global              glueVenB
+
+# Section 27
+global              k_section27
+global              numSpecWt
+global              specWtA
+global              specWtB
+
+# Section 28
+global	            k_section28 
+global	            numCalagVar 
+global              numRisersC
+global              calagVarA
+global	            calagVarB
+global	            calagVarC
+global	            calagVarD
+global	            calagVarE
+global	            calagVarF
+global	            speedVarA
+global	            speedVarB
+global	            speedVarC
+global	            speedVarD
+
+# Section 29
+global              k_section29
+global              k_section29b
+global              numGroups3DS
+global              num3DS
+global              line3DSu
+global              line3DSl
+global              line3DSpp
+
+# Section 30
+global              k_section30
+global              airThickA
+global              airThickB
+
+# Section 31
+global              k_section31 
+global              numGroupsNS 
+global              numNewSkin 
+global              lineNeSk
+
+# Section1
+global              numRibsGeo
+
+#--------------------------------------------------------
+# Init global wing values
+#--------------------------------------------------------
 proc initGlobalWingVars {} {
 
     global g_GlobLepDataAvailable
@@ -264,6 +416,109 @@ proc initGlobalWingVars {} {
     set addRipPoX(0) 0
     set addRipPoY(0) 0
 
+    set dxfLayNaX(0) 0
+    set dxfLayNaY(0) 0
+
+# Section 20
+    set marksType0(0) 0
+    set marksType1(0) 0
+    set marksType2(0) 0
+    set marksType3(0) 0
+    set marksType4(0) 0
+    set marksType5(0) 0
+    set marksType6(0) 0
+
+# Section 21
+    set k_section21 0
+    set numGroupsJDdb 0
+    set numGroupsJD(0) 0
+    set numDataBlocJD(0,0) 0
+    set numJoncsDef(0,0,0) 0
+    set lineJoncsDef1(0,0,0,0) 0
+    set lineJoncsDef2(0,0,0,0) 0
+
+# Section 22
+    set k_section22 0
+    set numGroupsMY 0
+    set numNoseMy(0,0) 0
+    set lineNoseMy(0,0) 0
+
+# Section 23
+    set k_section23 0
+    set numGroupsTR 0
+    set numTabReinf(0,0) 0
+    set lineTabReinf(0,0) 0
+    set schemesTR(0,0) 0
+
+# Section 24
+    set k_section24 0
+    set numGe2Dop 6
+    foreach i {1 2 3 4 5 6} {
+    set dxf2DopA($i) 0
+    set dxf2DopB($i) 0
+    set dxf2DopC($i) 0
+    }
+
+# Section 25
+    set k_section25 0
+    set numGe3Dop 6
+    set numGe3Dopm 3
+    set dxf3DopA(0) 0
+    set dxf3DopB(0) 0
+    set dxf3DopC(0) 0
+    set dxf3DopD(0) 0
+
+# Section 26
+    set k_section26 0
+    set glueVenA(0) 0
+    set glueVenB(0) 0
+
+# Section 27
+    set k_section27 0
+    set numSpecWt 0
+    set specWtA(0) 0
+    set specWtB(0) 0
+
+# Section 29
+    set k_section29 0
+    set k_section29b 0
+    set numGroups3DS(0) 0
+    set num3DS(0,0) 0
+    set line3DSu(0,0,0) 0
+    set line3DSl(0,0,0) 0
+    set line3DSpp(0,0) 0
+
+# Section 28
+    set k_section28 0
+    set numCalagVar 0
+    set numRisersC 0
+    set calagVarA(0) 0
+    set calagVarB(0) 0
+    set calagVarC(0) 0
+    set calagVarD(0) 0
+    set calagVarE(0) 0
+    set calagVarF(0) 0
+    set speedVarA(0) 0
+    set speedVarB(0) 0
+    set speedVarC(0) 0
+    set speedVarD(0) 0
+
+# Section 30
+    set k_section30 0
+    set airThickA(0) 0
+    set airThickB(0) 0
+
+# Section 31
+    set k_section31 0
+    set numGroupsNS 0
+    set numNewSkin(0,0) 0
+    set lineNeSk(0,0,0) 0
+
+# Section 1
+    set numRibsGeo 0
+    set numCells 0
+
+# Classic skinTens
     global skinTens
     set i 1
     while {$i <= 6} {

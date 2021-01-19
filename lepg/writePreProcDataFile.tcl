@@ -30,7 +30,7 @@ proc WriteFileHeader {File} {
     puts $File $Separator
     puts $File "LEPARAGLIDING"
     puts -nonewline $File  $c_WingNameSect_pPFC_Lbl
-    puts $File "     v1.4"
+    puts $File "     v1.6"
     puts $File $Separator
 
     return [list 0 $File]
@@ -73,6 +73,8 @@ proc WriteLeadingEdge {File} {
     puts $File $c_LeadingESect_pPFC_Lbl
     puts $File $Separator
 
+    puts $File $typeLE
+
     puts -nonewline $File "a1= "
     puts $File $a1LE
 
@@ -82,11 +84,23 @@ proc WriteLeadingEdge {File} {
     puts -nonewline $File "x1= "
     puts $File $x1LE
 
+    puts -nonewline $File "x2= "
+    puts $File $x2LE
+
     puts -nonewline $File "xm= "
     puts $File $xmLE
 
-    puts -nonewline $File "c0= "
-    puts $File $c0LE
+    puts -nonewline $File "c01= "
+    puts $File $c01LE
+
+    puts -nonewline $File "ex1= "
+    puts $File $ex1LE
+
+    puts -nonewline $File "c02= "
+    puts $File $c02LE
+
+    puts -nonewline $File "ex2= "
+    puts $File $ex2LE
 
     return [list 0 $File]
 }
@@ -156,6 +170,8 @@ proc WriteTrailingEdge {File} {
     puts $File $c_TrailingESect_pPFC_Lbl
     puts $File $Separator
 
+    puts $File $typeTE
+
     puts -nonewline $File "a1= "
     puts $File $a1TE
 
@@ -173,6 +189,10 @@ proc WriteTrailingEdge {File} {
 
     puts -nonewline $File "y0= "
     puts $File $y0TE
+
+    puts -nonewline $File "ex1= "
+    puts $File $ex1TE
+
 
     return [list 0 $File]
 }
@@ -198,8 +218,34 @@ proc WriteCellsDistrib {File} {
     puts $File $Separator
 
     puts $File $cellDistrType
+
+    # Case 1
+    if { $cellDistrType == 1 } {
+    puts $File $numCellsPreProc
+    }
+
+    # Case 2
+    if { $cellDistrType == 2 } {
     puts $File $cellDistrCoeff
     puts $File $numCellsPreProc
+    }
+
+    # Case 3
+    if { $cellDistrType == 3 } {
+    puts $File $cellDistrCoeff
+    puts $File $numCellsPreProc
+    }
+
+    # Case 4
+    if { $cellDistrType == 4 } {
+    puts $File $numRibsHalfPre
+    set i 1
+    while { $i <= $numRibsHalfPre  } {
+    puts -nonewline $File $i
+    puts            $File $cellsWidth($i,2)
+    incr i
+    }
+    }
 
     return [list 0 $File]
 }

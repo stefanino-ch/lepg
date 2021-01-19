@@ -3,6 +3,7 @@
 #
 #  Determines version of the lep data file to be read.
 #----------------------------------------------------------------------
+
 proc DetectFileVersion {FilePathName} {
     source "lep_ConstantValues.tcl"
 
@@ -323,6 +324,33 @@ proc readLepDataFile {FilePathName} {
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
+    }
+
+    #----------------------
+    # DXF Layer Names
+    lassign [JumpToSection [set c_AddRibPoSect$Suffix] $Offset $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+    lassign [ReadAddRibPoSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
+    # 19. Additional DXF layer names
+    lassign [jumpToSection [set c_DXFLayNaSect_lFC_$Suffix] $Offset $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
+    }
+    lassign [ReadDXFLayNaSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+        puts $returnValue
     }
 
 # add DXF
@@ -1058,8 +1086,41 @@ proc ReadElLinesCorrSectV2_52 {File} {
     # loadDeform
     # code to read this is missing
 
+
     return [list 0 $File]
 }
+
+
+#----------------------------------------------------------------------
+#  proc RadDXFLayNaSectV2_52
+#  Reads DXF layer names section of a lep data file
+#  Applicable versions 2.52 ...
+#
+#  IN:  File            Pointer to the first data line of the data section
+#  OUT:                 Global Wing variables set with file values
+#       ReturnValue1    0 : parameters loaded
+#                       -1: problem during parameter loading
+#       ReturnValue2    Pointer to the first data line after the data section
+#----------------------------------------------------------------------
+proc ReadDXFLayNaSectV2_52 {File} {
+    source "lep_GlobalWingVars.tcl"
+
+    # numDXFLayNa
+    set ndxfln [gets $File]
+
+    set i 1
+    while {$i <= $ndxfln} {
+        set DataLine [gets $File]
+        # dxfLayNaX
+        set xdxfln($i) [lindex $DataLine 0]
+        # dxfLayNaY
+        set ydxfln($i) [lindex $DataLine 1]
+        incr i
+    }
+
+    return [list 0 $File]
+}
+
 
 #----------------------------------------------------------------------
 #  proc myApp_lep_r
@@ -1613,6 +1674,26 @@ proc myApp_lep_r { } {
 
     # loadDeform
     # code to read this is missing
+
+    # Read 19. DXF Layer Names
+
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+    set DataLine [gets $file]
+
+    # numDXFLayNa
+    set ndxfln [gets $file]
+
+    set i 1
+    while {$i <= $ndxfln} {
+		set DataLine [gets $file]
+        # dxfLayNaX
+        set xdxfln($i) [lindex $DataLine 0]
+        # dxfLayNaY
+		set ydxfln($i) [lindex $DataLine 1]
+		incr i
+	}
+
 
     #----------------------------------------------------------------------
     close $file

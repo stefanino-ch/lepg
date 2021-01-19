@@ -11,7 +11,7 @@
 #---------------------------------------------------------------------
 
 global Separator
-set Separator "**********************************"
+set Separator "*******************************************************************"
 
 #----------------------------------------------------------------------
 #  writeWingDataFile
@@ -31,7 +31,7 @@ proc writeWingDataFile {FilePathName} {
         return -1
     }
 
-    # File header
+    # 0. File header
     lassign [WriteFileHeaderV2_6 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -39,7 +39,7 @@ proc writeWingDataFile {FilePathName} {
     }
 
     #---------
-    # Geometry
+    # 1. Geometry
     lassign [WriteGeometrySectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -47,7 +47,7 @@ proc writeWingDataFile {FilePathName} {
     }
 
     #--------
-    # Airfoil
+    # 2. Airfoils
     lassign [WriteAirfoilSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -55,7 +55,7 @@ proc writeWingDataFile {FilePathName} {
     }
 
     #--------------
-    # Anchor points
+    # 3. Anchor points
     lassign [WriteAnchorsSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -63,7 +63,7 @@ proc writeWingDataFile {FilePathName} {
     }
 
     #--------------
-    # Airfoil holes
+    # 4. Airfoil holes
     lassign [WriteAirfoilHoSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -71,7 +71,7 @@ proc writeWingDataFile {FilePathName} {
     }
 
     #-------------
-    # Skin tension
+    # 5. Skin tension
     #--------------
     # Anchor points
     lassign [WriteSkinTensSectV2_52 $File] ReturnValue File
@@ -81,7 +81,7 @@ proc writeWingDataFile {FilePathName} {
     }
 
     #------------------
-    # Sewing allowances
+    # 6. Sewing allowances
     lassign [WriteSewingAllowancesV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -89,7 +89,7 @@ proc writeWingDataFile {FilePathName} {
     }
 
     #------
-    # Marks
+    # 7. Marks
     lassign [WriteMarksSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -97,7 +97,7 @@ proc writeWingDataFile {FilePathName} {
     }
 
     #-----------------------
-    # Global angle of attack
+    # 8. Global angle of attack
     lassign [WriteGlobalAoASectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -105,7 +105,7 @@ proc writeWingDataFile {FilePathName} {
     }
 
     #-----------------
-    # Suspension lines
+    # 9. Suspension lines
     lassign [WriteSuspLinesSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -113,7 +113,7 @@ proc writeWingDataFile {FilePathName} {
     }
 
     #-------
-    # Brakes
+    # 10. Brakes
     lassign [WriteBrakesSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -121,7 +121,7 @@ proc writeWingDataFile {FilePathName} {
     }
 
     #---------------------
-    # Ramification lengths
+    # 11. Ramification lengths
     lassign [WriteRamLengthSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -130,7 +130,7 @@ proc writeWingDataFile {FilePathName} {
 
 
     #----------------
-    # H V and VH ribs => miniRib
+    # 12. H V and VH ribs => miniRib
     lassign [WriteHV-VH-RibSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -138,7 +138,7 @@ proc writeWingDataFile {FilePathName} {
     }
 
     #----------------------
-    # Trailing edge  colors
+    # 15. Extrados Trailing edge  colors?
     lassign [WriteTeColSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -146,7 +146,7 @@ proc writeWingDataFile {FilePathName} {
     }
 
     #--------------------
-    # Leading edge colors
+    # 16. Intrados Leading edge colors?
     lassign [WriteLeColSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -154,9 +154,7 @@ proc writeWingDataFile {FilePathName} {
     }
 
     #----------------------
-    # Additional rib points
-    #--------------------------
-    # Elastig lines corrections
+    # 17. Additional rib points
     lassign [WriteAddRibPoSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
@@ -164,17 +162,118 @@ proc writeWingDataFile {FilePathName} {
     }
 
     #--------------------------
-    # Elastig lines corrections
+    # 18. Elastig lines corrections
     lassign [WriteElLinesCorrSectV2_52 $File] ReturnValue File
     if {$ReturnValue < 0} {
         close $File
         return $ReturnValue
     }
 
+    #--------------------------
+    # 19. DXF layer names
+    lassign [WriteDXFLayNaSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
 
     #--------------------------
-    # DXF
+    # 20. Marks types
+    lassign [WriteMarksTySectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
 
+    #--------------------------
+    # 21. Joncs definitions
+    lassign [WriteJoncsDefSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
+    #--------------------------
+    # 22. Nose mylars
+    lassign [WriteNoseMySectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
+    #--------------------------
+    # 23. Tab reinforcements
+    lassign [WriteTabReinfSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
+    #--------------------------
+    # 24. General 2D DXF options
+    lassign [WriteGe2DopSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
+    #--------------------------
+    # 25. General 3D DXF options
+    lassign [WriteGe3DopSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
+    #--------------------------
+    # 26. Glue vents
+    lassign [WriteGlueVenSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
+    #--------------------------
+    # 27. Special wingtip
+    lassign [WriteSpecWtSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
+    #--------------------------
+    # 28. Calage variation
+    lassign [WriteCalagVarSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
+    #--------------------------
+    # 29. 3D shaping
+    lassign [WriteP3DShapingSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
+    #--------------------------
+    # 30. Airfoil thickness
+    lassign [WriteAirThickSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
+    #--------------------------
+    # 31. New skin tension
+    lassign [WriteNewSkinSectV2_52 $File] ReturnValue File
+    if {$ReturnValue < 0} {
+        close $File
+        return $ReturnValue
+    }
+
+    #--------------------------
     flush $File
     close $File
 
@@ -201,7 +300,7 @@ proc WriteFileHeaderV2_6 {File} {
 
     puts $File $Separator
     puts $File "* LABORATORI D'ENVOL PARAGLIDING DESIGN"
-    puts $File "* lep input data file        v2.6"
+    puts $File "* lep input data file        v3.14"
     puts $File $Separator
     puts $File "*"
     return [list 0 $File]
@@ -868,3 +967,710 @@ proc WriteElLinesCorrSectV2_52 {File} {
 
     return [list 0 $File]
 }
+
+
+#----------------------------------------------------------------------
+#  WriteDXFLayNaSectV2_52
+#  Writes DXF layer names section in the V3.14 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteDXFLayNaSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_DXFLayNaSect_lFC_Lbl"
+    puts $File $Separator
+
+    # numAddRipPo
+    puts $File $numDXFLayNa
+
+    set i 1
+    while {$i <= $numDXFLayNa} {
+
+        # dxfLayNaX
+        puts -nonewline $File $dxfLayNaX($i)
+        # dxfLayNaY
+        puts            $File "\t$dxfLayNaY($i)"
+        incr i
+    }
+
+    return [list 0 $File]
+}
+
+
+#----------------------------------------------------------------------
+#  WriteMarksTySectV2_52
+#  Writes Marks types section in the V3.14 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteMarksTySectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_MarksTySect_lFC_Lbl"
+    puts $File $Separator
+
+    # numAddRipPo
+    puts $File $numMarksTy
+
+    set i 1
+    while {$i <= $numMarksTy} {
+
+        # marksType0 to marksType6
+        puts -nonewline $File $marksType0($i)
+        puts -nonewline $File "\t$marksType1($i)"
+        puts -nonewline $File "\t$marksType2($i)"
+        puts -nonewline $File "\t$marksType3($i)"
+        puts -nonewline $File "\t$marksType4($i)"
+        puts -nonewline $File "\t$marksType5($i)"
+        puts            $File "\t$marksType6($i)"
+        incr i
+    }
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteAirThickSectV2_52
+#  Writes joncs defintions data in section 21 in the V3.14 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteJoncsDefSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_JoncsDefSect_lFC_Lbl"
+    puts $File $Separator
+
+    # K_section21
+    puts $File $k_section21
+
+    # Case scheme 0
+    if {$k_section21 == 0 } {
+    # do nothing
+    }
+
+    # Case scheme 1
+    if {$k_section21 == 1 } {
+
+        # Number of groups
+        puts $File $numGroupsJD(1)
+
+        # iterate in each group
+    	set gr 1
+    	while {$gr <= $numGroupsJD(1)} {
+        	puts -nonewline $File $numJoncsDef(1,$gr,1)
+        	puts -nonewline $File "\t$numJoncsDef(1,$gr,2)"
+        	puts            $File "\t$numJoncsDef(1,$gr,3)"
+                # Type 1 data
+                foreach i {1 2 3} {
+        	puts -nonewline $File $lineJoncsDef1(1,$gr,$i,1)
+        	puts -nonewline $File "\t$lineJoncsDef1(1,$gr,$i,2)"
+        	puts -nonewline $File "\t$lineJoncsDef1(1,$gr,$i,3)"
+        	puts            $File "\t$lineJoncsDef1(1,$gr,$i,4)"
+                }
+              	incr gr
+    	}
+    }
+    # Case scheme 1
+
+
+    # Case scheme 2
+    if {$k_section21 == 2 } {
+
+        # Number of data blocs
+        puts $File $numGroupsJDdb
+
+        # Number of data blocs
+        puts $File $numGroupsJDdb
+
+        # iterate in each data bloc
+    	set db 1
+    	while {$db <= $numGroupsJDdb} {
+
+            # Data bloc numbers
+            puts -nonewline $File $numDataBlocJD($db,1)
+            puts            $File $numDataBlocJD($db,2)
+
+            # Number of groups
+            puts $File $numGroupsJD($db)
+
+            # iterate in each group
+    	    set gr 1
+            while {$gr <= $numGroupsJD($db)} {
+
+            # case type 1
+            if { $numDataBlocJD($db,2) == 1 } {
+
+        	puts -nonewline $File $numJoncsDef(1,$gr,1)
+        	puts -nonewline $File "\t$numJoncsDef(1,$gr,2)"
+        	puts            $File "\t$numJoncsDef(1,$gr,3)"
+                # Type 1 data
+                foreach i {1 2 3} {
+        	puts -nonewline $File $lineJoncsDef1(1,$gr,$i,1)
+        	puts -nonewline $File "\t$lineJoncsDef1(1,$gr,$i,2)"
+        	puts -nonewline $File "\t$lineJoncsDef1(1,$gr,$i,3)"
+        	puts            $File "\t$lineJoncsDef1(1,$gr,$i,4)"
+                }
+              	incr gr
+        	}
+                # end case type 1
+
+            # case type 2
+            if { $numDataBlocJD($db,2) == 2 } {
+
+                puts -nonewline $File $numJoncsDef($db,$gr,1)
+                puts -nonewline $File "\t$numJoncsDef($db,$gr,2)"
+        	puts            $File "\t$numJoncsDef($db,$gr,3)"
+                # Type 2 data
+        	puts -nonewline $File    $lineJoncsDef2($db,$gr,1,1)
+        	puts -nonewline $File "\t$lineJoncsDef2($db,$gr,1,2)"
+        	puts -nonewline $File "\t$lineJoncsDef2($db,$gr,1,3)"
+        	puts -nonewline $File "\t$lineJoncsDef2($db,$gr,1,4)"
+        	puts            $File "\t$lineJoncsDef2($db,$gr,1,5)"
+                puts -nonewline $File    $lineJoncsDef2($db,$gr,2,1)
+        	puts -nonewline $File "\t$lineJoncsDef2($db,$gr,2,2)"
+        	puts -nonewline $File "\t$lineJoncsDef2($db,$gr,2,3)"
+        	puts            $File "\t$lineJoncsDef2($db,$gr,2,4)"
+                # end case type 2
+                }
+
+            incr gr
+            # end group number
+            }
+        incr db
+        # end data bloc
+        }
+    }
+    # Case scheme 2
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteAirThickSectV2_52
+#  Writes nose mylars data in section 22 in the V3.14 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteNoseMySectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_NoseMySect_lFC_Lbl"
+    puts $File $Separator
+
+    # K_section31
+    puts $File $k_section22
+
+    # Case 0
+    if {$k_section22 == 0 } {
+    # do nothing
+    }
+
+    # Case 1
+    if {$k_section22 == 1 } {
+
+        # Number of groups
+        puts $File $numGroupsMY
+
+        # iterate in each group
+    	set i 1
+    	while {$i <= $numGroupsMY} {
+        	puts -nonewline $File $numNoseMy($i,1)
+        	puts -nonewline $File "\t$numNoseMy($i,2)"
+        	puts            $File "\t$numNoseMy($i,3)"
+        # Nose mylars data
+        	puts -nonewline $File $lineNoseMy($i,1)
+        	puts -nonewline $File "\t$lineNoseMy($i,2)"
+        	puts -nonewline $File "\t$lineNoseMy($i,3)"
+        	puts -nonewline $File "\t$lineNoseMy($i,4)"
+        	puts -nonewline $File "\t$lineNoseMy($i,5)"
+        	puts            $File "\t$lineNoseMy($i,6)"
+              	incr i
+    	}
+    }
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteTaReinfSectV2_52
+#  Writes tab reinforcements data in section 23 in the V3.14 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteTabReinfSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_TabReinfSect_lFC_Lbl"
+    puts $File $Separator
+
+    # K_section31
+    puts $File $k_section23
+
+    # Case 0
+    if {$k_section23 == 0 } {
+    # do nothing
+    }
+
+    # Case 1
+    if {$k_section23 == 1 } {
+
+        # Number of groups
+        puts $File $numGroupsTR
+
+        # iterate in each group
+    	set i 1
+    	while {$i <= $numGroupsTR} {
+        	puts -nonewline $File $numTabReinf($i,1)
+        	puts -nonewline $File "\t$numTabReinf($i,2)"
+        	puts            $File "\t$numTabReinf($i,3)"
+        # Nose mylars data
+        	puts -nonewline $File $lineTabReinf($i,1)
+        	puts -nonewline $File "\t$lineTabReinf($i,2)"
+        	puts -nonewline $File "\t$lineTabReinf($i,3)"
+        	puts -nonewline $File "\t$lineTabReinf($i,4)"
+        	puts            $File "\t$lineTabReinf($i,5)"
+              	incr i
+    	}
+
+        # schemes
+        puts $File "schemes"
+        # schemes data
+        foreach i {1 2 3 4 5} {
+        	puts -nonewline $File $schemesTR($i,1)
+        	puts -nonewline $File "\t$schemesTR($i,2)"
+        	puts -nonewline $File "\t$schemesTR($i,3)"
+        	puts -nonewline $File "\t$schemesTR($i,4)"
+        	puts -nonewline $File "\t$schemesTR($i,5)"
+        	puts -nonewline $File "\t$schemesTR($i,6)"
+        	puts            $File "\t$schemesTR($i,7)"
+        }
+    }
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteGe2DopSectV2_52
+#  Writes general 2D DXF options section 24 in the V3.14 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteGe2DopSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_Ge2DopSect_lFC_Lbl"
+    puts $File $Separator
+
+    # k_section24
+    puts $File $k_section24
+
+    set i 1
+    while {$i <= $numGe2Dop} {
+
+        # marksType0 to marksType6
+        puts -nonewline $File $dxf2DopA($i)
+        puts -nonewline $File "\t$dxf2DopB($i)"
+        puts            $File "\t$dxf2DopC($i)"
+        incr i
+    }
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteGe3DopSectV2_52
+#  Writes general 3D DXF options section 25 in the V3.14 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteGe3DopSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_Ge3DopSect_lFC_Lbl"
+    puts $File $Separator
+
+    # k_section25
+    puts $File $k_section25
+
+    set i 1
+    while {$i <= $numGe3Dop} {
+
+        # marksType0 to marksType6
+        puts -nonewline $File $dxf3DopA($i)
+        puts -nonewline $File "\t$dxf3DopB($i)"
+        puts            $File "\t$dxf3DopC($i)"
+        incr i
+    }
+
+    set i [expr $numGe3Dop + 1]
+    while {$i <= [expr $numGe3Dop + $numGe3Dopm]} {
+
+        # marksType0 to marksType6
+        puts -nonewline $File $dxf3DopA($i)
+        puts -nonewline $File "\t$dxf3DopB($i)"
+        puts -nonewline $File "\t$dxf3DopC($i)"
+        puts            $File "\t$dxf3DopD($i)"
+        incr i
+    }
+
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteGlueVenSectV2_52
+#  Writes glue vents data in section 26 in the V3.14 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteGlueVenSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_GlueVenSect_lFC_Lbl"
+    puts $File $Separator
+
+    # K_section26=0
+    if {$k_section26 == 0} {
+    puts $File $k_section26
+    }
+
+    # K_section26=1
+    if {$k_section26 == 1} {
+    puts $File $k_section26
+
+    set i 1
+    while {$i <= $numRibsHalf} {
+
+        # marksType0 to marksType6
+        puts -nonewline $File $glueVenA($i)
+        puts            $File "\t$glueVenB($i)"
+        incr i
+    }
+    }
+
+    return [list 0 $File]
+}
+
+
+#----------------------------------------------------------------------
+#  WriteSpecWtSectV2_52
+#  Writes special wingtip data in section 27 in the V3.14 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteSpecWtSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_SpecWtSect_lFC_Lbl"
+    puts $File $Separator
+
+    # K_section27
+
+    if {$k_section27 == 0 } {
+    puts $File $k_section27
+    }
+
+    if {$k_section27 == 1 } {
+        puts $File $k_section27
+    	set i 1
+    	while {$i <= 2} {
+        	# Wingtip data
+        	puts -nonewline $File $specWtA($i)
+        	puts            $File "\t$specWtB($i)"
+        	incr i
+    	}
+    }
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteSpecWtSectV2_52
+#  Writes calage variation data in section 28 in the V3.14 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteCalagVarSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_CalagVarSect_lFC_Lbl"
+    puts $File $Separator
+
+    # K_section28
+
+    if {$k_section28 == 0 } {
+    puts $File $k_section28
+    }
+
+    if {$k_section28 == 1 } {
+        puts $File $k_section28
+    	
+        puts $File $numRisersC
+
+        puts -nonewline $File $calagVarA(1)
+        puts -nonewline $File "\t$calagVarB(1)"
+        puts -nonewline $File "\t$calagVarC(1)"
+        puts -nonewline $File "\t$calagVarD(1)"
+        puts -nonewline $File "\t$calagVarE(1)"
+        puts            $File "\t$calagVarF(1)"
+
+        puts -nonewline $File $speedVarA(1)
+        puts -nonewline $File "\t$speedVarB(1)"
+        puts -nonewline $File "\t$speedVarC(1)"
+        puts            $File "\t$speedVarD(1)"
+
+        }
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteSpecWtSectV2_52
+#  Writes 3D shaping data in section 29 in the V3.14 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteP3DShapingSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_P3DShapingSect_lFC_Lbl"
+    puts $File $Separator
+
+    # K_section29
+    if {$k_section29 == 0 } {
+    puts $File $k_section29
+    }
+
+    if {$k_section29 == 1 } {
+        puts $File $k_section29
+        puts $File $k_section29b
+        puts -nonewline $File $numGroups3DS(1)
+        puts            $File "\t$numGroups3DS(2)"
+
+        # iterate in each group
+    	set i 1
+    	while {$i <= $numGroups3DS(2)} {
+                # data line 1
+                puts -nonewline $File $num3DS($i,1)
+                puts -nonewline $File "\t$num3DS($i,2)"
+                puts -nonewline $File "\t$num3DS($i,3)"
+                puts            $File "\t$num3DS($i,4)"
+                # data line 2
+                puts -nonewline $File $num3DS($i,5)
+                puts -nonewline $File "\t$num3DS($i,6)"
+                puts            $File "\t$num3DS($i,7)"
+                    # print parameters extrados
+    	            set j 1
+    	            while {$j <= $num3DS($i,6)} {
+                    puts -nonewline $File $line3DSu($i,$j,1)
+                    puts -nonewline $File "\t$line3DSu($i,$j,2)"
+                    puts -nonewline $File "\t$line3DSu($i,$j,3)"
+                    puts            $File "\t$line3DSu($i,$j,4)"
+                    incr j
+                    }
+                # data line 3
+                puts -nonewline $File $num3DS($i,8)
+                puts -nonewline $File "\t$num3DS($i,9)"
+                puts            $File "\t$num3DS($i,10)"
+                    # print parameters intrados
+    	            set j 1
+    	            while {$j <= $num3DS($i,9)} {
+                    puts -nonewline $File $line3DSl($i,$j,1)
+                    puts -nonewline $File "\t$line3DSl($i,$j,2)"
+                    puts -nonewline $File "\t$line3DSl($i,$j,3)"
+                    puts            $File "\t$line3DSl($i,$j,4)"
+                    incr j
+                    }
+        incr i
+        }     
+                # print constant bloc of five lines
+                    puts $File "* Print parameters"
+                    set j 1
+                    while {$j <= 5} {
+                    puts -nonewline $File $line3DSpp($j,1)
+                    puts -nonewline $File "\t$line3DSpp($j,2)"
+                    puts -nonewline $File "\t$line3DSpp($j,3)"
+                    puts -nonewline $File "\t$line3DSpp($j,4)"
+                    puts            $File "\t$line3DSpp($j,5)"
+                    incr j
+                    }
+        }
+    return [list 0 $File]
+}
+
+#----------------------------------------------------------------------
+#  WriteAirThickSectV2_52
+#  Writes airfoil thickness data in section 30 in the V3.14 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteAirThickSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_AirThickSect_lFC_Lbl"
+    puts $File $Separator
+
+    # K_section30
+
+    if {$k_section30 == 0 } {
+    puts $File $k_section30
+    }
+
+    if {$k_section30 == 1 } {
+        puts $File $k_section30
+    	set i 1
+    	while {$i <= $numRibsHalf} {
+        	# Air thickness
+        	puts -nonewline $File $airThickA($i)
+        	puts            $File "\t$airThickB($i)"
+        	incr i
+    	}
+    }
+    return [list 0 $File]
+}
+
+
+#----------------------------------------------------------------------
+#  WriteAirThickSectV2_52
+#  Writes new skin tension data in section 31 in the V3.14 format
+#
+#  IN:  File            Pointer to the line to write
+#  OUT:
+#       ReturnValue1    0 : written
+#                       -1: problem during write
+#       ReturnValue2    Pointer to the next empty data line
+#----------------------------------------------------------------------
+proc WriteNewSkinSectV2_52 {File} {
+    source "lepFileConstants.tcl"
+    source "globalWingVars.tcl"
+    global Separator
+
+    puts $File $Separator
+    puts $File "* $c_NewSkinSect_lFC_Lbl"
+    puts $File $Separator
+
+    # K_section31
+    puts $File $k_section31
+
+    # Case 0
+    if {$k_section31 == 0 } {
+    # do nothing
+    }
+
+    # Case 1
+    if {$k_section31 == 1 } {
+
+        # Number of groups
+        puts $File $numGroupsNS
+
+        # iterate in each group
+    	set i 1
+    	while {$i <= $numGroupsNS} {
+
+                puts -nonewline $File "* Skin tension group number $i from rib $numNewSkin($i,2) to "
+                puts $File "$numNewSkin($i,3), $numNewSkin($i,4) points, type $numNewSkin($i,5)"
+
+        	puts -nonewline $File $numNewSkin($i,1)
+        	puts -nonewline $File "\t$numNewSkin($i,2)"
+        	puts -nonewline $File "\t$numNewSkin($i,3)"
+        	puts -nonewline $File "\t$numNewSkin($i,4)"
+        	puts            $File "\t$numNewSkin($i,5)"
+        # iterate in the number of points
+    	set j 1
+    	while {$j <= $numNewSkin($i,4)} {
+        	puts -nonewline $File $lineNeSk($i,$j,1)
+        	puts -nonewline $File "\t$lineNeSk($i,$j,2)"
+        	puts -nonewline $File "\t$lineNeSk($i,$j,3)"
+        	puts -nonewline $File "\t$lineNeSk($i,$j,4)"
+        	puts            $File "\t$lineNeSk($i,$j,5)"
+                incr j
+              }
+        	incr i
+    	}
+    }
+    return [list 0 $File]
+}
+
+
+

@@ -19,18 +19,19 @@ global  g_PreProcDataChanged
 
 global  AllPreProcVars
 set     AllPreProcVars {wingNamePreProc \
-                        a1LE b1LE x1LE xmLE c0LE a1TE \
-                        a1TE b1TE x1TE xmTE c0TE y0TE \
+                        typeLE a1LE b1LE x1LE x2LE xmLE c01LE ex1LE c02LE ex2LE \
+                        typeTE a1TE b1TE x1TE xmTE c0TE y0TE ex1TE \
                         vaultType a1Vault b1Vault x1Vault c1Vault radVault angVault \
-                        cellDistrType cellDistrCoeff numCellsPreProc }
+                        cellDistrType cellDistrCoeff numCellsPreProc cellsOddEven \
+                        numRibsHalfPre }
 
 global SinglePreProcVariables
 set SinglePreProcVariables {   wingNamePreProc \
-                        a1LE b1LE x1LE xmLE c0LE a1TE \
-                        a1TE b1TE x1TE xmTE c0TE y0TE \
+                        typeLE a1LE b1LE x1LE x2LE xmLE c01LE ex1LE c02LE ex2LE \
+                        typeTE a1TE b1TE x1TE xmTE c0TE y0TE ex1TE \
                         vaultType a1Vault b1Vault x1Vault c1Vault \
-                        cellDistrType cellDistrCoeff numCellsPreProc
-                    }
+                        cellDistrType cellDistrCoeff numCellsPreProc cellsOddEven \
+                        numRibsHalfPre }
 
 #--------------
 # Wing name
@@ -38,19 +39,31 @@ global              wingNamePreProc
 
 #--------------
 # Leading edge
+global              typeLE
+                    # integer
 global              a1LE
                     # [cm]
 global              b1LE
                     # [cm]
 global              x1LE
                     # [cm]
+global              x2LE
+                    # [cm]
 global              xmLE
                     # [cm]
-global              c0LE
+global              c01LE
                     # [cm]
+global              ex1LE
+                    # [coeff]
+global              c02LE
+                    # [cm]
+global              ex2LE
+                    # [coeff]
 
 #--------------
 # Trailing edge
+global              typeTE
+                    # integer
 global              a1TE
                     # [cm]
 global              b1TE
@@ -63,6 +76,8 @@ global              c0TE
                     # [cm]
 global              y0TE
                     # [cm]
+global              ex1TE
+                    # [coeff]
 
 #--------------
 # Vault edge
@@ -99,7 +114,11 @@ global              cellDistrCoeff
 
 global              numCellsPreProc
 # Total cell number
-
+global              cellsWidth
+# Cells width
+global              cellsOddEven
+# Num ribs half
+global              numRibsHalfPre
 
 #----------------------------------------------------------------------
 #  proc initGlobalPreProcVars
@@ -133,4 +152,10 @@ proc initGlobalPreProcVars {} {
     # special init
     set vaultType 1
     set cellDistrType 3
+
+    # cells width
+    set cellsWidth(0,0) 30
+
+    # numRibsHalfPre
+    set numRibsHalfPre 1
 }

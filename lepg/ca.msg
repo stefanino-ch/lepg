@@ -26,6 +26,7 @@
 
 "##### Airfoils Menu"           "##### Perfils Menu"
 "Airfoils"                      "Perfils aerodinàmics"
+"02. Airfoils"                  "02. Perfils"
 
 "##### Calage Menu"             "##### Calatge Menu"
 "Calage"                        "Calatge"

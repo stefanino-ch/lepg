@@ -36,7 +36,7 @@ set g_PreProcDataChanged 0
                                     # has been changed
 
 set g_PreProcFileTypes {
-    {{Geometry files}   {.txt}}
+    {{Geometry files pre-data.txt}   {.txt}}
 }
 
 set g_PreProcFilePathName ""
@@ -50,7 +50,7 @@ set g_WingDataChanged 0
                                     # set to 1 if there is unsaved wing data
 
 set g_WingFileTypes {
-    {{Data files}   {.txt}}
+    {{Data files leparagliding.txt}  {.txt}}
 }
 
 set g_WingFilePathName ""
@@ -65,9 +65,9 @@ set data_le(c0) 10.11
 #---------------------------------------------------------------------
 #
 #  LEparagliding GUI
-set LepVersioNumber "2.60"
-set LepgNumber      "V0.99.3"
-set VersionDate     "2019-11-06"
+set LepVersioNumber "3.15"
+set LepgNumber      "V0.99.5 test"
+set VersionDate     "2021-01-14"
 #
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
@@ -172,6 +172,8 @@ proc InitGui { root } {
     menu $base.menu.geometry -tearoff 0
     menu $base.menu.wing -tearoff 0
     menu $base.menu.wingplan -tearoff 0
+    menu $base.menu.draw -tearoff 0
+    menu $base.menu.run -tearoff 0
     menu $base.menu.settings -tearoff 0
     menu $base.menu.settings.language -tearoff 0
     menu $base.menu.help -tearoff 0
@@ -185,7 +187,7 @@ proc InitGui { root } {
     # Geometry menu
     $base.menu add cascade -label [::msgcat::mc "Geometry"] -underline 0 -menu $base.menu.geometry
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "New Geometry..."]    -command NewGeometry
-    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Open Geometry..."]   -command OpenPreProcFile
+    $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Open Geometry file..."]   -command OpenPreProcFile
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Save Geometry"]      -command SavePreProcFile    -state disabled
     $base.menu.geometry add command -underline 0 -label [::msgcat::mc "Save Geometry As"]   -command SavePreProcFileAs  -state disabled
     $base.menu.geometry add separator
@@ -195,41 +197,69 @@ proc InitGui { root } {
 
     # Wing menu
     $base.menu add cascade -label [::msgcat::mc "Wing"] -underline 0 -menu $base.menu.wing
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Wing Geometry"]   -command ImportWingGeometry
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Open Wing..."]           -command OpenWingFile
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing"]              -command SaveWingFile -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save Wing As"]           -command SaveWingFileAs -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Import Matrix Geometry"]   -command ImportWingGeometry
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Open data file..."]           -command OpenWingFile
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save data"]              -command SaveWingFile -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Save data As"]           -command SaveWingFileAs -state disabled
     $base.menu.wing add separator
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Basic Data"]             -command OpenWingBasicDataEdit -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Airfoils"]               -command OpenWingAirfoilsDataEdit  -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Anchor Points"]          -command OpenWingAnchorsDataEdit -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Airfoil Holes"]          -command OpenWingAirfoilHolesDataEdit -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Skin Tension"]           -command OpenWingSkinTensionDataEdit -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Global AoA"]             -command OpenGlobalAoADataEdit -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Suspension lines"]       -command OpenSuspensionLinesDataEdit -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Brake lines"]            -command OpenBrakeLinesDataEdit -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Ramification lengths"]   -command OpenRamificationLengthDataEdit -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "HV-VH Ribs"]             -command OpenHV-VH-RibsDataEdit -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Leading Edge Colors"]    -command OpenWingLEColorDataEdit -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Trailing Edge Colors"]   -command OpenWingTEColorDataEdit -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Additional rib points"]  -command OpenWingAddRibPointsDataEdit -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "Elastic lines corr"]     -command OpenElasticLinesCorrEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "01A. Basic Data"]            -command OpenWingBasicDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "01B. Washin"]                -command OpenWingWashinDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "01C. Geometry edit"]         -command OpenWingGeoEditDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "01D. Cells number"]          -command OpenWingCellsNumberDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "02. Airfoils"]               -command OpenWingAirfoilsDataEdit  -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "03. Anchor Points"]          -command OpenWingAnchorsDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "04. Airfoil Holes"]          -command OpenWingAirfoilHolesDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "05. Skin Tension"]           -command OpenWingSkinTensionDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "08. Global AoA"]             -command OpenGlobalAoADataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "09. Suspension lines"]       -command OpenSuspensionLinesDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "10. Brake lines"]            -command OpenBrakeLinesDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "11. Ramification lengths"]   -command OpenRamificationLengthDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "12. HV-VH Ribs"]             -command OpenHV-VH-RibsDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "15. Extrados Colors"]        -command OpenWingLEColorDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "16. Intrados Colors"]        -command OpenWingTEColorDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "17. Additional rib points"]  -command OpenWingAddRibPointsDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "18. Elastic lines corr"]     -command OpenElasticLinesCorrEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "21. Joncs definition"]       -command OpenWingJoncsDefDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "22. Nose mylars"]            -command OpenWingNoseMyDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "23. Tab reinforcements"]     -command OpenWingTabReinfDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "26. Glue vents"]             -command OpenWingGlueVenDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "27. Special wingtip"]        -command OpenWingSpecWtDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "28. Calage variation"]       -command OpenWingCalagVarDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "29. 3D shaping"]             -command OpenShaping3DDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "30. Airfoil thickness"]      -command OpenWingAirThickDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "31. New skin tension"]       -command OpenWingNewSkinDataEdit -state disabled
     $base.menu.wing add separator
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "Calc Wing"]              -command lepProcRun -state disabled
 
     # Wing plan menu
     $base.menu add cascade -label [::msgcat::mc "Wing plan"] -underline 0 -menu $base.menu.wingplan
-    $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "Sewing Allowances"]  -command OpenWingSewingAllowancesEdit -state disabled
-    $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "Marks"]              -command OpenWingMarksEdit -state disabled
+    $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "06. Sewing Allowances"]  -command OpenWingSewingAllowancesEdit -state disabled
+    $base.menu.wingplan add command -underline 5 -label [::msgcat::mc "07. Marks"]              -command OpenWingMarksEdit -state disabled
+    $base.menu.wingplan add command -underline 0 -label [::msgcat::mc "19. DXF layer names"]  -command OpenWingDXFLayNamesDataEdit -state disabled
+    $base.menu.wingplan add command -underline 0 -label [::msgcat::mc "20. Marks types"]  -command OpenWingMarksTypesDataEdit -state disabled
+    $base.menu.wingplan add command -underline 9 -label [::msgcat::mc "24. General 2D DXF options"]  -command OpenWingGe2DopDataEdit -state disabled
+    $base.menu.wingplan add command -underline 9 -label [::msgcat::mc "25. General 3D DXF options"]  -command OpenWingGe3DopDataEdit -state disabled
     #$base.menu.wingplan add command -underline 5 -label [::msgcat::mc "DXF"]             -command xxx -state disabled
+
+    # Draw menu
+    $base.menu add cascade -label [::msgcat::mc "Draw"] -underline 0 -menu $base.menu.draw
+    $base.menu.draw add command -underline 6 -label [::msgcat::mc "Redraw"] -command DrawTopView
+
+    # Run menu
+    $base.menu add cascade -label [::msgcat::mc "Run"] -underline 0 -menu $base.menu.run
+    $base.menu.run add command -underline 6 -label [::msgcat::mc "Check coherence"]
+    $base.menu.run add command -underline 4 -label [::msgcat::mc "Run LEparagliding"]
 
     # Settings menu
     $base.menu add cascade -label [::msgcat::mc "Settings"] -underline 0 -menu $base.menu.settings
     $base.menu.settings add cascade -label [::msgcat::mc "Language"] -underline 0 -menu $base.menu.settings.language
-    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Catalan"] -command {SetLanguage "ca"}
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "English"] -command {SetLanguage "en"}
-    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "German"] -command {SetLanguage "de"}
-    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Polish"] -command {SetLanguage "pl"}
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "German"]  -command {SetLanguage "de"}
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Polish"]  -command {SetLanguage "pl"}
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "French"]  -command {SetLanguage "fr"}
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Catalan"] -command {SetLanguage "ca"}
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Russian"] -command {SetLanguage "ru"}
+
 
     $base.menu.settings add command -underline 0 -label [::msgcat::mc "Geometry-Processor"] -command PreProcDirSelect_lepg
     $base.menu.settings add command -underline 0 -label [::msgcat::mc "Wing-Processor"] -command LepDirSelect
@@ -257,6 +287,7 @@ proc InitGui { root } {
 proc CreateMainWindow {} {
 
     source "globalWingVars.tcl"
+
     global .topv.c_topv
     global .tailv.c_tailv
     global .sidev.c_sidev
@@ -273,16 +304,21 @@ proc CreateMainWindow {} {
     pack .tailv.c_tailv -expand yes -fill both
 
     # Side view
-    ttk::labelframe .sidev -text [::msgcat::mc "Side view"]
-    canvas .sidev.c_sidev -width 500 -height 300 -bg white
-    pack .sidev.c_sidev -expand yes -fill both
+    ttk::labelframe .sidev -text [::msgcat::mc "Laboratori logo"]
+#    canvas .sidev.c_sidev -width 500 -height 300 -bg white
+#    pack .sidev.c_sidev -expand yes -fill both
+
+    set img [image create photo -file img/dissphc.gif]
+    label .sidev.c_sidev -image $img
+    pack  .sidev.c_sidev -side  top
+
 
     # Basic data
     ttk::labelframe .bd -text [::msgcat::mc "Basic wing data"]
 
-    grid .tailv -row 0 -column 0 -sticky nesw
+    grid .tailv -row 1 -column 0 -sticky nesw
     grid .sidev -row 0 -column 1 -sticky nesw
-    grid .topv -row 1 -column 0 -sticky nesw
+    grid .topv -row 0 -column 0 -sticky nesw
     grid .bd -row 1 -column 1 -sticky new
 
     grid columnconfigure . 0 -weight 1
@@ -299,10 +335,20 @@ proc CreateMainWindow {} {
     ttk::label .bd.drawScaleV -textvariable drawScale
     ttk::label .bd.wingScale -text [::msgcat::mc "Wing scale"]
     ttk::label .bd.wingScaleV -textvariable wingScale
+
+    ttk::label .bd.wingSurface -text [::msgcat::mc "Wing surface (m2)"]
+    ttk::label .bd.wingSurfaceV -textvariable wingSurface
+    ttk::label .bd.wingSpan -text [::msgcat::mc "Wing span (m)"]
+    ttk::label .bd.wingSpanV -textvariable wingSpan
+    ttk::label .bd.wingAR -text [::msgcat::mc "Wing aspect ratio"]
+    ttk::label .bd.wingARV -textvariable wingAR
+
     ttk::label .bd.numCells -text [::msgcat::mc "Number of Cells"]
     ttk::label .bd.numCellsV -textvariable numCells
     ttk::label .bd.numRibs -text [::msgcat::mc "Number of Ribs"]
     ttk::label .bd.numRibsV -textvariable numRibsTot
+    ttk::label .bd.paraType -text [::msgcat::mc "Wing type"]
+    ttk::label .bd.paraTypeV -textvariable paraType
 
     grid .bd.brandName -row 0 -column 0 -sticky w
     grid .bd.brandNameV -row 0 -column 1 -sticky w
@@ -312,17 +358,24 @@ proc CreateMainWindow {} {
     grid .bd.drawScaleV  -row 2 -column 1 -sticky w
     grid .bd.wingScale -row 3 -column 0 -sticky w
     grid .bd.wingScaleV  -row 3 -column 1 -sticky w
-    grid .bd.numCells -row 4 -column 0 -sticky w
-    grid .bd.numCellsV  -row 4 -column 1 -sticky w
-    grid .bd.numRibs -row 5 -column 0 -sticky w
-    grid .bd.numRibsV  -row 5 -column 1 -sticky w
+    grid .bd.wingSurface -row 4 -column 0 -sticky w
+    grid .bd.wingSurfaceV  -row 4 -column 1 -sticky w
+    grid .bd.wingSpan -row 5 -column 0 -sticky w
+    grid .bd.wingSpanV  -row 5 -column 1 -sticky w
+    grid .bd.wingAR -row 6 -column 0 -sticky w
+    grid .bd.wingARV  -row 6 -column 1 -sticky w
+    grid .bd.numCells -row 7 -column 0 -sticky w
+    grid .bd.numCellsV  -row 7 -column 1 -sticky w
+    grid .bd.numRibs -row 8 -column 0 -sticky w
+    grid .bd.numRibsV  -row 8 -column 1 -sticky w
+    grid .bd.paraType -row 9 -column 0 -sticky w
+    grid .bd.paraTypeV  -row 9 -column 1 -sticky w
 
     #ToDo: add missing parameters
     # Surface
     # Span
     # AlphaCenter
     # AlphaWingTip
-    # Wing type
 
     # DrawTopView .tc.c_topv
 }
@@ -422,7 +475,7 @@ proc DrawSideView {} {
     source "globalWingVars.tcl"
     global .sidev.c_sidev
 
-    .sidev.c_sidev delete "all"
+#    .sidev.c_sidev delete "all"
 
     set SF [CalcScaleFactor]
 
@@ -482,7 +535,7 @@ proc NewGeometry {} {
     .tailv.c_tailv delete "all"
 
     global .sidev.c_sidev
-    .sidev.c_sidev delete "all"
+#    .sidev.c_sidev delete "all"
 }
 
 
@@ -505,6 +558,7 @@ proc OpenPreProcFile { {FilePathName ""} } {
     }
 
     if {$FilePathName != ""} {
+
         set ReturnValue [ readPreProcDataFile $FilePathName ]
 
         if { $ReturnValue != 0 } {
@@ -602,10 +656,12 @@ proc ImportWingGeometry {} {
         PromptForWingSave
     }
 
-    # get rid of old values
-    initGlobalWingVars
+    # WARNING!!!! get rid of old values
+#    initGlobalWingVars
 
     set FilePathName [tk_getOpenFile -filetypes $g_WingFileTypes]
+
+#    puts "here $FilePathName"
 
     if {$FilePathName != ""} {
         set ReturnValue [ importPreProcOutFile $FilePathName ]
@@ -619,9 +675,11 @@ proc ImportWingGeometry {} {
 
     set g_WingDataAvailable 1
 
+
     DrawTopView
     DrawTailView
-    DrawSideView
+#    Not draw side view
+#    DrawSideView
 }
 
 #----------------------------------------------------------------------
@@ -639,11 +697,18 @@ proc OpenWingFile { {FilePathName ""} } {
     global g_WingFileTypes
     global g_WingDataAvailable
 
+#   TEMPORARY ---------------------------------------------------------
+#   Set direct path #### temporary code during development, to open fast
+#    set FilePathName "/home/pere/Documents/LEP/GUI-Tcl/lepg-3.15/lep/lep-3.15/lep/leparagliding.txt"
+#   TEMPORARY ---------------------------------------------------------
+
+
     if { $g_WingDataChanged } {
         PromptForWingSave
     }
 
     source "readLepDataFile.tcl"
+
 
     if {$FilePathName == ""} {
         set FilePathName [tk_getOpenFile -filetypes $g_WingFileTypes]
@@ -663,10 +728,18 @@ proc OpenWingFile { {FilePathName ""} } {
 
     DrawTopView
     DrawTailView
-    DrawSideView
+#   TEMPORARY: REMOVE SIDE VIEW AND CHANGE BY PHOTO
+#    DrawSideView
 
     ##### temporary code below
     set g_WingDataChanged 1
+
+#    puts $FilePathName
+
+#   Calcule surface, span, aspect ratio
+    source "wingSomeCalculus.tcl"
+    wingSomeCalculus
+
 }
 
 #----------------------------------------------------------------------
@@ -767,6 +840,27 @@ proc OpenWingBasicDataEdit { } {
     wingBasicDataEdit
 }
 
+proc OpenWingWashinDataEdit { } {
+
+    source "wingWashinDataEdit.tcl"
+
+    wingWashinDataEdit
+}
+
+proc OpenWingGeoEditDataEdit { } {
+
+    source "wingMatrixGeoDataEdit.tcl"
+
+    wingMatrixGeoDataEdit 
+}
+
+proc OpenWingCellsNumberDataEdit { } {
+
+    source "wingCellsNumberDataEdit.tcl"
+
+    wingCellsNumberDataEdit 
+}
+
 proc OpenWingAirfoilsDataEdit { } {
     source "wingAirfoilsDataEdit.tcl"
 
@@ -856,6 +950,91 @@ proc OpenElasticLinesCorrEdit { } {
 
     wingElasticLinesCorrEdit
 }
+
+proc OpenWingDXFLayNamesDataEdit { } {
+    source "wingDXFLayNamesDataEdit.tcl"
+
+    wingDXFLayNamesDataEdit
+}
+
+proc OpenWingMarksTypesDataEdit { } {
+    source "wingMarksTypesDataEdit.tcl"
+
+    wingMarksTypesDataEdit
+}
+
+proc OpenWingJoncsDefDataEdit { } {
+    source "wingJoncsDefDataEdit.tcl"
+
+    wingJoncsDefDataEdit
+}
+
+proc OpenWingNoseMyDataEdit { } {
+    source "wingNoseMyDataEdit.tcl"
+
+    wingNoseMyDataEdit
+}
+
+proc OpenWingTabReinfDataEdit { } {
+    source "wingTabReinfDataEdit.tcl"
+
+    wingTabReinfDataEdit
+}
+
+proc OpenWingGe2DopDataEdit { } {
+    source "wingGe2DopDataEdit.tcl"
+
+    wingGe2DopDataEdit
+}
+
+proc OpenWingGe3DopDataEdit { } {
+    source "wingGe3DopDataEdit.tcl"
+
+    wingGe3DopDataEdit
+}
+
+proc OpenWingGlueVenDataEdit { } {
+    source "wingGlueVenDataEdit.tcl"
+
+    wingGlueVenDataEdit
+}
+
+proc OpenWingSpecWtDataEdit { } {
+    source "wingSpecWtDataEdit.tcl"
+
+    wingSpecWtDataEdit
+}
+
+proc OpenWingCalagVarDataEdit { } {
+    source "wingCalagVarDataEdit.tcl"
+
+    wingCalagVarDataEdit
+}
+
+proc OpenWingAirThickDataEdit { } {
+    source "wingAirThickDataEdit.tcl"
+
+    wingAirThickDataEdit
+}
+
+proc OpenShaping3DDataEdit { } {
+     source "wingP3DShapingDataEdit.tcl"
+
+     wingP3DShapingDataEdit
+}
+
+proc OpenWingNewSkinDataEdit { } {
+    source "wingNewSkinDataEdit.tcl"
+
+    wingNewSkinDataEdit
+}
+
+
+
+
+# Add more sections HERE:
+
+
 
 proc myAppExit { } {
     global g_PreProcDataChanged
@@ -1009,43 +1188,75 @@ proc SetWingBtnStatus { a e op } {
     if {$g_WingDataAvailable == 0} {
         $base.menu.wing entryconfigure [::msgcat::mc "Save Wing"]    -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Save Wing As"] -state disabled
-        $base.menu.wing entryconfigure [::msgcat::mc "Basic Data"]   -state disabled
-        $base.menu.wing entryconfigure [::msgcat::mc "Airfoils"]     -state disabled
-        $base.menu.wing entryconfigure [::msgcat::mc "Anchor Points"] -state disabled
-        $base.menu.wing entryconfigure [::msgcat::mc "Airfoil Holes"] -state disabled
-        $base.menu.wing entryconfigure [::msgcat::mc "Skin Tension"] -state disabled
-        $base.menu.wing entryconfigure [::msgcat::mc "Global AoA"] -state disabled
-        $base.menu.wing entryconfigure [::msgcat::mc "Suspension lines"] -state disabled
-        $base.menu.wing entryconfigure [::msgcat::mc "Ramification lengths"] -state disabled
-        $base.menu.wing entryconfigure [::msgcat::mc "HV-VH Ribs"] -state disabled
-        $base.menu.wing entryconfigure [::msgcat::mc "Brake lines"] -state disabled
-        $base.menu.wing entryconfigure [::msgcat::mc "Leading Edge Colors"] -state disabled
-        $base.menu.wing entryconfigure [::msgcat::mc "Trailing Edge Colors"] -state disabled
-        $base.menu.wing entryconfigure [::msgcat::mc "Additional rib points"] -state disabled
-        $base.menu.wing entryconfigure [::msgcat::mc "Elastic lines corr"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "01A. Basic Data"]   -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "01B. Washin"]   -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "01C. Geometry edit"]   -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "01D. Cells number"]   -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "02. Airfoils"]     -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "03. Anchor Points"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "04. Airfoil Holes"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "05. Skin Tension"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "08. Global AoA"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "09. Suspension lines"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "11. Ramification lengths"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "12. HV-VH Ribs"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "10. Brake lines"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "15. Extrados Colors"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "16. Intrados Colors"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "17. Additional rib points"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "18. Elastic lines corr"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "21. Joncs definitions"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "22. Nose mylars"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "23. Tab reinforcements"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "26. Glue vents"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "27. Special wingtip"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "28. Calage variation"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "29. 3D shaping"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "30. Airfoil thickness"] -state disabled
+        $base.menu.wing entryconfigure [::msgcat::mc "31. New skin tension"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Calc Wing"] -state disabled
-        $base.menu.wingplan entryconfigure [::msgcat::mc "Sewing Allowances"] -state disabled
-        $base.menu.wingplan entryconfigure [::msgcat::mc "Marks"] -state disabled
+        $base.menu.wingplan entryconfigure [::msgcat::mc "06. Sewing Allowances"] -state disabled
+        $base.menu.wingplan entryconfigure [::msgcat::mc "07. Marks"] -state disabled
+        $base.menu.wingplan entryconfigure [::msgcat::mc "19. DXF layer names"] -state disabled
+        $base.menu.wingplan entryconfigure [::msgcat::mc "20. Marks types"] -state disabled
+        $base.menu.wingplan entryconfigure [::msgcat::mc "24. General 2D DXF options"] -state disabled
+        $base.menu.wingplan entryconfigure [::msgcat::mc "25. General 3D DXF options"] -state disabled
     } else {
-        $base.menu.wing entryconfigure [::msgcat::mc "Save Wing"]    -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "Save Wing As"] -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "Basic Data"]   -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "Airfoils"]     -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "Anchor Points"] -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "Airfoil Holes"] -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "Skin Tension"] -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "Global AoA"] -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "Suspension lines"] -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "Brake lines"] -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "Ramification lengths"] -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "HV-VH Ribs"] -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "Leading Edge Colors"] -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "Trailing Edge Colors"] -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "Additional rib points"] -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "Elastic lines corr"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "Save data"]    -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "Save data As"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "01A. Basic Data"]   -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "01B. Washin"]   -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "01C. Geometry edit"]   -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "01D. Cells number"]   -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "02. Airfoils"]     -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "03. Anchor Points"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "04. Airfoil Holes"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "05. Skin Tension"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "08. Global AoA"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "09. Suspension lines"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "10. Brake lines"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "11. Ramification lengths"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "12. HV-VH Ribs"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "15. Extrados Colors"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "16. Intrados Colors"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "17. Additional rib points"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "18. Elastic lines corr"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "21. Joncs definition"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "22. Nose mylars"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "23. Tab reinforcements"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "26. Glue vents"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "27. Special wingtip"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "28. Calage variation"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "29. 3D shaping"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "30. Airfoil thickness"] -state active
+        $base.menu.wing entryconfigure [::msgcat::mc "31. New skin tension"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Calc Wing"] -state active
-        $base.menu.wingplan entryconfigure [::msgcat::mc "Sewing Allowances"] -state active
-        $base.menu.wingplan entryconfigure [::msgcat::mc "Marks"] -state active
+        $base.menu.wingplan entryconfigure [::msgcat::mc "06. Sewing Allowances"] -state active
+        $base.menu.wingplan entryconfigure [::msgcat::mc "07. Marks"] -state active
+        $base.menu.wingplan entryconfigure [::msgcat::mc "19. DXF layer names"] -state active
+        $base.menu.wingplan entryconfigure [::msgcat::mc "20. Marks types"] -state active
+        $base.menu.wingplan entryconfigure [::msgcat::mc "24. General 2D DXF options"] -state active
+        $base.menu.wingplan entryconfigure [::msgcat::mc "25. General 3D DXF options"] -state active
     }
 }
 

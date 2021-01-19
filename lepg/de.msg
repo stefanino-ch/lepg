@@ -23,12 +23,17 @@
 "Anchor Points"                 "Aufhängepunkte"
 "Calc Wing"                     "Flügel berechnen"
 
+"Draw"                          "Zeichnen"
+
 "##### Basic Data Window"       "##### Fenster Basisdaten"
 "Wing Basic Data"               "Flügel Basisdaten"
+"Basic wing data"               "Flügel Basisdaten"
 "Brand Name"                    "Name des Herstellers"
 "Wing Name"                     "Name des Flügels"
 "Draw Scale"                    "Zeichnungsmasstab"
 "Wing Scale"                    "Flügelmasstab"
+"Wing type"                     "Flügeltyp"
+"Wing aspect ratio"             "Flügelseitenverhältnis"
 
 "brandName"                     "Herstellername"
 "wingName"                      "Flügelname"
