@@ -1,5 +1,5 @@
 LEPG 2.6
-Â© Pere Casellas, Stefan Feuz
+© Pere Casellas, Stefan Feuz
 http://www.laboratoridenvol.com
 General Public License GNU GPL 3.0
 
@@ -61,7 +61,7 @@ Lepg installieren
 -----------------
 1. Das komplette lepg Verzeichnis herunterladen und an einem beliebigen Ort speichern. 
 
-Lepg auf Windows ausfÃ¼hren
+Lepg auf Windows ausführen
 --------------------------
 2. Gehe in das lepg Verzeichnis
 3. Doppelclick auf die Datei lepg.bat => lepg startet
@@ -73,8 +73,8 @@ Run lepg on Linux
 
 Erste Konfigurationen
 ---------------------
-4. Ã–ffne das Menu Settings-> Language wÃ¤hle dort German
-5. Ã–ffne das Menu Settings-> Geometry-Processor 
+4. Öffne das Menu Settings-> Language wähle dort German
+5. Öffne das Menu Settings-> Geometry-Processor 
    Konfiguriere das Verzeichnic in dem der PreProcessor gespeichert ist: lepg\lep-2_60-win\pre/pre-1.4.exe
-6. Ã–ffne das Menu Settings-> Wing-Processor
+6. Öffne das Menu Settings-> Wing-Processor
    Konfiguriere das Verzeichnic in dem der Wing Processor (lep) gespeichert ist: \lepg\lep-2_60-win\lep\lep-2.6.exe
