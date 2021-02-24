@@ -1,7 +1,7 @@
 # lepg
 Repostiory for the LEparagliding GUI (lepg) written in tcl. 
 
-LEPG 2.6
+LEPG 3.15
 © Pere Casellas, Stefan Feuz
 http://www.laboratoridenvol.com
 General Public License GNU GPL 3.0
