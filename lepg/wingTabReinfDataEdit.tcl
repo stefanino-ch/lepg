@@ -74,6 +74,9 @@ proc wingTabReinfDataEdit {} {
     SetHelpBind .wTABREINF.dataTop.e_ctrl1 k_section23   HelpText_wTABREINF
     grid        .wTABREINF.dataTop.e_ctrl1 -row 2 -column 1 -sticky w -pady 1
 
+    # Avoid data if case 0
+    if { $Lcl_k_section23 != 0 } {
+
     #-------------
     # Control parameter, entry
     label       .wTABREINF.dataTop.ctrl2 -width 16 -text [::msgcat::mc "Groups"]
@@ -121,7 +124,7 @@ proc wingTabReinfDataEdit {} {
     grid        .wTABREINF.dataInf.e_u1$i -row [expr (8-1 + $i)] -column 1 -sticky w -pady 1
 
     ttk::entry  .wTABREINF.dataInf.e_u2$i -width 10 -textvariable Lcl_schemesTR($i,2)
-    SetHelpBind .wTABREINF.dataInf.e_u2$i [::msgcat::mc "parameter 0 means use units in percent of chord \nparameter 1 means use absolute units in cm"] HelpText_wTABREINF
+    SetHelpBind .wTABREINF.dataInf.e_u2$i [::msgcat::mc "parameter 0 means use units in %% of chord \nparameter 1 means use absolute units in cm"] HelpText_wTABREINF
     grid        .wTABREINF.dataInf.e_u2$i -row [expr (8-1 + $i)] -column 2 -sticky w -pady 1
 
     ttk::entry  .wTABREINF.dataInf.e_u3$i -width 10 -textvariable Lcl_schemesTR($i,3)
@@ -144,7 +147,14 @@ proc wingTabReinfDataEdit {} {
     SetHelpBind .wTABREINF.dataInf.e_u7$i [::msgcat::mc "Geometric parameter according to scheme"] HelpText_wTABREINF
     grid        .wTABREINF.dataInf.e_u7$i -row [expr (8-1 + $i)] -column 7 -sticky w -pady 1
 
+    # Avoid schemes section
     }
+
+}
+
+
+    # Avoid data if case 0
+    if { $Lcl_k_section23 != 0 } {
 
     #-------------
     # Spacer for line 3
@@ -166,6 +176,11 @@ proc wingTabReinfDataEdit {} {
     }
     UpdateConfigButtons_wTABREINF
 
+    # Case 0
+    }
+
+
+
     #-------------
     # explanations
     label .wTABREINF.help.e_help -width 80 -height 3 -background LightYellow -justify left -textvariable HelpText_wTABREINF
@@ -173,10 +188,10 @@ proc wingTabReinfDataEdit {} {
 
     #-------------
     # buttons
-    button .wTABREINF.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wTABREINF
-    button .wTABREINF.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wTABREINF
-    button .wTABREINF.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wTABREINF
-    button .wTABREINF.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wTABREINF
+    button .wTABREINF.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wTABREINF
+    button .wTABREINF.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wTABREINF
+    button .wTABREINF.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wTABREINF
+    button .wTABREINF.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wTABREINF
 
     grid .wTABREINF.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wTABREINF.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -208,14 +223,14 @@ proc SetLclVars_wTABREINF {} {
     set Lcl_numGroupsTR  $numGroupsTR
 
     # iterate across all new skin groups
-    for { set i 1 } { $i <= $numGroupsTR } { incr i } {
+    for { set i 1 } { $i <= $Lcl_numGroupsTR } { incr i } {
         set Lcl_numTabReinf($i,1)  $numTabReinf($i,1)
         set Lcl_numTabReinf($i,2)  $numTabReinf($i,2)
         set Lcl_numTabReinf($i,3)  $numTabReinf($i,3)
     } 
 
     # iterate across all new skin groups
-    for { set i 1 } { $i <= $numGroupsTR } { incr i } {
+    for { set i 1 } { $i <= $Lcl_numGroupsTR } { incr i } {
     # iterate across all points of new skin tension
         	set Lcl_lineTabReinf($i,1)   $lineTabReinf($i,1)
         	set Lcl_lineTabReinf($i,2)   $lineTabReinf($i,2)
@@ -230,6 +245,7 @@ proc SetLclVars_wTABREINF {} {
      set Lcl_schemesTR($i,$j) $schemesTR($i,$j)
      }
      }
+
 }
 
 #----------------------------------------------------------------------
@@ -292,6 +308,12 @@ proc ApplyButtonPress_wTABREINF {} {
         set g_WingDataChanged       1
         set Lcl_wTABREINF_DataChanged    0
     }
+
+    # Optionally destroy all and edit again
+    # Note: works, but is better destroy only components...
+    destroy .wTABREINF
+    wingTabReinfDataEdit
+
 }
 
 #----------------------------------------------------------------------
@@ -333,9 +355,9 @@ proc CancelButtonPress_wTABREINF {} {
     if { $Lcl_wTABREINF_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wTABREINF
             return 0

@@ -2,6 +2,7 @@
 #
 #  Window to edit the wing anchors data
 #
+#  Pere Casellas
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
 #
@@ -11,14 +12,11 @@
 
 #-------
 # Globals
-global .wande
+global  Lcl_wANDE_DataChanged
+set     Lcl_wANDE_DataChanged    0
 
-global  Lcl_wAnDE_DataChanged
-set     Lcl_wAnDE_DataChanged    0
-
-global  AllGlobalVars_wAnDE
-set     AllGlobalVars_wAnDE { ribConfig numRibsHalf }
-
+global  AllGlobalVars_wANDE
+set     AllGlobalVars_wANDE { numRibsHalf ribConfig }
 
 #----------------------------------------------------------------------
 #  wingAnchorsDataEdit
@@ -32,321 +30,510 @@ set     AllGlobalVars_wAnDE { ribConfig numRibsHalf }
 proc wingAnchorsDataEdit {} {
     source "windowExplanationsHelper.tcl"
 
-    global .wande
+    global .wANDE
 
-    global Lcl_ribConfig
-    global numRibsHalf
+    # make sure Lcl_ variables are known
+    global  AllGlobalVars_wANDE
+    foreach {e} $AllGlobalVars_wANDE {
+        global Lcl_$e
+    }
 
-    SetLclVars_wAnDE
+    SetLclVars_wANDE
 
-    toplevel .wande
-    focus .wande
+    toplevel .wANDE
+    focus .wANDE
 
-    wm protocol .wande WM_DELETE_WINDOW { CancelButtonPress_wAnDE }
+    wm protocol .wANDE WM_DELETE_WINDOW { CancelButtonPress_wANDE }
 
-    wm title .wande [::msgcat::mc "Wing Anchors Data"]
+    wm title .wANDE [::msgcat::mc "Section 3: Wing Anchors Data"]
 
     #-------------
     # Frames and grids
-    ttk::frame      .wande.data
-    ttk::labelframe .wande.help -text [::msgcat::mc "Explanations"]
-    ttk::frame      .wande.btn
-    #
-    grid .wande.data         -row 0 -column 0 -sticky e
-    grid .wande.help         -row 1 -column 0 -sticky e
-    grid .wande.btn          -row 2 -column 0 -sticky e
-    #
+    # ttk::frame      .wANDE.dataTop
+    ttk::frame      .wANDE.dataMid
+    ttk::frame      .wANDE.dataBot
+    ttk::labelframe .wANDE.help -text [::msgcat::mc "Explanations"]
+    ttk::frame      .wANDE.btn
+
     #-------------
-    # Data fields setup
+    # Place frames
+    # grid .wANDE.dataTop         -row 0 -column 0 -sticky w
+    grid .wANDE.dataMid         -row 1 -column 0 -sticky w
+    grid .wANDE.dataBot         -row 2 -column 0 -sticky nesw
+    grid .wANDE.help            -row 3 -column 0 -sticky e
+    grid .wANDE.btn             -row 4 -column 0 -sticky e
 
-    # do the header
-    ttk::label .wande.data.title1 -text [::msgcat::mc "Rib Num"] -width 10 -anchor e
-    ttk::label .wande.data.title2 -text [::msgcat::mc "A"] -width 20 -anchor w
-    ttk::label .wande.data.title3 -text [::msgcat::mc "B"] -width 20 -anchor w
-    ttk::label .wande.data.title4 -text [::msgcat::mc "C"] -width 20 -anchor w
-    ttk::label .wande.data.title5 -text [::msgcat::mc "D"] -width 20 -anchor w
-    ttk::label .wande.data.title6 -text [::msgcat::mc "E"] -width 20 -anchor w
-    ttk::label .wande.data.title7 -text [::msgcat::mc "Brakes"] -width 20 -anchor w
+    grid columnconfigure .wANDE 0 -weight 1
+    grid rowconfigure .wANDE 2 -weight 1
 
-    # Add header fields to grid
-    set i 1
-    while {$i <= 7 } {
-        grid .wande.data.title$i -row 0 -column [expr $i -1] -sticky e -padx 0 -pady 0
-        incr i
-    }
+    #-------------
+    # Get a scrollable region
+    canvas .wANDE.dataBot.scroll  -width 700 -height 400 -yscrollcommand ".wANDE.dataBot.yscroll set"
+    ttk::scrollbar .wANDE.dataBot.yscroll -command ".wANDE.dataBot.scroll yview"
 
-    # do a line for each rib
-    set i 1
-    while {$i <= $numRibsHalf} {
+    grid .wANDE.dataBot.scroll -row 0 -column 0 -sticky nesw
+    grid .wANDE.dataBot.yscroll -row 0 -column 1 -sticky nesw
 
-        ttk::label  .wande.data.numRib$i -text $i -width 20 -anchor e
-        grid        .wande.data.numRib$i -row [expr $i] -column 0 -sticky e
+    grid columnconfigure .wANDE.dataBot 0 -weight 1
+    grid columnconfigure .wANDE.dataBot 1 -weight 0
+    grid rowconfigure .wANDE.dataBot 0 -weight 1
 
-        ttk::entry  .wande.data.e_A$i -width 20 -textvariable Lcl_ribConfig($i,16)
-        SetHelpBind .wande.data.e_A$i anchorPosA HelpText_wAnDE
-        grid        .wande.data.e_A$i -row [expr $i] -column 1 -sticky e
+    ttk::frame .wANDE.dataBot.scroll.widgets -borderwidth 1
+    grid .wANDE.dataBot.scroll.widgets -row 0 -column 0
 
-        ttk::entry  .wande.data.e_B$i -width 20 -textvariable Lcl_ribConfig($i,17)
-        SetHelpBind .wande.data.e_B$i anchorPosB HelpText_wAnDE
-        grid        .wande.data.e_B$i -row [expr $i] -column 2 -sticky e
+    addEdit_wANDE
 
-        ttk::entry  .wande.data.e_C$i -width 20 -textvariable Lcl_ribConfig($i,18)
-        SetHelpBind .wande.data.e_C$i anchorPosC HelpText_wAnDE
-        grid        .wande.data.e_C$i -row [expr $i] -column 3 -sticky e
-
-        ttk::entry  .wande.data.e_D$i -width 20 -textvariable Lcl_ribConfig($i,19)
-        SetHelpBind .wande.data.e_D$i anchorPosD HelpText_wAnDE
-        grid        .wande.data.e_D$i -row [expr $i] -column 4 -sticky e
-
-        ttk::entry  .wande.data.e_E$i -width 20 -textvariable Lcl_ribConfig($i,20)
-        SetHelpBind .wande.data.e_E$i anchorPosE HelpText_wAnDE
-        grid        .wande.data.e_E$i -row [expr $i] -column 5 -sticky e
-
-        ttk::entry  .wande.data.e_F$i -width 20 -textvariable Lcl_ribConfig($i,21)
-        SetHelpBind .wande.data.e_F$i anchorPosF HelpText_wAnDE
-        grid        .wande.data.e_F$i -row [expr $i] -column 6 -sticky e
-
-        ttk::label  .wande.data.spacer$i -text "" -width 5 -anchor e
-        grid        .wande.data.spacer$i -row [expr $i] -column 7 -sticky e
-
-        incr i
-    }
+    ResizeScrollFrame_wANDE
 
     #-------------
     # explanations
-    label .wande.help.e_help -width 80 -height 3 -background LightYellow -justify left -textvariable HelpText_wAnDE
-    grid  .wande.help.e_help -row 0 -column 0 -sticky nesw -padx 10 -pady 10
+    label .wANDE.help.e_help -width 100 -height 3 -background LightYellow -justify left -textvariable HelpText_wANDE
+    grid  .wANDE.help.e_help -row 0 -column 0 -sticky nesw -padx 10 -pady 10
 
     #-------------
     # buttons
-    button .wande.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wAnDE
-    button .wande.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wAnDE
-    button .wande.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wAnDE
-    button .wande.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wAnDE
+    button .wANDE.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wANDE
+    button .wANDE.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wANDE
+    button .wANDE.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wANDE
+    button .wANDE.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wANDE
 
-    grid .wande.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
-    grid .wande.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
-    grid .wande.btn.cancel    -row 0 -column 3 -sticky e -padx 10 -pady 10
-    grid .wande.btn.help      -row 1 -column 3 -sticky e -padx 10 -pady 10
+    grid .wANDE.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
+    grid .wANDE.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
+    grid .wANDE.btn.cancel    -row 0 -column 3 -sticky e -padx 10 -pady 10
+    grid .wANDE.btn.help      -row 1 -column 3 -sticky e -padx 10 -pady 10
 
-    SetLclVarTrace_wAnDE
+
+
+    #-------------
+    # Config num of items
+    label       .wANDE.dataMid.spacer00 -width 5 -text ""
+    grid        .wANDE.dataMid.spacer00 -row 0 -column 0
+
+    button      .wANDE.dataMid.b_decItems -width 10 -text [::msgcat::mc "dec Points"] -command DecItemLines_wANDE -state disabled
+    grid        .wANDE.dataMid.b_decItems -row 1 -column 1 -sticky e -padx 3 -pady 3
+
+    button      .wANDE.dataMid.b_incItems -width 10 -text [::msgcat::mc "inc Points"]  -command IncItemLines_wANDE
+    grid        .wANDE.dataMid.b_incItems -row 1 -column 2 -sticky e -padx 3 -pady 3
+
+    label       .wANDE.dataMid.spacer20 -width 5 -text "    "
+    grid        .wANDE.dataMid.spacer20 -row 2 -column 0
+
+
+
+    SetLclVarTrace_wANDE
 }
 
 #----------------------------------------------------------------------
-#  SetLclVars_wAnDE
+#  SetLclVars_wANDE
 #  Reads the global application values into the lcl ones
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc SetLclVars_wAnDE {} {
+proc SetLclVars_wANDE {} {
     source "globalWingVars.tcl"
 
-    global Lcl_ribConfig
+    # make sure Lcl_ variables are known
+    global  AllGlobalVars_wANDE
+    foreach {e} $AllGlobalVars_wANDE {
+        global Lcl_$e
+    }
+    set Lcl_numRibsHalf    $numRibsHalf
 
-    set i 1
-    while {$i <= $numRibsHalf} {
-
-        set Lcl_ribConfig($i,1) $ribConfig($i,1)
-        set Lcl_ribConfig($i,15) $ribConfig($i,15)
-        set Lcl_ribConfig($i,16) $ribConfig($i,16)
-        set Lcl_ribConfig($i,17) $ribConfig($i,17)
-        set Lcl_ribConfig($i,18) $ribConfig($i,18)
-        set Lcl_ribConfig($i,19) $ribConfig($i,19)
-        set Lcl_ribConfig($i,20) $ribConfig($i,20)
-        set Lcl_ribConfig($i,21) $ribConfig($i,21)
-
-        incr i
+    for {set i 1} {$i <= $numRibsHalf} {incr i} {
+        foreach k {1 15 16 17 18 19 20 21} {
+        set Lcl_ribConfig($i,$k)   $ribConfig($i,$k)
+        }
     }
 }
 
 #----------------------------------------------------------------------
-#  ExportLclVars_wAnDE
+#  ExportLclVars_wANDE
 #  Exports the local vars back into the global ones
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc ExportLclVars_wAnDE {} {
+proc ExportLclVars_wANDE {} {
     source "globalWingVars.tcl"
 
-    global Lcl_ribConfig
+    # make sure Lcl_ variables are known
+    global  AllGlobalVars_wANDE
+    foreach {e} $AllGlobalVars_wANDE {
+        global Lcl_$e
+    }
 
-    set i 1
-    while {$i <= $numRibsHalf} {
+    set numRibsHalf    $Lcl_numRibsHalf
 
-        set ribConfig($i,1) $Lcl_ribConfig($i,1)
-        # set ribConfig($i,15) $Lcl_ribConfig($i,15)
-        set ribConfig($i,16) $Lcl_ribConfig($i,16)
-        set ribConfig($i,17) $Lcl_ribConfig($i,17)
-        set ribConfig($i,18) $Lcl_ribConfig($i,18)
-        set ribConfig($i,19) $Lcl_ribConfig($i,19)
-        set ribConfig($i,20) $Lcl_ribConfig($i,20)
-        set ribConfig($i,21) $Lcl_ribConfig($i,21)
-
-        # set num of anchors to 0
-        set ribConfig($i,15) 0
-        foreach j {16 17 18 19 20} {
-            if { [string is double $Lcl_ribConfig($i,$j)] } {
-                # yes we have a double value
-                if { $Lcl_ribConfig($i,$j) > 0 } {
-                    # valid, increment number of anchors
-                    incr ribConfig($i,15)
-                }
-                if { $Lcl_ribConfig($i,$j) == 0 } {
-                    # end of line (value = 0) reached
-                    break
-                }
-            } else {
-                # there's not a double value
-                break
-            }
+    for {set i 1} {$i <= $numRibsHalf} {incr i} {
+        foreach k {1 15 16 17 18 19 20 21} {
+        set ribConfig($i,$k)   $Lcl_ribConfig($i,$k)
         }
-        incr i
     }
 }
 
 #----------------------------------------------------------------------
-#  ApplyButtonPress_wAnDE
+#  ApplyButtonPress_wANDE
 #  All action after the Apply button was pressed
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc ApplyButtonPress_wAnDE {} {
+proc ApplyButtonPress_wANDE {} {
     global g_WingDataChanged
-    global Lcl_wAnDE_DataChanged
+    global Lcl_wANDE_DataChanged
 
-    if { $Lcl_wAnDE_DataChanged == 1 } {
-        ExportLclVars_wAnDE
+    if { $Lcl_wANDE_DataChanged == 1 } {
+        ExportLclVars_wANDE
 
         set g_WingDataChanged       1
-        set Lcl_wAnDE_DataChanged    0
+        set Lcl_wANDE_DataChanged    0
     }
+    
+    # Redraw top view
+    #DrawTopView 
+    #DrawTailView
 }
 
 #----------------------------------------------------------------------
-#  OkButtonPress_wBDE
+#  OkButtonPress_wANDE
 #  All action after the Ok button was pressed
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc OkButtonPress_wAnDE {} {
-    global .wande
+proc OkButtonPress_wANDE {} {
+    global .wANDE
     global g_WingDataChanged
-    global Lcl_wAnDE_DataChanged
+    global Lcl_wANDE_DataChanged
 
-    if { $Lcl_wAnDE_DataChanged == 1 } {
-        ExportLclVars_wAnDE
+    if { $Lcl_wANDE_DataChanged == 1 } {
+        ExportLclVars_wANDE
         set g_WingDataChanged       1
-        set Lcl_wAnDE_DataChanged    0
+        set Lcl_wANDE_DataChanged    0
     }
 
-    UnsetLclVarTrace_wAnDE
-    destroy .wande
+    # Redraw top view
+    #DrawTopView 
+    #DrawTailView
+
+    UnsetLclVarTrace_wANDE
+    destroy .wANDE
 }
 
 #----------------------------------------------------------------------
-#  CancelButtonPress_wAnDE
+#  CancelButtonPress_wANDE
 #  All action after the Cancel button was pressed
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc CancelButtonPress_wAnDE {} {
-    global .wande
+proc CancelButtonPress_wANDE {} {
+    global .wANDE
     global g_WingDataChanged
-    global Lcl_wAnDE_DataChanged
+    global Lcl_wANDE_DataChanged
 
-    if { $Lcl_wAnDE_DataChanged == 1} {
+    if { $Lcl_wANDE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
-            focus .wande
+            focus .wANDE
             return 0
         }
     }
 
-    set Lcl_wAnDE_DataChanged 0
-    UnsetLclVarTrace_wAnDE
-    destroy .wande
+    set Lcl_wANDE_DataChanged 0
+    UnsetLclVarTrace_wANDE
+    destroy .wANDE
 
 }
 
 #----------------------------------------------------------------------
-#  HelpButtonPress_wAnDE
+#  HelpButtonPress_wANDE
 #  Opens the helpfile for the current window
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc HelpButtonPress_wAnDE {} {
+proc HelpButtonPress_wANDE {} {
     source "userHelp.tcl"
 
-    displayHelpfile "anchors-basic-data"
+    displayHelpfile "geometry-matrix-data"
 }
 
 #----------------------------------------------------------------------
-#  SetLclVarTrace_wAnDE
+#  SetLclVarTrace_wANDE
 #  Starts tracing the changes of relevant local variables
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc SetLclVarTrace_wAnDE {} {
+proc SetLclVarTrace_wANDE {} {
 
-    global AllGlobalVars_wAnDE
+    global AllGlobalVars_wANDE
 
     # make sure Lcl_ variables are known
-    foreach {e} $AllGlobalVars_wAnDE {
+    foreach {e} $AllGlobalVars_wANDE {
         global Lcl_$e
-        trace variable Lcl_$e w { SetLclChangeFlag_wAnDE }
+        trace variable Lcl_$e w { SetLclChangeFlag_wANDE }
     }
 }
 
 #----------------------------------------------------------------------
-#  UnsetLclVarTrace_wBDE
+#  UnsetLclVarTrace_wANDE
 #  Stops tracing the changes of relevant local variables
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc UnsetLclVarTrace_wAnDE {} {
+proc UnsetLclVarTrace_wANDE {} {
 
-    global AllGlobalVars_wAnDE
+    global AllGlobalVars_wANDE
 
     # make sure Lcl_ variables are known
-    foreach {e} $AllGlobalVars_wAnDE {
+    foreach {e} $AllGlobalVars_wANDE {
         global lcl_$e
-        trace remove variable Lcl_$e write { SetLclChangeFlag_wAnDE }
+        trace remove variable Lcl_$e write { SetLclChangeFlag_wANDE }
     }
 }
 
 #----------------------------------------------------------------------
-#  SetLclChangeFlag_wAnDE
+#  SetLclChangeFlag_wANDE
 #  Setup local change flags upon edit
 #
 #  IN:      N/A
 #  OUT:     N/A
 #  Returns: N/A
 #----------------------------------------------------------------------
-proc SetLclChangeFlag_wAnDE { a e op } {
+proc SetLclChangeFlag_wANDE { a e op } {
     # maybe helpful for debug
     # puts "SetLclChangeFlag: a=$a e=$e op=$op ax=[info exists ::$a] ex=[info exists ::${a}($e)]"
 
-    global Lcl_wAnDE_DataChanged
+    global Lcl_wANDE_DataChanged
 
-    set Lcl_wAnDE_DataChanged 1
+    set Lcl_wANDE_DataChanged 1
+}
+
+#----------------------------------------------------------------------
+#  addEdit_wANDE
+#  Adds all the edit elements needed for the config
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc addEdit_wANDE {} {
+    global .wANDE
+
+    # make sure Lcl_ variables are known
+    global  AllGlobalVars_wANDE
+    foreach {e} $AllGlobalVars_wANDE {
+        global Lcl_$e
+    }
+
+    #-------------
+    # Config of top data section
+    # There's none
+
+    #-------------
+    # header for the item lines
+
+#    label       .wANDE.dataMid.spacerr -width 10 -text ""
+#    grid        .wANDE.dataMid.spacerr -row 3 -column 0 -sticky e
+
+    label       .wANDE.dataMid.n1 -width 10 -text [::msgcat::mc "Num"]
+    grid        .wANDE.dataMid.n1 -row 3 -column 0 -sticky e -pady 1
+
+    label       .wANDE.dataMid.n2 -width 13 -text [::msgcat::mc "A"]
+    grid        .wANDE.dataMid.n2 -row 3 -column 1 -sticky e -pady 1
+
+    label       .wANDE.dataMid.n3 -width 13 -text [::msgcat::mc "B"]
+    grid        .wANDE.dataMid.n3 -row 3 -column 2 -sticky e -pady 1
+
+    label       .wANDE.dataMid.n4 -width 10 -text [::msgcat::mc "C"]
+    grid        .wANDE.dataMid.n4 -row 3 -column 3 -sticky e -pady 1
+
+    label       .wANDE.dataMid.n5 -width 10 -text [::msgcat::mc "D"]
+    grid        .wANDE.dataMid.n5 -row 3 -column 4 -sticky e -pady 1
+
+    label       .wANDE.dataMid.n6 -width 10 -text [::msgcat::mc "E"]
+    grid        .wANDE.dataMid.n6 -row 3 -column 5 -sticky e -pady 1
+
+    label       .wANDE.dataMid.n7 -width 15 -text [::msgcat::mc "Brakes"]
+    grid        .wANDE.dataMid.n7 -row 3 -column 6 -sticky e -pady 1
+
+    #-------------
+    # item lines
+    for { set i 1 } { $i <= $Lcl_numRibsHalf } { incr i } {
+        AddItemLine_wANDE $i
+    }
+
+#    UpdateItemLineButtons_wANDE
+}
+
+#----------------------------------------------------------------------
+#  DecItemLines_wANDE
+#  Decreases the number of config item lines
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc DecItemLines_wANDE {} {
+    global .wANDE
+    global Lcl_numRibsHalf
+
+    destroy .wANDE.dataBot.scroll.widgets.e_n1$Lcl_numRibsHalf
+    destroy .wANDE.dataBot.scroll.widgets.e_n2$Lcl_numRibsHalf
+    destroy .wANDE.dataBot.scroll.widgets.e_n3$Lcl_numRibsHalf
+    destroy .wANDE.dataBot.scroll.widgets.e_n4$Lcl_numRibsHalf
+    destroy .wANDE.dataBot.scroll.widgets.e_n5$Lcl_numRibsHalf
+    destroy .wANDE.dataBot.scroll.widgets.e_n6$Lcl_numRibsHalf
+    destroy .wANDE.dataBot.scroll.widgets.e_n7$Lcl_numRibsHalf
+
+    incr Lcl_numRibsHalf -1
+
+    UpdateItemLineButtons_wANDE
+
+    ResizeScrollFrame_wANDE
+}
+
+#----------------------------------------------------------------------
+#  IncItemLines_wANDE
+#  Increases the number of config item lines
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc IncItemLines_wANDE {} {
+    global .wANDE
+    global Lcl_numRibsHalf
+
+    incr Lcl_numRibsHalf
+
+    UpdateItemLineButtons_wANDE
+
+    # init additional variables
+    CreateInitialItemLineVars_wANDE
+
+    AddItemLine_wANDE $Lcl_numRibsHalf
+
+    ResizeScrollFrame_wANDE
+}
+
+#----------------------------------------------------------------------
+#  CreateInitialItemLineVars_wANDE
+#  Create the initial vars to display an empty item line
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc CreateInitialItemLineVars_wANDE {} {
+    global .wANDE
+    # make sure Lcl_ variables are known
+    global  AllGlobalVars_wANDE
+    foreach {e} $AllGlobalVars_wANDE {
+        global Lcl_$e
+    }
+
+    foreach k {1 15 16 17 18 19 20 21} {
+    set Lcl_ribConfig($Lcl_numRibsHalf,$k) 0
+    }
+    set Lcl_ribConfig($Lcl_numRibsHalf,1) $Lcl_numRibsHalf
+}
+
+
+#----------------------------------------------------------------------
+#  UpdateItemLineButtons_wANDE
+#  Updates the status of the config item buttons depending on the number of
+#  lines.
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc UpdateItemLineButtons_wANDE { } {
+    global .wANDE
+    global Lcl_numRibsHalf
+
+    if {$Lcl_numRibsHalf > 1} {
+        .wANDE.dataMid.b_decItems configure -state normal
+    } else {
+        .wANDE.dataMid.b_decItems configure -state disabled
+    }
+}
+
+#----------------------------------------------------------------------
+#  AddItemLine_wANDE
+#  Adds an additional Item Line to a tab
+#
+#  IN:      Line number to be added
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc AddItemLine_wANDE { lineNum } {
+    global .wANDE
+    global Lcl_numRibsHalf
+
+    ttk::entry  .wANDE.dataBot.scroll.widgets.e_n1$lineNum -width 10 -textvariable Lcl_ribConfig($lineNum,1)
+    SetHelpBind .wANDE.dataBot.scroll.widgets.e_n1$lineNum [::msgcat::mc "Rib number"] HelpText_wANDE
+    grid        .wANDE.dataBot.scroll.widgets.e_n1$lineNum -row [expr (4-1 + $lineNum)] -column 0 -sticky e -pady 1
+
+    ttk::entry  .wANDE.dataBot.scroll.widgets.e_n2$lineNum -width 13 -textvariable Lcl_ribConfig($lineNum,16)
+    SetHelpBind .wANDE.dataBot.scroll.widgets.e_n2$lineNum [::msgcat::mc "A anchor position %%"] HelpText_wANDE
+    grid        .wANDE.dataBot.scroll.widgets.e_n2$lineNum -row [expr (4-1 + $lineNum)] -column 1 -sticky e -pady 1
+
+    ttk::entry  .wANDE.dataBot.scroll.widgets.e_n3$lineNum -width 13 -textvariable Lcl_ribConfig($lineNum,17)
+    SetHelpBind .wANDE.dataBot.scroll.widgets.e_n3$lineNum [::msgcat::mc "B anchor position %%"] HelpText_wANDE
+    grid        .wANDE.dataBot.scroll.widgets.e_n3$lineNum -row [expr (4-1 + $lineNum)] -column 2 -sticky e -pady 1
+
+    ttk::entry  .wANDE.dataBot.scroll.widgets.e_n4$lineNum -width 10 -textvariable Lcl_ribConfig($lineNum,18)
+    SetHelpBind .wANDE.dataBot.scroll.widgets.e_n4$lineNum [::msgcat::mc "C anchor position %%"] HelpText_wANDE
+    grid        .wANDE.dataBot.scroll.widgets.e_n4$lineNum -row [expr (4-1 + $lineNum)] -column 3 -sticky e -pady 1
+
+    ttk::entry  .wANDE.dataBot.scroll.widgets.e_n5$lineNum -width 10 -textvariable Lcl_ribConfig($lineNum,19)
+    SetHelpBind .wANDE.dataBot.scroll.widgets.e_n5$lineNum [::msgcat::mc "D anchor position %%"] HelpText_wANDE
+    grid        .wANDE.dataBot.scroll.widgets.e_n5$lineNum -row [expr (4-1 + $lineNum)] -column 4 -sticky e -pady 1
+
+    ttk::entry  .wANDE.dataBot.scroll.widgets.e_n6$lineNum -width 10 -textvariable Lcl_ribConfig($lineNum,20)
+    SetHelpBind .wANDE.dataBot.scroll.widgets.e_n6$lineNum [::msgcat::mc "E anchor position %%"] HelpText_wANDE
+    grid        .wANDE.dataBot.scroll.widgets.e_n6$lineNum -row [expr (4-1 + $lineNum)] -column 5 -sticky e -pady 1
+
+    ttk::entry  .wANDE.dataBot.scroll.widgets.e_n7$lineNum -width 15 -textvariable Lcl_ribConfig($lineNum,21)
+    SetHelpBind .wANDE.dataBot.scroll.widgets.e_n7$lineNum [::msgcat::mc "Brakes"] HelpText_wANDE
+    grid        .wANDE.dataBot.scroll.widgets.e_n7$lineNum -row [expr (4-1 + $lineNum)] -column 6 -sticky e -pady 1
+
+}
+
+#----------------------------------------------------------------------
+#  ResizeScrollFrame_wANDE
+#  Bandaid as the scroll pane will not resize correctly.
+#  Call this if items where added or deleted.
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc ResizeScrollFrame_wANDE { } {
+    global .wANDE
+
+    set framesize [grid size .wANDE.dataBot.scroll.widgets]
+
+    .wANDE.dataBot.scroll.widgets configure -height [expr [lindex $framesize 1] * 22]
+
+    .wANDE.dataBot.scroll create window 0 0 -anchor nw -window .wANDE.dataBot.scroll.widgets
+    .wANDE.dataBot.scroll configure -scrollregion [.wANDE.dataBot.scroll bbox all]
 }

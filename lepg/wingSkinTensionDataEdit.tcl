@@ -45,7 +45,7 @@ proc wingSkinTensionDataEdit {} {
 
     wm protocol .wstde WM_DELETE_WINDOW { CancelButtonPress_wSTDE }
 
-    wm title .wstde [::msgcat::mc "Skin Tension Data"]
+    wm title .wstde [::msgcat::mc "Section 5: Skin Tension Data"]
 
     #-------------
     # Frames and grids
@@ -81,19 +81,19 @@ proc wingSkinTensionDataEdit {} {
         grid        .wstde.data.numRib$i -row [expr $i] -column 0 -sticky e
 
         ttk::entry  .wstde.data.e_topPanChord$i -width 20 -textvariable Lcl_skinTens($i,1)
-        SetHelpBind .wstde.data.e_topPanChord$i topPanelChordPerc HelpText_wSTDE
+        SetHelpBind .wstde.data.e_topPanChord$i [::msgcat::mc "topPanelChordPerc"] HelpText_wSTDE
         grid        .wstde.data.e_topPanChord$i -row [expr $i] -column 1 -sticky e
 
         ttk::entry  .wstde.data.e_topPanOW$i -width 20 -textvariable Lcl_skinTens($i,2)
-        SetHelpBind .wstde.data.e_topPanOW$i topPanelOverWide HelpText_wSTDE
+        SetHelpBind .wstde.data.e_topPanOW$i [::msgcat::mc "topPanelOverWide"] HelpText_wSTDE
         grid        .wstde.data.e_topPanOW$i -row [expr $i] -column 2 -sticky e
 
         ttk::entry  .wstde.data.e_lowPanChord$i -width 20 -textvariable Lcl_skinTens($i,3)
-        SetHelpBind .wstde.data.e_lowPanChord$i lowPanelChordPerc HelpText_wSTDE
+        SetHelpBind .wstde.data.e_lowPanChord$i [::msgcat::mc "lowPanelChordPerc"] HelpText_wSTDE
         grid        .wstde.data.e_lowPanChord$i -row [expr $i] -column 3 -sticky e
 
         ttk::entry  .wstde.data.e_lowPanOW$i -width 20 -textvariable Lcl_skinTens($i,4)
-        SetHelpBind .wstde.data.e_lowPanOW$i lowPanelOverWide HelpText_wSTDE
+        SetHelpBind .wstde.data.e_lowPanOW$i [::msgcat::mc "lowPanelOverWide"] HelpText_wSTDE
         grid        .wstde.data.e_lowPanOW$i -row [expr $i] -column 4 -sticky e
 
         ttk::label  .wstde.data.spacer$i -text "" -width 5 -anchor e
@@ -104,22 +104,22 @@ proc wingSkinTensionDataEdit {} {
     ttk::label  .wstde.data.spacer1_wSTDE     -text "" -width 20 -anchor e
     grid        .wstde.data.spacer1_wSTDE     -row 7 -column 0 -sticky e
 
-    ttk::label  .wstde.data.strain   -text "Strain in mini-ribs" -width 20 -anchor e
+    ttk::label  .wstde.data.strain   -text [::msgcat::mc "Strain in mini-ribs"] -width 20 -anchor e
     grid        .wstde.data.strain   -row 8 -column 0 -sticky e
     ttk::entry  .wstde.data.e_strain -width 20 -textvariable Lcl_strainMiniRibs
-    SetHelpBind .wstde.data.e_strain  strainMiniRibs  HelpText_wSTDE
+    SetHelpBind .wstde.data.e_strain  [::msgcat::mc "strainMiniRibs"]  HelpText_wSTDE
     grid        .wstde.data.e_strain -row 8 -column 1 -sticky e
 
-    ttk::label  .wstde.data.numPoi  -text "Num of points" -width 20 -anchor e
+    ttk::label  .wstde.data.numPoi  -text [::msgcat::mc "Num of points"] -width 20 -anchor e
     grid        .wstde.data.numPoi  -row 9 -column 0 -sticky e
     ttk::entry  .wstde.data.e_numPoi    -width 20 -textvariable Lcl_numStrainPoints
-    SetHelpBind .wstde.data.e_numPoi  numStrainPoints  HelpText_wSTDE
+    SetHelpBind .wstde.data.e_numPoi  [::msgcat::mc "numStrainPoints"]  HelpText_wSTDE
     grid        .wstde.data.e_numPoi  -row 9 -column 1 -sticky e
 
-    ttk::label  .wstde.data.coeff   -text "Coefficient" -width 20 -anchor e
+    ttk::label  .wstde.data.coeff   -text [::msgcat::mc "Coefficient"] -width 20 -anchor e
     grid        .wstde.data.coeff   -row 10 -column 0 -sticky e
     ttk::entry  .wstde.data.e_coeff -width 20 -textvariable Lcl_strainCoef
-    SetHelpBind .wstde.data.e_coeff strainCoef HelpText_wSTDE
+    SetHelpBind .wstde.data.e_coeff [::msgcat::mc "strainCoef"] HelpText_wSTDE
     grid        .wstde.data.e_coeff   -row 10 -column 1 -sticky e
 
     ttk::label  .wstde.data.spacer2_wSTDE     -text "" -width 20 -anchor e
@@ -132,10 +132,10 @@ proc wingSkinTensionDataEdit {} {
 
     #-------------
     # buttons
-    button .wstde.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wSTDE
-    button .wstde.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wSTDE
-    button .wstde.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wSTDE
-    button .wstde.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wSTDE
+    button .wstde.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wSTDE
+    button .wstde.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wSTDE
+    button .wstde.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wSTDE
+    button .wstde.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wSTDE
 
     grid .wstde.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wstde.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -259,9 +259,9 @@ proc CancelButtonPress_wSTDE {} {
     if { $Lcl_wSTDE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wstde
             return 0

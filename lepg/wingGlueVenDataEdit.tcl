@@ -72,7 +72,7 @@ proc wingGlueVenDataEdit {} {
 
     #-------------
     # Get a scrollable region
-    canvas .wGLUEVEN.dataBot.scroll  -width 500 -height 400 -yscrollcommand ".wGLUEVEN.dataBot.yscroll set"
+    canvas .wGLUEVEN.dataBot.scroll  -width 300 -height 400 -yscrollcommand ".wGLUEVEN.dataBot.yscroll set"
     ttk::scrollbar .wGLUEVEN.dataBot.yscroll -command ".wGLUEVEN.dataBot.scroll yview"
 
 #    grid .wGLUEVEN.dataTop.n1 -row 0 -column 0 -sticky nesw
@@ -94,15 +94,15 @@ proc wingGlueVenDataEdit {} {
 
     #-------------
     # explanations
-    label .wGLUEVEN.help.e_help -width 80 -height 3 -background LightYellow -justify center -textvariable HelpText_wGLUEVEN
+    label .wGLUEVEN.help.e_help -width 60 -height 3 -background LightYellow -justify center -textvariable HelpText_wGLUEVEN
     grid  .wGLUEVEN.help.e_help -row 0 -column 0 -sticky nesw -padx 10 -pady 10
 
     #-------------
     # buttons
     button .wGLUEVEN.btn.apply  -width 10 -text [::msgcat::mc "Apply"]    -command ApplyButtonPress_wGLUEVEN
-    button .wGLUEVEN.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wGLUEVEN
-    button .wGLUEVEN.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wGLUEVEN
-    button .wGLUEVEN.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wGLUEVEN
+    button .wGLUEVEN.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wGLUEVEN
+    button .wGLUEVEN.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wGLUEVEN
+    button .wGLUEVEN.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wGLUEVEN
 
     grid .wGLUEVEN.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wGLUEVEN.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -182,6 +182,10 @@ proc ApplyButtonPress_wGLUEVEN {} {
         set g_WingDataChanged       1
         set Lcl_wGLUEVEN_DataChanged    0
     }
+    
+    # Actions to update (brute force)
+    destroy .wGLUEVEN
+    wingGlueVenDataEdit
 }
 
 #----------------------------------------------------------------------
@@ -223,9 +227,9 @@ proc CancelButtonPress_wGLUEVEN {} {
     if { $Lcl_wGLUEVEN_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wGLUEVEN
             return 0
@@ -332,7 +336,7 @@ proc addEdit_wGLUEVEN {} {
     label       .wGLUEVEN.dataTop.p1 -width 15 -text [::msgcat::mc "Config type"]
     grid        .wGLUEVEN.dataTop.p1 -row 1 -column 0 -sticky e
     ttk::entry  .wGLUEVEN.dataTop.e_p1 -width 15 -textvariable Lcl_k_section26
-    SetHelpBind .wGLUEVEN.dataTop.e_p1 "Configuration, only type 1 or 0 available"   HelpText_wGLUEVEN
+    SetHelpBind .wGLUEVEN.dataTop.e_p1 [::msgcat::mc "Configuration, only type 1 or 0 available"]   HelpText_wGLUEVEN
     grid        .wGLUEVEN.dataTop.e_p1 -row 1 -column 1 -sticky e -pady 1
 
     #-------------
@@ -342,9 +346,11 @@ proc addEdit_wGLUEVEN {} {
 #    label       .wGLUEVEN.note.spacer01 -width 80 -text "the default settings are generally appropriate.\n"
 #    grid        .wGLUEVEN.note.spacer01 -row 1 -column 0
 
+    # Print only case different from zero
+    if { $Lcl_k_section26 != 0 } {
     #-------------
     # header for the item lines
-    label       .wGLUEVEN.dataBot.scroll.widgets.n -width 15 -text "Num"
+    label       .wGLUEVEN.dataBot.scroll.widgets.n -width 15 -text [::msgcat::mc "Num"]
     grid        .wGLUEVEN.dataBot.scroll.widgets.n -row 0 -column 1 -sticky e
 
     label       .wGLUEVEN.dataBot.scroll.widgets.p0 -width 15 -text [::msgcat::mc "Type"]
@@ -357,6 +363,8 @@ proc addEdit_wGLUEVEN {} {
     }
 
     UpdateItemLineButtons_wGLUEVEN
+    # end case 0
+    }
 }
 
 #----------------------------------------------------------------------
@@ -463,7 +471,7 @@ proc AddItemLine_wGLUEVEN { lineNum } {
     grid        .wGLUEVEN.dataBot.scroll.widgets.n$lineNum -row [expr (4-1 + $lineNum)] -column 1 -sticky e
 
     ttk::entry  .wGLUEVEN.dataBot.scroll.widgets.e_p0$lineNum -width 15 -textvariable Lcl_glueVenB($lineNum)
-    SetHelpBind .wGLUEVEN.dataBot.scroll.widgets.e_p0$lineNum "Types of vent available: -2,-1,0,1,3"   HelpText_wGLUEVEN
+    SetHelpBind .wGLUEVEN.dataBot.scroll.widgets.e_p0$lineNum [::msgcat::mc "Types of available vents: -2,-1,0,1,3"]   HelpText_wGLUEVEN
     grid        .wGLUEVEN.dataBot.scroll.widgets.e_p0$lineNum -row [expr (4-1 + $lineNum)] -column 2 -sticky e -pady 1
 }
 

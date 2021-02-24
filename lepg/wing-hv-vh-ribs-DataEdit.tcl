@@ -44,7 +44,7 @@ proc wingHV-VH-RibsDataEdit {} {
 
     wm protocol .wRIBDE WM_DELETE_WINDOW { CancelButtonPress_wRIBDE }
 
-    wm title .wRIBDE [::msgcat::mc "HV VH ribs configuration"]
+    wm title .wRIBDE [::msgcat::mc "Section 12: HV VH ribs configuration"]
 
     #-------------
     # Frames and grids
@@ -67,7 +67,7 @@ proc wingHV-VH-RibsDataEdit {} {
 
     #-------------
     # Get a scrollable region
-    canvas .wRIBDE.dataBot.scroll  -width 1000 -height 300 -yscrollcommand ".wRIBDE.dataBot.yscroll set"
+    canvas .wRIBDE.dataBot.scroll  -width 1100 -height 300 -yscrollcommand ".wRIBDE.dataBot.yscroll set"
     ttk::scrollbar .wRIBDE.dataBot.yscroll -command ".wRIBDE.dataBot.scroll yview"
 
     grid .wRIBDE.dataBot.scroll -row 0 -column 0 -sticky nesw
@@ -91,10 +91,10 @@ proc wingHV-VH-RibsDataEdit {} {
 
     #-------------
     # buttons
-    button .wRIBDE.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wRIBDE
-    button .wRIBDE.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wRIBDE
-    button .wRIBDE.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wRIBDE
-    button .wRIBDE.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wRIBDE
+    button .wRIBDE.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wRIBDE
+    button .wRIBDE.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wRIBDE
+    button .wRIBDE.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wRIBDE
+    button .wRIBDE.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wRIBDE
 
     grid .wRIBDE.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wRIBDE.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -124,8 +124,10 @@ proc SetLclVars_wRIBDE {} {
     set Lcl_miniRibXSep    $miniRibXSep
     set Lcl_miniRibYSep    $miniRibYSep
 
+    puts $numMiniRibs
+
     for {set i 1} {$i <= $numMiniRibs} {incr i} {
-        for {set j 1} {$j <= 10} {incr j} {
+        for {set j 1} {$j <= 12} {incr j} {
             set Lcl_miniRib($i,$j)   $miniRib($i,$j)
         }
 
@@ -161,7 +163,7 @@ proc ExportLclVars_wRIBDE {} {
         # make sure number is in
         set miniRib($i,1)   $i
 
-        for {set j 2} {$j <= 10} {incr j} {
+        for {set j 1} {$j <= 10} {incr j} {
             set miniRib($i,$j)   $Lcl_miniRib($i,$j)
         }
 
@@ -191,6 +193,11 @@ proc ApplyButtonPress_wRIBDE {} {
         set g_WingDataChanged       1
         set Lcl_wRIBDE_DataChanged    0
     }
+
+    # Destroy window and edir again
+    destroy .wRIBDE
+    wingHV-VH-RibsDataEdit
+
 }
 
 #----------------------------------------------------------------------
@@ -232,9 +239,9 @@ proc CancelButtonPress_wRIBDE {} {
     if { $Lcl_wRIBDE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wRIBDE
             return 0
@@ -338,20 +345,30 @@ proc addEdit_wRIBDE {} {
     label       .wRIBDE.dataTop.spacer00 -width 5 -text ""
     grid        .wRIBDE.dataTop.spacer00 -row 0 -column 0
 
-    label       .wRIBDE.dataTop.lbl1 -width 10 -text [::msgcat::mc "Spacing"]
-    grid        .wRIBDE.dataTop.lbl1 -row 1 -column 1 -sticky e
+    label       .wRIBDE.dataTop.numVH -width 15 -text [::msgcat::mc "VH number"]
+    grid        .wRIBDE.dataTop.numVH -row 1 -column 1 -sticky e
+    ttk::entry  .wRIBDE.dataTop.e_numVH -width 10 -textvariable Lcl_numMiniRibs
+    SetHelpBind .wRIBDE.dataTop.e_numVH [::msgcat::mc "VH ribs number"]   HelpText_wRIBDE
+    grid        .wRIBDE.dataTop.e_numVH -row 1 -column 2 -sticky e -pady 1
+
+#    label       .wRIBDE.dataTop.lbl1 -width 10 -text [::msgcat::mc "Spacing"]
+#    grid        .wRIBDE.dataTop.lbl1 -row 1 -column 1 -sticky e
+
+
+    # Write data only if numMiniRibs > 0
+    if { $Lcl_numMiniRibs != 0 } {
 
     label       .wRIBDE.dataTop.p1 -width 10 -text [::msgcat::mc "X-Spacing"]
     grid        .wRIBDE.dataTop.p1 -row 2 -column 2 -sticky e
     ttk::entry  .wRIBDE.dataTop.e_p1 -width 10 -textvariable Lcl_miniRibXSep
-    SetHelpBind .wRIBDE.dataTop.e_p1 miniRibXSep   HelpText_wRIBDE
-    grid        .wRIBDE.dataTop.e_p1 -row 2 -column 3 -sticky e -pady 1
+    SetHelpBind .wRIBDE.dataTop.e_p1 [::msgcat::mc "miniRibXSep"]   HelpText_wRIBDE
+    grid        .wRIBDE.dataTop.e_p1 -row 3 -column 2 -sticky e -pady 1
 
     label       .wRIBDE.dataTop.p2 -width 10 -text [::msgcat::mc "Y-Spacing"]
-    grid        .wRIBDE.dataTop.p2 -row 2 -column 4 -sticky e
+    grid        .wRIBDE.dataTop.p2 -row 2 -column 3 -sticky e
     ttk::entry  .wRIBDE.dataTop.e_p2 -width 10 -textvariable Lcl_miniRibYSep
-    SetHelpBind .wRIBDE.dataTop.e_p2 miniRibYSep   HelpText_wRIBDE
-    grid        .wRIBDE.dataTop.e_p2 -row 2 -column 5 -sticky e -pady 1
+    SetHelpBind .wRIBDE.dataTop.e_p2 [::msgcat::mc "miniRibYSep"]   HelpText_wRIBDE
+    grid        .wRIBDE.dataTop.e_p2 -row 3 -column 3 -sticky e -pady 1
 
     #-------------
     # Config num of items
@@ -369,7 +386,7 @@ proc addEdit_wRIBDE {} {
 
     #-------------
     # header for the item lines
-    label       .wRIBDE.dataBot.scroll.widgets.n -width 10 -text "Num"
+    label       .wRIBDE.dataBot.scroll.widgets.n -width 10 -text [::msgcat::mc "Num"]
     grid        .wRIBDE.dataBot.scroll.widgets.n -row 0 -column 1 -sticky e
 
     label       .wRIBDE.dataBot.scroll.widgets.p2 -width 10 -text [::msgcat::mc "Type"]
@@ -388,6 +405,10 @@ proc addEdit_wRIBDE {} {
     }
 
     UpdateItemLineButtons_wRIBDE
+
+    # Close case numMiniRibs != 0
+    }
+
 }
 
 #----------------------------------------------------------------------

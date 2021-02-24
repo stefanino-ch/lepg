@@ -102,9 +102,9 @@ proc wingGe2DopDataEdit {} {
     #-------------
     # buttons
     button .wGE2DOP.btn.apply  -width 10 -text [::msgcat::mc "Apply"]    -command ApplyButtonPress_wGE2DOP
-    button .wGE2DOP.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wGE2DOP
-    button .wGE2DOP.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wGE2DOP
-    button .wGE2DOP.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wGE2DOP
+    button .wGE2DOP.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wGE2DOP
+    button .wGE2DOP.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wGE2DOP
+    button .wGE2DOP.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wGE2DOP
 
     grid .wGE2DOP.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wGE2DOP.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -227,9 +227,9 @@ proc CancelButtonPress_wGE2DOP {} {
     if { $Lcl_wGE2DOP_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wGE2DOP
             return 0
@@ -336,14 +336,14 @@ proc addEdit_wGE2DOP {} {
     label       .wGE2DOP.dataTop.p1 -width 15 -text [::msgcat::mc "Config type"]
     grid        .wGE2DOP.dataTop.p1 -row 1 -column 0 -sticky e
     ttk::entry  .wGE2DOP.dataTop.e_p1 -width 5 -textvariable Lcl_k_section24
-    SetHelpBind .wGE2DOP.dataTop.e_p1 "Configuration, only type 1 available"   HelpText_wGE2DOP
+    SetHelpBind .wGE2DOP.dataTop.e_p1 [::msgcat::mc "Configuration, only type 1 available"]   HelpText_wGE2DOP
     grid        .wGE2DOP.dataTop.e_p1 -row 1 -column 1 -sticky e -pady 1
 
     #-------------
     # Config note
-    label       .wGE2DOP.note.spacer00 -width 80 -text "This is an invariant section,"
+    label       .wGE2DOP.note.spacer00 -width 80 -text [::msgcat::mc "This is an invariant section,"]
     grid        .wGE2DOP.note.spacer00 -row 0 -column 0 -sticky s
-    label       .wGE2DOP.note.spacer01 -width 80 -text "the default settings are generally appropriate.\n"
+    label       .wGE2DOP.note.spacer01 -width 80 -text [::msgcat::mc "the default settings are generally appropriate.\n"]
     grid        .wGE2DOP.note.spacer01 -row 1 -column 0
 
 #   Fixed number of points to 10 in version 3.14
@@ -358,7 +358,7 @@ proc addEdit_wGE2DOP {} {
 
     #-------------
     # header for the item lines
-    label       .wGE2DOP.dataBot.scroll.widgets.n -width 10 -text "Num"
+    label       .wGE2DOP.dataBot.scroll.widgets.n -width 10 -text [::msgcat::mc "Num"]
     grid        .wGE2DOP.dataBot.scroll.widgets.n -row 0 -column 1 -sticky e
 
     label       .wGE2DOP.dataBot.scroll.widgets.p0 -width 20 -text [::msgcat::mc "Name"]
@@ -484,15 +484,15 @@ proc AddItemLine_wGE2DOP { lineNum } {
     grid        .wGE2DOP.dataBot.scroll.widgets.n$lineNum -row [expr (4-1 + $lineNum)] -column 1 -sticky e
 
     ttk::entry  .wGE2DOP.dataBot.scroll.widgets.e_p0$lineNum -width 20 -textvariable Lcl_dxf2DopA($lineNum)
-    SetHelpBind .wGE2DOP.dataBot.scroll.widgets.e_p0$lineNum "Element"   HelpText_wGE2DOP
+    SetHelpBind .wGE2DOP.dataBot.scroll.widgets.e_p0$lineNum [::msgcat::mc "Element"]   HelpText_wGE2DOP
     grid        .wGE2DOP.dataBot.scroll.widgets.e_p0$lineNum -row [expr (4-1 + $lineNum)] -column 2 -sticky e -pady 1
 
     ttk::entry  .wGE2DOP.dataBot.scroll.widgets.e_p1$lineNum -width 10 -textvariable Lcl_dxf2DopB($lineNum)
-    SetHelpBind .wGE2DOP.dataBot.scroll.widgets.e_p1$lineNum "CAD color"   HelpText_wGE2DOP
+    SetHelpBind .wGE2DOP.dataBot.scroll.widgets.e_p1$lineNum [::msgcat::mc "CAD color"]   HelpText_wGE2DOP
     grid        .wGE2DOP.dataBot.scroll.widgets.e_p1$lineNum -row [expr (4-1 + $lineNum)] -column 3 -sticky e -pady 1
 
     ttk::entry  .wGE2DOP.dataBot.scroll.widgets.e_p2$lineNum -width 15 -textvariable Lcl_dxf2DopC($lineNum)
-    SetHelpBind .wGE2DOP.dataBot.scroll.widgets.e_p2$lineNum "Color"   HelpText_wGE2DOP
+    SetHelpBind .wGE2DOP.dataBot.scroll.widgets.e_p2$lineNum [::msgcat::mc "Color"]   HelpText_wGE2DOP
     grid        .wGE2DOP.dataBot.scroll.widgets.e_p2$lineNum -row [expr (4-1 + $lineNum)] -column 4 -sticky e -pady 1
 }
 

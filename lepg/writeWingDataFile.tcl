@@ -300,7 +300,7 @@ proc WriteFileHeaderV2_6 {File} {
 
     puts $File $Separator
     puts $File "* LABORATORI D'ENVOL PARAGLIDING DESIGN"
-    puts $File "* lep input data file        v3.14"
+    puts $File "* lep input data file        v3.15"
     puts $File $Separator
     puts $File "*"
     return [list 0 $File]

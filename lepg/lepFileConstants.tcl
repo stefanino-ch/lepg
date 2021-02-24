@@ -146,7 +146,7 @@ set c_MarksTySect_lFC_Id "section-id-200"
 #----------------------
 # Joncs definition
 global c_JoncsDefSect_lFC_Lbl
-set c_JoncsDefSect_lFC_Lbl "21. JONCS DEFINITIONS (NYLON RODS)" 
+set c_JoncsDefSect_lFC_Lbl "21. JONCS DEFINITION" 
 global c_JoncsDefSect_lFC_Id
 set c_JoncsDefSect_lFC_Id "section-id-210"
 

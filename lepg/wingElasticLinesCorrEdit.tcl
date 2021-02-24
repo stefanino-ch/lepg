@@ -48,7 +48,7 @@ proc wingElasticLinesCorrEdit {} {
 
     wm protocol .welc WM_DELETE_WINDOW { CancelButtonPress_wELC }
 
-    wm title .welc [::msgcat::mc "Elastic lines correction"]
+    wm title .welc [::msgcat::mc "Section 18: Elastic lines correction"]
 
     #-------------
     # Frames and grids
@@ -71,7 +71,7 @@ proc wingElasticLinesCorrEdit {} {
     grid            .welc.data.lF_inFlightWeight.inFlightWeigth -row 0 -column 0 -sticky e -padx 10 -pady 3
 
     ttk::entry      .welc.data.lF_inFlightWeight.e_inFlightWeigth -width 10 -textvariable Lcl_loadTot
-    SetHelpBind     .welc.data.lF_inFlightWeight.e_inFlightWeigth loadTot   HelpText_wELC
+    SetHelpBind     .welc.data.lF_inFlightWeight.e_inFlightWeigth [::msgcat::mc "Total weight in flight (kg)"]   HelpText_wELC
     grid            .welc.data.lF_inFlightWeight.e_inFlightWeigth -row 0 -column 1 -sticky e -padx 10 -pady 3
 
 
@@ -97,7 +97,7 @@ proc wingElasticLinesCorrEdit {} {
     grid                .welc.data.lF_loadDistrRibs.weight2 -row 2 -column 0 -sticky e
     for {set i 1} {$i <=3} {incr i} {
         ttk::entry      .welc.data.lF_loadDistrRibs.weight2$i -width 14 -textvariable Lcl_loadDistr(2,$i)
-        SetHelpBind     .welc.data.lF_loadDistrRibs.weight2$i loadDistr   HelpText_wELC
+        SetHelpBind     .welc.data.lF_loadDistrRibs.weight2$i [::msgcat::mc "loadDistr"]   HelpText_wELC
         grid            .welc.data.lF_loadDistrRibs.weight2$i -row 2 -column [expr $i] -sticky e -pady 1
     }
     # third data line
@@ -105,7 +105,7 @@ proc wingElasticLinesCorrEdit {} {
     grid                .welc.data.lF_loadDistrRibs.weight3 -row 3 -column 0 -sticky e
     for {set i 1} {$i <=4} {incr i} {
         ttk::entry      .welc.data.lF_loadDistrRibs.weight3$i -width 14 -textvariable Lcl_loadDistr(3,$i)
-        SetHelpBind     .welc.data.lF_loadDistrRibs.weight3$i loadDistr   HelpText_wELC
+        SetHelpBind     .welc.data.lF_loadDistrRibs.weight3$i [::msgcat::mc "loadDistr"]  HelpText_wELC
         grid            .welc.data.lF_loadDistrRibs.weight3$i -row 3 -column [expr $i] -sticky e -pady 1
     }
     # fourth data line
@@ -113,7 +113,7 @@ proc wingElasticLinesCorrEdit {} {
     grid                .welc.data.lF_loadDistrRibs.weight4 -row 4 -column 0 -sticky e
     for {set i 1} {$i <=5} {incr i} {
         ttk::entry      .welc.data.lF_loadDistrRibs.weight4$i -width 14 -textvariable Lcl_loadDistr(4,$i)
-        SetHelpBind     .welc.data.lF_loadDistrRibs.weight4$i loadDistr   HelpText_wELC
+        SetHelpBind     .welc.data.lF_loadDistrRibs.weight4$i [::msgcat::mc "loadDistr"]  HelpText_wELC
         grid            .welc.data.lF_loadDistrRibs.weight4$i -row 4 -column [expr $i] -sticky e -pady 1
     }
 
@@ -135,15 +135,15 @@ proc wingElasticLinesCorrEdit {} {
         grid            .welc.data.lF_loadDistrLev.data1$i -row [expr $i] -column 0 -sticky e
 
         ttk::entry      .welc.data.lF_loadDistrLev.data2$i -width 25 -textvariable Lcl_loadDeform($i,2)
-        SetHelpBind     .welc.data.lF_loadDistrLev.data2$i loadDeform   HelpText_wELC
+        SetHelpBind     .welc.data.lF_loadDistrLev.data2$i [::msgcat::mc "loadDeform"]   HelpText_wELC
         grid            .welc.data.lF_loadDistrLev.data2$i -row [expr $i] -column 1 -sticky e -pady 1
 
         ttk::entry      .welc.data.lF_loadDistrLev.data3$i -width 25 -textvariable Lcl_loadDeform($i,3)
-        SetHelpBind     .welc.data.lF_loadDistrLev.data3$i loadDeform   HelpText_wELC
+        SetHelpBind     .welc.data.lF_loadDistrLev.data3$i [::msgcat::mc "loadDeform"]   HelpText_wELC
         grid            .welc.data.lF_loadDistrLev.data3$i -row [expr $i] -column 2 -sticky e -pady 1
 
         ttk::entry      .welc.data.lF_loadDistrLev.data4$i -width 25 -textvariable Lcl_loadDeform($i,4)
-        SetHelpBind     .welc.data.lF_loadDistrLev.data4$i loadDeform   HelpText_wELC
+        SetHelpBind     .welc.data.lF_loadDistrLev.data4$i [::msgcat::mc "loadDeform"]   HelpText_wELC
         grid            .welc.data.lF_loadDistrLev.data4$i -row [expr $i] -column 3 -sticky e -pady 1
     }
 
@@ -154,10 +154,10 @@ proc wingElasticLinesCorrEdit {} {
 
     #-------------
     # buttons
-    button .welc.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wELC
-    button .welc.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wELC
-    button .welc.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wELC
-    button .welc.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wELC
+    button .welc.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wELC
+    button .welc.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wELC
+    button .welc.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wELC
+    button .welc.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wELC
 
     grid .welc.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .welc.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -313,9 +313,9 @@ proc CancelButtonPress_wELC {} {
     if { $Lcl_wELC_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .welc
             return 0

@@ -54,7 +54,7 @@ proc wingBasicDataEdit {} {
 
     wm protocol .wbde WM_DELETE_WINDOW { CancelButtonPress_wBDE }
 
-    wm title .wbde [::msgcat::mc "01A. Wing Basic Data"]
+    wm title .wbde [::msgcat::mc "Section 1A: Wing Basic Data"]
 
     #-------------
     # Frames and grids
@@ -108,15 +108,15 @@ proc wingBasicDataEdit {} {
     ttk::label .wbde.data.numCells -text [::msgcat::mc "Cells number"] -width 20
     grid .wbde.data.numCells   -row 4 -column 0 -sticky e -padx 10 -pady 3
 
-    ttk::entry .wbde.data.e_numCells -width 30 -textvariable Lcl_numCells
-    SetHelpBind .wbde.data.e_numCells [::msgcat::mc "cells number\nWARNING!\nYou must change all other sections consistently"] HelpText_wBDE
+    ttk::entry .wbde.data.e_numCells -foreground red -width 30 -textvariable Lcl_numCells
+    SetHelpBind .wbde.data.e_numCells [::msgcat::mc "cells number - WARNING!\nYou must change all other sections consistently\n Use Geometry pre-processor or import new Matrix"] HelpText_wBDE
     grid .wbde.data.e_numCells -row 4 -column 1 -sticky w -padx 10 -pady 3
 
     # Ribs number
     ttk::label .wbde.data.numRibsTot -text [::msgcat::mc "Ribs number"] -width 20
     grid .wbde.data.numRibsTot   -row 5 -column 0 -sticky e -padx 10 -pady 3
 
-    ttk::entry .wbde.data.e_numRibsTot -width 30 -textvariable Lcl_numRibsTot
+    ttk::entry .wbde.data.e_numRibsTot -foreground red -width 30 -textvariable Lcl_numRibsTot
     SetHelpBind .wbde.data.e_numRibsTot [::msgcat::mc "ribs number = cells number + 1\nWARNING!\nYou must change all other sections consistently"] HelpText_wBDE
     grid .wbde.data.e_numRibsTot -row 5 -column 1 -sticky w -padx 10 -pady 3
 
@@ -135,10 +135,10 @@ proc wingBasicDataEdit {} {
 
     #-------------
     # buttons
-    button .wbde.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wBDE
-    button .wbde.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wBDE
-    button .wbde.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wBDE
-    button .wbde.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wBDE
+    button .wbde.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wBDE
+    button .wbde.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wBDE
+    button .wbde.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wBDE
+    button .wbde.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wBDE
 
     grid .wbde.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wbde.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -221,12 +221,24 @@ proc ApplyButtonPress_wBDE {} {
     global g_WingDataChanged
     global Lcl_wBDE_DataChanged
 
+    global wingSurface
+    global wingSpan
+
+    TestRibsCells
+
     if { $Lcl_wBDE_DataChanged == 1 } {
         ExportLclVars_wBDE
 
         set g_WingDataChanged       1
         set Lcl_wBDE_DataChanged    0
     }
+
+    # Update surface and area
+    source "wingSomeCalculus.tcl"
+    wingSomeCalculus
+    set Lcl_wingSurface $wingSurface
+    set Lcl_wingSpan $wingSpan
+
 }
 
 #----------------------------------------------------------------------
@@ -241,6 +253,8 @@ proc OkButtonPress_wBDE {} {
     global .wbde
     global g_WingDataChanged
     global Lcl_wBDE_DataChanged
+
+    TestRibsCells
 
     if { $Lcl_wBDE_DataChanged == 1 } {
         ExportLclVars_wBDE
@@ -268,9 +282,9 @@ proc CancelButtonPress_wBDE {} {
     if { $Lcl_wBDE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wbde
             return 0
@@ -350,4 +364,41 @@ proc SetLclChangeFlag_wBDE { a e op } {
     global Lcl_wBDE_DataChanged
 
     set Lcl_wBDE_DataChanged 1
+}
+
+
+
+
+#----------------------------------------------------------------------
+#  SetLclChangeFlag_wBDE
+#  Test if numRibsTotal = numCellsTotal +1 and fix on agree
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc TestRibsCells {} {
+
+   global Lcl_numCells
+   global Lcl_numRibsTot
+
+   if { $Lcl_numRibsTot != [expr $Lcl_numCells +1] } {
+
+   # do warning dialog
+        set answer [tk_messageBox -title [::msgcat::mc "Warning!"] \
+                    -type yesno -icon warning \
+                    -message [::msgcat::mc "Total ribs number is incoherent with total cells number\nDo you want try automatical correction?"]]
+        if { $answer == "yes" } {
+            set Lcl_numRibsTot [expr $Lcl_numCells +1]
+            focus .wbde
+            return 0
+        }
+        if { $answer == "no" } {
+            focus .wbde
+            return 0
+        }
+
+
+   }
+
 }

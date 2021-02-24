@@ -94,10 +94,10 @@ proc preCellsDis4DataEdit {} {
 
     #-------------
     # buttons
-    button .wCELLSD4DE.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wCELLSD4DE
-    button .wCELLSD4DE.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wCELLSD4DE
-    button .wCELLSD4DE.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wCELLSD4DE
-    button .wCELLSD4DE.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wCELLSD4DE
+    button .wCELLSD4DE.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wCELLSD4DE
+    button .wCELLSD4DE.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wCELLSD4DE
+    button .wCELLSD4DE.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wCELLSD4DE
+    button .wCELLSD4DE.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wCELLSD4DE
 
     grid .wCELLSD4DE.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wCELLSD4DE.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -219,9 +219,9 @@ proc CancelButtonPress_wCELLSD4DE {} {
     if { $Lcl_wCELLSD4DE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wCELLSD4DE
             return 0
@@ -340,7 +340,7 @@ proc addEdit_wCELLSD4DE {} {
 
     #-------------
     # header for the item lines
-    label       .wCELLSD4DE.dataBot.scroll.widgets.n -width 10 -text "Num"
+    label       .wCELLSD4DE.dataBot.scroll.widgets.n -width 10 -text [::msgcat::mc "Num"]
     grid        .wCELLSD4DE.dataBot.scroll.widgets.n -row 0 -column 1 -sticky e
 
     label       .wCELLSD4DE.dataBot.scroll.widgets.pY -width 10 -text [::msgcat::mc "Width"]

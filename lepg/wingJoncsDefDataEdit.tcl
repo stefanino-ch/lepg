@@ -46,7 +46,7 @@ proc wingJoncsDefDataEdit {} {
 
     wm protocol .wJONCSDEF WM_DELETE_WINDOW { CancelButtonPress_wJONCSDEF }
 
-    wm title .wJONCSDEF [::msgcat::mc "Section 21: Joncsdefinition configuration"]
+    wm title .wJONCSDEF [::msgcat::mc "Section 21: Joncs definition configuration"]
 
     #-------------
     # Frames and grids
@@ -70,7 +70,7 @@ proc wingJoncsDefDataEdit {} {
     label       .wJONCSDEF.dataTop.ctrl1 -width 16 -text [::msgcat::mc "Scheme"]
     grid        .wJONCSDEF.dataTop.ctrl1 -row 2 -column 0 -sticky e
     ttk::entry  .wJONCSDEF.dataTop.e_ctrl1 -width 10 -textvariable Lcl_k_section21
-    SetHelpBind .wJONCSDEF.dataTop.e_ctrl1 k_section21   HelpText_wJONCSDEF
+    SetHelpBind .wJONCSDEF.dataTop.e_ctrl1 [::msgcat::mc "scheme confiuration"]   HelpText_wJONCSDEF
     grid        .wJONCSDEF.dataTop.e_ctrl1 -row 2 -column 1 -sticky w -pady 1
 
     if { $Lcl_k_section21 != 0 } {
@@ -80,7 +80,7 @@ proc wingJoncsDefDataEdit {} {
     label       .wJONCSDEF.dataTop.ctrl2 -width 16 -text [::msgcat::mc "Blocs"]
     grid        .wJONCSDEF.dataTop.ctrl2 -row 3 -column 0 -sticky e
     ttk::entry  .wJONCSDEF.dataTop.e_ctrl2 -width 10 -textvariable Lcl_numGroupsJDdb -state disabled
-    SetHelpBind .wJONCSDEF.dataTop.e_ctrl2 numGroupsJDdb   HelpText_wJONCSDEF
+    SetHelpBind .wJONCSDEF.dataTop.e_ctrl2 [::msgcat::mc "number of data blocs"]   HelpText_wJONCSDEF
     grid        .wJONCSDEF.dataTop.e_ctrl2 -row 3 -column 1 -sticky w -pady 1
     }
 
@@ -90,12 +90,9 @@ proc wingJoncsDefDataEdit {} {
     label       .wJONCSDEF.dataTop.ctrl2 -width 16 -text [::msgcat::mc "Blocs"]
     grid        .wJONCSDEF.dataTop.ctrl2 -row 3 -column 0 -sticky e
     ttk::entry  .wJONCSDEF.dataTop.e_ctrl2 -width 10 -textvariable Lcl_numGroupsJDdb
-    SetHelpBind .wJONCSDEF.dataTop.e_ctrl2 numGroupsJDdb   HelpText_wJONCSDEF
+    SetHelpBind .wJONCSDEF.dataTop.e_ctrl2 [::msgcat::mc "number of data blocs"]   HelpText_wJONCSDEF
     grid        .wJONCSDEF.dataTop.e_ctrl2 -row 3 -column 1 -sticky w -pady 1
     }
-    # case k_section21 not 0
-    }
-
 
     #-------------
     # Buttons dec inc
@@ -127,6 +124,9 @@ proc wingJoncsDefDataEdit {} {
     }
     UpdateConfigButtons_wJONCSDEF
 
+    # case k_section21 not 0
+    }
+
     #-------------
     # explanations
     label .wJONCSDEF.help.e_help -width 80 -height 3 -background LightYellow -justify left -textvariable HelpText_wJONCSDEF
@@ -134,10 +134,10 @@ proc wingJoncsDefDataEdit {} {
 
     #-------------
     # buttons
-    button .wJONCSDEF.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wJONCSDEF
-    button .wJONCSDEF.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wJONCSDEF
-    button .wJONCSDEF.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wJONCSDEF
-    button .wJONCSDEF.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wJONCSDEF
+    button .wJONCSDEF.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wJONCSDEF
+    button .wJONCSDEF.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wJONCSDEF
+    button .wJONCSDEF.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wJONCSDEF
+    button .wJONCSDEF.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wJONCSDEF
 
     grid .wJONCSDEF.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wJONCSDEF.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -166,6 +166,14 @@ proc SetLclVars_wJONCSDEF {} {
 
     set Lcl_k_section21    $k_section21
     set Lcl_numGroupsJDdb  $numGroupsJDdb
+
+    # Be sure case 0 starts clean
+#    if { $Lcl_k_section21 == 0 } {
+#    set Lcl_numGroupsJDdb 1
+#    }
+
+    # Set values only if case is not 0
+#    if { $Lcl_k_section21 != 0 } {
 
     # iterate across all data blocs
     for { set db 1 } { $db <= $numGroupsJDdb } { incr db } {
@@ -203,6 +211,8 @@ proc SetLclVars_wJONCSDEF {} {
        }
        }
     } 
+    # Case not 0
+#    }
 }
 
 #----------------------------------------------------------------------
@@ -224,6 +234,9 @@ proc ExportLclVars_wJONCSDEF {} {
 
     set k_section21  $Lcl_k_section21
     set numGroupsJDdb  $Lcl_numGroupsJDdb
+
+    # Set values only if case is not 0
+#    if { $Lcl_k_section21 != 0 } {
 
     # iterate across all data blocs
     for { set db 1 } { $db <= $Lcl_numGroupsJDdb } { incr db } {
@@ -261,6 +274,9 @@ proc ExportLclVars_wJONCSDEF {} {
        }
        }
    }
+
+   # Case not 0
+#   }
 }
 
 #----------------------------------------------------------------------
@@ -281,8 +297,10 @@ proc ApplyButtonPress_wJONCSDEF {} {
         set g_WingDataChanged       1
         set Lcl_wJONCSDEF_DataChanged    0
     }
-#    destroy .wJONCSDEF
-#    wingJoncsDefDataEdit 
+    
+     # Destroy and set new values
+    destroy .wJONCSDEF
+    wingJoncsDefDataEdit 
 }
 
 #----------------------------------------------------------------------
@@ -324,9 +342,9 @@ proc CancelButtonPress_wJONCSDEF {} {
     if { $Lcl_wJONCSDEF_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wJONCSDEF
             return 0
@@ -647,10 +665,10 @@ proc addEditTab_wJONCSDEF {tabNum_wJONCSDEF} {
 
     #-------------
     # header for the item point
-    label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p1$gr -width 10 -text "xini"
+    label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p1$gr -width 10 -text [::msgcat::mc "xini"]
     grid        .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p1$gr -row [expr (6 + 7*$gr)] -column 1 -sticky e
 
-    label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p2$gr -width 10 -text "xfin"
+    label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p2$gr -width 10 -text [::msgcat::mc "xfin"]
     grid        .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p2$gr -row [expr (6 + 7*$gr)] -column 2 -sticky e
 
     label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p3$gr -width 10 -text "y"
@@ -659,10 +677,10 @@ proc addEditTab_wJONCSDEF {tabNum_wJONCSDEF} {
     label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p4$gr -width 10 -text "n"
     grid        .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p4$gr -row [expr (6 + 7*$gr)] -column 4 -sticky e
 
-    label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p5$gr -width 10 -text "Upper"
+    label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p5$gr -width 10 -text [::msgcat::mc "Upper"]
     grid        .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p5$gr -row [expr (7 + 7*$gr)] -column 0 -sticky e
 
-    label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p6$gr -width 10 -text "Lower"
+    label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p6$gr -width 10 -text [::msgcat::mc "Lower"]
     grid        .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p6$gr -row [expr (8 + 7*$gr)] -column 0 -sticky e
 
     label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p7$gr -width 10 -text "s1"
@@ -677,7 +695,7 @@ proc addEditTab_wJONCSDEF {tabNum_wJONCSDEF} {
     label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p10$gr -width 10 -text "s4"
     grid        .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p10$gr -row [expr (9 + 7*$gr)] -column 4 -sticky e
 
-    label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p11$gr -width 10 -text "Pocket"
+    label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p11$gr -width 10 -text [::msgcat::mc "Pocket"]
     grid        .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p11$gr -row [expr (10 + 7*$gr)] -column 0 -sticky e
 
     label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.pes$gr -width 10 -text ""
@@ -811,7 +829,7 @@ proc addEditTab_wJONCSDEF {tabNum_wJONCSDEF} {
     grid        .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.e_pt4$gr -row [expr (7 + 7*$gr)] -column 4 -sticky e -pady 1
 
     ttk::entry  .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.e_pt5$gr -width 10 -textvariable Lcl_lineJoncsDef2($tabNum_wJONCSDEF,$gr,1,5)
-    SetHelpBind .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.e_pt5$gr [::msgcat::mc "Arc deflection percent"] HelpText_wJONCSDEF
+    SetHelpBind .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.e_pt5$gr [::msgcat::mc "Arc deflection in %% of chord"] HelpText_wJONCSDEF
     grid        .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.e_pt5$gr -row [expr (7 + 7*$gr)] -column 5 -sticky e -pady 1
 
     #-------------
@@ -828,7 +846,7 @@ proc addEditTab_wJONCSDEF {tabNum_wJONCSDEF} {
     label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p10$gr -width 10 -text "s4"
     grid        .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p10$gr -row [expr (8 + 7*$gr)] -column 4 -sticky e
 
-    label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p11$gr -width 10 -text "Pocket"
+    label       .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p11$gr -width 10 -text [::msgcat::mc "Pocket"]
     grid        .wJONCSDEF.dataBot.ntebk.config$tabNum_wJONCSDEF.p11$gr -row [expr (9 + 7*$gr)] -column 0 -sticky e
 
     #-------------

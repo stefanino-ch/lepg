@@ -52,7 +52,7 @@ proc wingCellsNumberDataEdit {} {
 
     wm protocol .wbde WM_DELETE_WINDOW { CancelButtonPress_wCELLSN }
 
-    wm title .wbde [::msgcat::mc "01D. Set number of cells"]
+    wm title .wbde [::msgcat::mc "Section 1D: Set number of cells"]
 
     #-------------
     # Frames and grids
@@ -113,7 +113,7 @@ proc wingCellsNumberDataEdit {} {
 
     #-------------
     # warning
-    label .wbde.warn.e_warn -width 100 -height 3 -background Yellow -text "Changing the number of cells affects most sections!\nYou have the option to update all sections manually (recommended),\nor allow the program to attempt an automatic adaptation."
+    label .wbde.warn.e_warn -width 100 -height 3 -background Yellow -text [::msgcat::mc "Changing the number of cells affects most sections!\nYou have the option to update all sections manually (recommended),\nor allow the program to attempt an automatic adaptation."]
     grid  .wbde.warn.e_warn -row 0 -column 0 -sticky nesw -padx 10 -pady 10
  
     #-------------
@@ -123,10 +123,10 @@ proc wingCellsNumberDataEdit {} {
 
     #-------------
     # buttons
-    button .wbde.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wCELLSN
-    button .wbde.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wCELLSN
-    button .wbde.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wCELLSN
-    button .wbde.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wCELLSN
+    button .wbde.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wCELLSN
+    button .wbde.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wCELLSN
+    button .wbde.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wCELLSN
+    button .wbde.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wCELLSN
 
     grid .wbde.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wbde.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -251,9 +251,9 @@ proc CancelButtonPress_wCELLSN {} {
     if { $Lcl_wCELLSN_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wbde
             return 0

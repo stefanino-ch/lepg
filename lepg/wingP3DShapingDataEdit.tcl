@@ -76,6 +76,10 @@ proc wingP3DShapingDataEdit {} {
     grid        .w3DSHA.dataTop.e_ctrl1 -row 2 -column 1 -sticky w -pady 1
 
     #-------------
+    # Print data only if case not 0
+    if { $Lcl_k_section29 != 0 } {
+
+    #-------------
     # Control parameter, entry
     label       .w3DSHA.dataTop.ctrl2 -width 16 -text [::msgcat::mc "Config 2"]
     grid        .w3DSHA.dataTop.ctrl2 -row 3 -column 0 -sticky e
@@ -165,6 +169,9 @@ proc wingP3DShapingDataEdit {} {
     }
     UpdateConfigButtons_w3DSHA
 
+    # End case not 0
+    }
+
     #-------------
     # explanations
     label .w3DSHA.help.e_help -width 80 -height 3 -background LightYellow -justify left -textvariable HelpText_w3DSHA
@@ -172,10 +179,10 @@ proc wingP3DShapingDataEdit {} {
 
     #-------------
     # buttons
-    button .w3DSHA.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_w3DSHA
-    button .w3DSHA.btn.ok     -width 10 -text "OK"        -command OkButtonPress_w3DSHA
-    button .w3DSHA.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_w3DSHA
-    button .w3DSHA.btn.help   -width 10 -text "Help"      -command HelpButtonPress_w3DSHA
+    button .w3DSHA.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_w3DSHA
+    button .w3DSHA.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_w3DSHA
+    button .w3DSHA.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_w3DSHA
+    button .w3DSHA.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_w3DSHA
 
     grid .w3DSHA.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .w3DSHA.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -232,13 +239,13 @@ proc SetLclVars_w3DSHA {} {
         }
         }
     # iterate across all print parameters lines
-    if {$Lcl_k_section29 != 0} {
+   # if {$Lcl_k_section29 != 0} {
     for { set i 1 } { $i <= 5 } { incr i } {
             foreach k {1 2 3 4 5} {
                 set Lcl_line3DSpp($i,$k)   $line3DSpp($i,$k)
             }
         }
-    }
+   # }
 }
 
 #----------------------------------------------------------------------
@@ -288,13 +295,13 @@ proc ExportLclVars_w3DSHA {} {
         }
         }
     # iterate across all print parameters lines
-    if {$Lcl_k_section29 != 0} {
+   # if {$Lcl_k_section29 != 0} {
     for { set i 1 } { $i <= 5 } { incr i } {
             foreach k {1 2 3 4 5} {
                 set line3DSpp($i,$k)   $Lcl_line3DSpp($i,$k)
             }
         }
-    }
+    #}
 }
 
 #----------------------------------------------------------------------
@@ -315,6 +322,10 @@ proc ApplyButtonPress_w3DSHA {} {
         set g_WingDataChanged       1
         set Lcl_w3DSHA_DataChanged    0
     }
+
+    # Destroy main window and edit again
+    destroy .w3DSHA
+    wingP3DShapingDataEdit
 }
 
 #----------------------------------------------------------------------
@@ -356,9 +367,9 @@ proc CancelButtonPress_w3DSHA {} {
     if { $Lcl_w3DSHA_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .w3DSHA
             return 0
@@ -630,6 +641,18 @@ proc addEditTab_w3DSHA {tabNum_w3DSHA} {
     grid        .w3DSHA.dataBot.ntebk.config$tabNum_w3DSHA.p4 -row 10 -column 4 -sticky e
          # Add upper surface data lines
          for { set i 1 } { $i <= $Lcl_num3DS($tabNum_w3DSHA,6) } { incr i } {
+
+             # Set new values
+             #if { $i >= 1 } {
+             #if { $Lcl_line3DSu($tabNum_w3DSHA,$i,1) == "" } {
+             #set Lcl_line3DSu($tabNum_w2DSHA,$i,1) $Lcl_line3DSu($tabNum_w2DSHA,[expr $i -1],1) 
+             #set Lcl_line3DSu($tabNum_w2DSHA,$i,2) $Lcl_line3DSu($tabNum_w2DSHA,[expr $i -1],2) 
+             #set Lcl_line3DSu($tabNum_w2DSHA,$i,3) $Lcl_line3DSu($tabNum_w2DSHA,[expr $i -1],3) 
+             #set Lcl_line3DSu($tabNum_w2DSHA,$i,4) $Lcl_line3DSu($tabNum_w2DSHA,[expr $i -1],4) 
+             #}
+             #}
+
+
              AddItemLine_w3DSHA $tabNum_w3DSHA $i
          }
     }
@@ -685,6 +708,11 @@ proc addEditTab_w3DSHA {tabNum_w3DSHA} {
     grid        .w3DSHA.dataBot.ntebk.config$tabNum_w3DSHA.p8 -row [expr (12 + $sum)] -column 4 -sticky e
          # Add lower surface data lines
          for { set i 1 } { $i <= $Lcl_num3DS($tabNum_w3DSHA,9) } { incr i } {
+
+             if { $i >= 2 } {
+             
+             }
+
              AddItemLine_w3DSHA_l $tabNum_w3DSHA $i [expr (12 + $sum)]
          }
     }

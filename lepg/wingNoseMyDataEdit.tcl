@@ -69,20 +69,20 @@ proc wingNoseMyDataEdit {} {
     label       .wNOSEMY.dataTop.ctrl1 -width 16 -text [::msgcat::mc "Configuration"]
     grid        .wNOSEMY.dataTop.ctrl1 -row 2 -column 0 -sticky e
     ttk::entry  .wNOSEMY.dataTop.e_ctrl1 -width 10 -textvariable Lcl_k_section22
-    SetHelpBind .wNOSEMY.dataTop.e_ctrl1 k_section22   HelpText_wNOSEMY
+    SetHelpBind .wNOSEMY.dataTop.e_ctrl1 [::msgcat::mc "section 22 configuration"]   HelpText_wNOSEMY
     grid        .wNOSEMY.dataTop.e_ctrl1 -row 2 -column 1 -sticky w -pady 1
 
     #-------------
-    # Verify not 0
+    # Print data only if case not 0
     if { $Lcl_k_section22 != 0 } {
+
     #-------------
     # Control parameter, entry
     label       .wNOSEMY.dataTop.ctrl2 -width 16 -text [::msgcat::mc "Groups"]
     grid        .wNOSEMY.dataTop.ctrl2 -row 3 -column 0 -sticky e
     ttk::entry  .wNOSEMY.dataTop.e_ctrl2 -width 10 -textvariable Lcl_numGroupsMY
-    SetHelpBind .wNOSEMY.dataTop.e_ctrl2 k_section22   HelpText_wNOSEMY
+    SetHelpBind .wNOSEMY.dataTop.e_ctrl2 [::msgcat::mc "section 22 groups"]   HelpText_wNOSEMY
     grid        .wNOSEMY.dataTop.e_ctrl2 -row 3 -column 1 -sticky w -pady 1
-    }
 
     #-------------
     # Spacer for line 3
@@ -104,6 +104,9 @@ proc wingNoseMyDataEdit {} {
     }
     UpdateConfigButtons_wNOSEMY
 
+    # Case not 0
+    }
+
     #-------------
     # explanations
     label .wNOSEMY.help.e_help -width 80 -height 3 -background LightYellow -justify left -textvariable HelpText_wNOSEMY
@@ -111,10 +114,10 @@ proc wingNoseMyDataEdit {} {
 
     #-------------
     # buttons
-    button .wNOSEMY.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wNOSEMY
-    button .wNOSEMY.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wNOSEMY
-    button .wNOSEMY.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wNOSEMY
-    button .wNOSEMY.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wNOSEMY
+    button .wNOSEMY.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wNOSEMY
+    button .wNOSEMY.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wNOSEMY
+    button .wNOSEMY.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wNOSEMY
+    button .wNOSEMY.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wNOSEMY
 
     grid .wNOSEMY.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wNOSEMY.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -217,6 +220,10 @@ proc ApplyButtonPress_wNOSEMY {} {
         set g_WingDataChanged       1
         set Lcl_wNOSEMY_DataChanged    0
     }
+
+    # Destroy main window and edit again
+    destroy .wNOSEMY
+    wingNoseMyDataEdit
 }
 
 #----------------------------------------------------------------------
@@ -258,9 +265,9 @@ proc CancelButtonPress_wNOSEMY {} {
     if { $Lcl_wNOSEMY_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wNOSEMY
             return 0
@@ -637,27 +644,27 @@ proc AddItemLine_wNOSEMY { tabNum lineNum} {
     }
 
     ttk::entry  .wNOSEMY.dataBot.ntebk.config$tabNum.e_p1$lineNum -width 10 -textvariable Lcl_lineNoseMy($currentTab,1)
-    SetHelpBind .wNOSEMY.dataBot.ntebk.config$tabNum.e_p1$lineNum parameter_x1   HelpText_wNOSEMY
+    SetHelpBind .wNOSEMY.dataBot.ntebk.config$tabNum.e_p1$lineNum [::msgcat::mc "parameter_x1"]   HelpText_wNOSEMY
     grid        .wNOSEMY.dataBot.ntebk.config$tabNum.e_p1$lineNum -row [expr (10-1 + $lineNum)] -column 1 -sticky e -pady 1
 
     ttk::entry  .wNOSEMY.dataBot.ntebk.config$tabNum.e_p2$lineNum -width 10 -textvariable Lcl_lineNoseMy($currentTab,2)
-    SetHelpBind .wNOSEMY.dataBot.ntebk.config$tabNum.e_p2$lineNum parameter_u1   HelpText_wNOSEMY
+    SetHelpBind .wNOSEMY.dataBot.ntebk.config$tabNum.e_p2$lineNum [::msgcat::mc "parameter_u1"]   HelpText_wNOSEMY
     grid        .wNOSEMY.dataBot.ntebk.config$tabNum.e_p2$lineNum -row [expr (10-1 + $lineNum)] -column 2 -sticky e -pady 1
 
     ttk::entry  .wNOSEMY.dataBot.ntebk.config$tabNum.e_p3$lineNum -width 10 -textvariable Lcl_lineNoseMy($currentTab,3)
-    SetHelpBind .wNOSEMY.dataBot.ntebk.config$tabNum.e_p3$lineNum parameter_u2   HelpText_wNOSEMY
+    SetHelpBind .wNOSEMY.dataBot.ntebk.config$tabNum.e_p3$lineNum [::msgcat::mc "parameter_u2"]   HelpText_wNOSEMY
     grid        .wNOSEMY.dataBot.ntebk.config$tabNum.e_p3$lineNum -row [expr (10-1 + $lineNum)] -column 3 -sticky e -pady 1
 
     ttk::entry  .wNOSEMY.dataBot.ntebk.config$tabNum.e_p4$lineNum -width 10 -textvariable Lcl_lineNoseMy($currentTab,4)
-    SetHelpBind .wNOSEMY.dataBot.ntebk.config$tabNum.e_p4$lineNum parameter_x2   HelpText_wNOSEMY
+    SetHelpBind .wNOSEMY.dataBot.ntebk.config$tabNum.e_p4$lineNum [::msgcat::mc "parameter_x2"]   HelpText_wNOSEMY
     grid        .wNOSEMY.dataBot.ntebk.config$tabNum.e_p4$lineNum -row [expr (10-1 + $lineNum)] -column 4 -sticky e -pady 1
 
     ttk::entry  .wNOSEMY.dataBot.ntebk.config$tabNum.e_p5$lineNum -width 10 -textvariable Lcl_lineNoseMy($currentTab,5)
-    SetHelpBind .wNOSEMY.dataBot.ntebk.config$tabNum.e_p5$lineNum parameter_v1   HelpText_wNOSEMY
+    SetHelpBind .wNOSEMY.dataBot.ntebk.config$tabNum.e_p5$lineNum [::msgcat::mc "parameter_v1"]   HelpText_wNOSEMY
     grid        .wNOSEMY.dataBot.ntebk.config$tabNum.e_p5$lineNum -row [expr (10-1 + $lineNum)] -column 5 -sticky e -pady 1
 
     ttk::entry  .wNOSEMY.dataBot.ntebk.config$tabNum.e_p6$lineNum -width 10 -textvariable Lcl_lineNoseMy($currentTab,6)
-    SetHelpBind .wNOSEMY.dataBot.ntebk.config$tabNum.e_p6$lineNum parameter_v2   HelpText_wNOSEMY
+    SetHelpBind .wNOSEMY.dataBot.ntebk.config$tabNum.e_p6$lineNum [::msgcat::mc "parameter_v2"]   HelpText_wNOSEMY
     grid        .wNOSEMY.dataBot.ntebk.config$tabNum.e_p6$lineNum -row [expr (10-1 + $lineNum)] -column 6 -sticky e -pady 1
 
 }

@@ -46,7 +46,7 @@ proc wingWashinDataEdit {} {
 
     wm protocol .wbde WM_DELETE_WINDOW { CancelButtonPress_wWASHIN }
 
-    wm title .wbde [::msgcat::mc "01B. Wing washin parameters"]
+    wm title .wbde [::msgcat::mc "Section 1B: Wing washin parameters"]
 
     #-------------
     # Frames and grids
@@ -96,10 +96,10 @@ proc wingWashinDataEdit {} {
 
     #-------------
     # buttons
-    button .wbde.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wWASHIN
-    button .wbde.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wWASHIN
-    button .wbde.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wWASHIN
-    button .wbde.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wWASHIN
+    button .wbde.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wWASHIN
+    button .wbde.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wWASHIN
+    button .wbde.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wWASHIN
+    button .wbde.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wWASHIN
 
     grid .wbde.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wbde.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -208,9 +208,9 @@ proc CancelButtonPress_wWASHIN {} {
     if { $Lcl_wWASHIN_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wbde
             return 0

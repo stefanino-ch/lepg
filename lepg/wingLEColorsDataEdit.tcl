@@ -1,6 +1,6 @@
 #---------------------------------------------------------------------
 #
-#  Window to edit the leading edge color settings
+#  Window to edit the intrados color settings
 #
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
@@ -44,7 +44,7 @@ proc wingLeadingEdgeColorsDataEdit {} {
 
     wm protocol .wlecde WM_DELETE_WINDOW { CancelButtonPress_wLECDE }
 
-    wm title .wlecde [::msgcat::mc "Leading edge color marks"]
+    wm title .wlecde [::msgcat::mc "Section 16. Lower surface color marks"]
 
     #-------------
     # Frames and grids
@@ -58,13 +58,24 @@ proc wingLeadingEdgeColorsDataEdit {} {
     grid .wlecde.help         -row 2 -column 0 -sticky e
     grid .wlecde.btn          -row 3 -column 0 -sticky e
     #
+
+    label       .wlecde.dataTop.numc -width 20 -text [::msgcat::mc "Configuration"]
+    grid        .wlecde.dataTop.numc -row 0 -column 1
+    ttk::entry  .wlecde.dataTop.e_numc -width 20 -textvariable Lcl_numLeCol
+    SetHelpBind .wlecde.dataTop.e_numc [::msgcat::mc "Configuration"] HelpText_wTECDE
+    grid        .wlecde.dataTop.e_numc -row 0 -column 2 -sticky e -pady 1
+
+
+    # Print data only if number of configurations is not 0
+    if { $Lcl_numLeCol != 0 } {
+
     #-------------
     # Config of configs
     button      .wlecde.dataTop.b_dec     -width 20 -text [::msgcat::mc "dec Configs"] -command DecConfigTabs_wLECDE -state disabled
-    grid        .wlecde.dataTop.b_dec    -row 0 -column 0 -sticky e -padx 3 -pady 3
+    grid        .wlecde.dataTop.b_dec    -row 1 -column 0 -sticky e -padx 3 -pady 3
 
     button      .wlecde.dataTop.b_inc     -width 20 -text [::msgcat::mc "inc Configs"]  -command IncConfigTabs_wLECDE
-    grid        .wlecde.dataTop.b_inc    -row 0 -column 1 -sticky e -padx 3 -pady 3
+    grid        .wlecde.dataTop.b_inc    -row 1 -column 1 -sticky e -padx 3 -pady 3
 
     ttk::notebook .wlecde.dataBot.ntebk
     pack .wlecde.dataBot.ntebk -fill both -expand 1
@@ -73,6 +84,9 @@ proc wingLeadingEdgeColorsDataEdit {} {
     }
     UpdateConfigButtons_wLECDE
 
+    # End case not 0
+    }
+
     #-------------
     # explanations
     label .wlecde.help.e_help -width 80 -height 3 -background LightYellow -justify left -textvariable HelpText_wLECDE
@@ -80,10 +94,10 @@ proc wingLeadingEdgeColorsDataEdit {} {
 
     #-------------
     # buttons
-    button .wlecde.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wLECDE
-    button .wlecde.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wLECDE
-    button .wlecde.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wLECDE
-    button .wlecde.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wLECDE
+    button .wlecde.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wLECDE
+    button .wlecde.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wLECDE
+    button .wlecde.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wLECDE
+    button .wlecde.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wLECDE
 
     grid .wlecde.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wlecde.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -180,6 +194,10 @@ proc ApplyButtonPress_wLECDE {} {
         set g_WingDataChanged       1
         set Lcl_wLECDE_DataChanged    0
     }
+
+    # Destroy and edir again
+    destroy .wlecde
+    wingLeadingEdgeColorsDataEdit
 }
 
 #----------------------------------------------------------------------
@@ -221,9 +239,9 @@ proc CancelButtonPress_wLECDE {} {
     if { $Lcl_wLECDE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wlecde
             return 0
@@ -413,7 +431,7 @@ proc addEditTab_wLECDE {tabNum_wLECDE} {
     label       .wlecde.dataBot.ntebk.config$tabNum_wLECDE.firstRib -width 16 -text [::msgcat::mc "Rib for config"]
     grid        .wlecde.dataBot.ntebk.config$tabNum_wLECDE.firstRib -row 0 -column 1
     ttk::entry  .wlecde.dataBot.ntebk.config$tabNum_wLECDE.e_firstRib -width 10 -textvariable Lcl_leColRibNum($tabNum_wLECDE)
-    SetHelpBind .wlecde.dataBot.ntebk.config$tabNum_wLECDE.e_firstRib leColRibNum   HelpText_wLECDE
+    SetHelpBind .wlecde.dataBot.ntebk.config$tabNum_wLECDE.e_firstRib [::msgcat::mc "inColRibNum"]   HelpText_wLECDE
     grid        .wlecde.dataBot.ntebk.config$tabNum_wLECDE.e_firstRib -row 0 -column 2 -sticky e -pady 1
 
     label       .wlecde.dataBot.ntebk.config$tabNum_wLECDE.spacer2 -width 5 -text ""
@@ -432,7 +450,7 @@ proc addEditTab_wLECDE {tabNum_wLECDE} {
 
     #-------------
     # header for the item lines
-    label       .wlecde.dataBot.ntebk.config$tabNum_wLECDE.n -width 10 -text "Num"
+    label       .wlecde.dataBot.ntebk.config$tabNum_wLECDE.n -width 10 -text [::msgcat::mc "Num"]
     grid        .wlecde.dataBot.ntebk.config$tabNum_wLECDE.n -row 4 -column 1 -sticky e
 
     label       .wlecde.dataBot.ntebk.config$tabNum_wLECDE.p2 -width 10 -text [::msgcat::mc "hor dist"]
@@ -576,10 +594,10 @@ proc AddItemLine_wLECDE { tabNum lineNum} {
     grid        .wlecde.dataBot.ntebk.config$tabNum.n$lineNum -row [expr ($startLine-1 + $lineNum)] -column 1 -sticky e
 
     ttk::entry  .wlecde.dataBot.ntebk.config$tabNum.e_p1$lineNum -width 10 -textvariable Lcl_leColMarkXDist($currentTab,$lineNum)
-    SetHelpBind .wlecde.dataBot.ntebk.config$tabNum.e_p1$lineNum leColMarkXDist   HelpText_wLECDE
+    SetHelpBind .wlecde.dataBot.ntebk.config$tabNum.e_p1$lineNum [::msgcat::mc "inColMarkXDist"]   HelpText_wLECDE
     grid        .wlecde.dataBot.ntebk.config$tabNum.e_p1$lineNum -row [expr ($startLine-1 + $lineNum)] -column 2 -sticky e -pady 1
 
     ttk::entry  .wlecde.dataBot.ntebk.config$tabNum.e_p2$lineNum -width 10 -textvariable Lcl_leColMarkYDist($currentTab,$lineNum)
-    SetHelpBind .wlecde.dataBot.ntebk.config$tabNum.e_p2$lineNum leColMarkYDist   HelpText_wLECDE
+    SetHelpBind .wlecde.dataBot.ntebk.config$tabNum.e_p2$lineNum [::msgcat::mc "inColMarkYDist"]   HelpText_wLECDE
     grid        .wlecde.dataBot.ntebk.config$tabNum.e_p2$lineNum -row [expr ($startLine-1 + $lineNum)] -column 3 -sticky e -pady 1
 }

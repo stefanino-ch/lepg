@@ -49,7 +49,7 @@ proc wingMarksEdit {} {
 
     wm protocol .wmde WM_DELETE_WINDOW { CancelButtonPress_wMDE }
 
-    wm title .wmde [::msgcat::mc "Wing Marks setup"]
+    wm title .wmde [::msgcat::mc "Section 7: Wing Marks setup"]
 
     #-------------
     # Frames and grids
@@ -67,21 +67,21 @@ proc wingMarksEdit {} {
     grid       .wmde.data.spacing -row 0 -column 0 -sticky e -padx 10 -pady 3
 
     ttk::entry  .wmde.data.e_spacing -width 10 -textvariable Lcl_markSpace
-    SetHelpBind .wmde.data.e_spacing markSpace   HelpText_wMDE
+    SetHelpBind .wmde.data.e_spacing [::msgcat::mc "markSpace"]   HelpText_wMDE
     grid        .wmde.data.e_spacing -row 0 -column 1 -sticky e -padx 10 -pady 3
 
     ttk::label .wmde.data.radius -text [::msgcat::mc "Point radius"] -width 20
     grid       .wmde.data.radius -row 1 -column 0 -sticky e -padx 10 -pady 3
 
     ttk::entry  .wmde.data.e_radius -width 10 -textvariable Lcl_markRad
-    SetHelpBind .wmde.data.e_radius   markRad   HelpText_wMDE
+    SetHelpBind .wmde.data.e_radius   [::msgcat::mc "markRad"]   HelpText_wMDE
     grid        .wmde.data.e_radius -row 1 -column 1 -sticky e -padx 10 -pady 3
 
     ttk::label .wmde.data.displacement -text [::msgcat::mc "Point displacement"] -width 20
     grid       .wmde.data.displacement -row 2 -column 0 -sticky e -padx 10 -pady 3
 
     ttk::entry  .wmde.data.e_displacement -width 10 -textvariable Lcl_markDisp
-    SetHelpBind .wmde.data.e_displacement markDisp   HelpText_wMDE
+    SetHelpBind .wmde.data.e_displacement [::msgcat::mc "markDisp"]   HelpText_wMDE
     grid        .wmde.data.e_displacement -row 2 -column 1 -sticky e -padx 10 -pady 3
 
     ttk::label .wmde.data.spacer -text [::msgcat::mc " "] -width 10
@@ -94,10 +94,10 @@ proc wingMarksEdit {} {
 
     #-------------
     # buttons
-    button .wmde.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wMDE
-    button .wmde.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wMDE
-    button .wmde.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wMDE
-    button .wmde.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wMDE
+    button .wmde.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wMDE
+    button .wmde.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wMDE
+    button .wmde.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wMDE
+    button .wmde.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wMDE
 
     grid .wmde.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wmde.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -211,9 +211,9 @@ proc CancelButtonPress_wMDE {} {
     if { $Lcl_wMDE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wmde
             return 0

@@ -46,7 +46,7 @@ proc wingRamificationLengthDataEdit {} {
 
     wm protocol .wrlde WM_DELETE_WINDOW { CancelButtonPress_wRLDE }
 
-    wm title .wrlde [::msgcat::mc "Ramification lengths"]
+    wm title .wrlde [::msgcat::mc "Section 11: Ramification lengths"]
 
     #-------------
     # Frames and grids
@@ -70,10 +70,10 @@ proc wingRamificationLengthDataEdit {} {
     ttk::label  .wrlde.data.spacer3_wRLDE -text "" -width 5 -anchor e
     grid        .wrlde.data.spacer3_wRLDE -row 0 -column 8 -sticky e
 
-    ttk::label  .wrlde.data.lvl_label1_wRLDE -text "3 line levels" -width 10 -anchor e
+    ttk::label  .wrlde.data.lvl_label1_wRLDE -text [::msgcat::mc "3 line levels"] -width 10 -anchor e
     grid        .wrlde.data.lvl_label1_wRLDE -row 1 -column 4 -sticky e
 
-    ttk::label  .wrlde.data.lvl_label2_wRLDE -text "4 line levels" -width 10 -anchor e
+    ttk::label  .wrlde.data.lvl_label2_wRLDE -text [::msgcat::mc "4 line levels"] -width 10 -anchor e
     grid        .wrlde.data.lvl_label2_wRLDE -row 1 -column 7 -sticky e
 
     ttk::label  .wrlde.data.lines_label1   -text [::msgcat::mc "Lines"] -width 20 -anchor e
@@ -84,24 +84,24 @@ proc wingRamificationLengthDataEdit {} {
 
     ttk::label  .wrlde.data.lines_3_t   -text [::msgcat::mc "Dist Ramification 1 to wing"] -width 35 -anchor e
     grid        .wrlde.data.lines_3_t   -row 2 -column 2 -sticky e
-    ttk::label  .wrlde.data.u_lines_3_t -text "\[cm\]" -width 5 -anchor e
+    ttk::label  .wrlde.data.u_lines_3_t -text [::msgcat::mc "\[cm\]"] -width 5 -anchor e
     grid        .wrlde.data.u_lines_3_t -row 2 -column 3 -sticky e
     ttk::entry  .wrlde.data.e_lines_3_t -width 10 -textvariable Lcl_ramLength(3,3)
-    SetHelpBind .wrlde.data.e_lines_3_t lines_t  HelpText_wRLDE
+    SetHelpBind .wrlde.data.e_lines_3_t [::msgcat::mc "lines_t"]  HelpText_wRLDE
     grid        .wrlde.data.e_lines_3_t -row 2 -column 4 -sticky e
     # --
-    ttk::label  .wrlde.data.u_lines_4_t -text "\[cm\]" -width 5 -anchor e
+    ttk::label  .wrlde.data.u_lines_4_t -text [::msgcat::mc "\[cm\]"] -width 5 -anchor e
     grid        .wrlde.data.u_lines_4_t -row 2 -column 6 -sticky e
     ttk::entry  .wrlde.data.e_lines_4_t -width 10 -textvariable Lcl_ramLength(4,4)
-    SetHelpBind .wrlde.data.e_lines_4_t lines_t  HelpText_wRLDE
+    SetHelpBind .wrlde.data.e_lines_4_t [::msgcat::mc "lines_t"]  HelpText_wRLDE
     grid        .wrlde.data.e_lines_4_t -row 2 -column 7 -sticky e
 
     ttk::label  .wrlde.data.lines_4_m   -text [::msgcat::mc "Dist Ramification 2 to wing"] -width 35 -anchor e
     grid        .wrlde.data.lines_4_m   -row 3 -column 2 -sticky e
-    ttk::label  .wrlde.data.u_lines_4_m -text "\[cm\]" -width 5 -anchor e
+    ttk::label  .wrlde.data.u_lines_4_m -text [::msgcat::mc "\[cm\]"] -width 5 -anchor e
     grid        .wrlde.data.u_lines_4_m -row 3 -column 6 -sticky e
     ttk::entry  .wrlde.data.e_lines_4_m -width 10 -textvariable Lcl_ramLength(4,3)
-    SetHelpBind .wrlde.data.e_lines_4_m lines_4_m  HelpText_wRLDE
+    SetHelpBind .wrlde.data.e_lines_4_m [::msgcat::mc "lines_4_m"]  HelpText_wRLDE
     grid        .wrlde.data.e_lines_4_m -row 3 -column 7 -sticky e
 
     ttk::label  .wrlde.data.spacer4_wRLDE -text "" -width 5 -anchor e
@@ -109,24 +109,24 @@ proc wingRamificationLengthDataEdit {} {
 
     ttk::label  .wrlde.data.breakl_3_t   -text [::msgcat::mc "Dist Ramification 1 to wing"] -width 35 -anchor e
     grid        .wrlde.data.breakl_3_t   -row 5 -column 2 -sticky e
-    ttk::label  .wrlde.data.u_breakl_3_t -text "\[cm\]" -width 5 -anchor e
+    ttk::label  .wrlde.data.u_breakl_3_t -text [::msgcat::mc "\[cm\]"] -width 5 -anchor e
     grid        .wrlde.data.u_breakl_3_t -row 5 -column 3 -sticky e
     ttk::entry  .wrlde.data.e_breakl_3_t -width 10 -textvariable Lcl_ramLength(5,3)
-    SetHelpBind .wrlde.data.e_breakl_3_t breakl_t  HelpText_wRLDE
+    SetHelpBind .wrlde.data.e_breakl_3_t [::msgcat::mc "breakl_t"]  HelpText_wRLDE
     grid        .wrlde.data.e_breakl_3_t -row 5 -column 4 -sticky e
     # --
     ttk::label  .wrlde.data.u_breakl_4_t -text "\[cm\]" -width 5 -anchor e
     grid        .wrlde.data.u_breakl_4_t -row 5 -column 6 -sticky e
     ttk::entry  .wrlde.data.e_breakl_4_t -width 10 -textvariable Lcl_ramLength(6,4)
-    SetHelpBind .wrlde.data.e_breakl_4_t breakl_t  HelpText_wRLDE
+    SetHelpBind .wrlde.data.e_breakl_4_t [::msgcat::mc "breakl_t"]  HelpText_wRLDE
     grid        .wrlde.data.e_breakl_4_t -row 5 -column 7 -sticky e
 
     ttk::label  .wrlde.data.breakl_4_m   -text [::msgcat::mc "Dist Ramification 2 to wing"] -width 35 -anchor e
     grid        .wrlde.data.breakl_4_m   -row 6 -column 2 -sticky e
-    ttk::label  .wrlde.data.u_breakl_4_m -text "\[cm\]" -width 5 -anchor e
+    ttk::label  .wrlde.data.u_breakl_4_m -text [::msgcat::mc "\[cm\]"] -width 5 -anchor e
     grid        .wrlde.data.u_breakl_4_m -row 6 -column 6 -sticky e
     ttk::entry  .wrlde.data.e_breakl_4_m -width 10 -textvariable Lcl_ramLength(6,3)
-    SetHelpBind .wrlde.data.e_breakl_4_m breakl_4_m  HelpText_wRLDE
+    SetHelpBind .wrlde.data.e_breakl_4_m [::msgcat::mc "breakl_4_m"]  HelpText_wRLDE
     grid        .wrlde.data.e_breakl_4_m -row 6 -column 7 -sticky e
 
     ttk::label  .wrlde.data.spacer5_wRLDE -text "" -width 5 -anchor e
@@ -139,10 +139,10 @@ proc wingRamificationLengthDataEdit {} {
 
     #-------------
     # buttons
-    button .wrlde.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wRLDE
-    button .wrlde.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wRLDE
-    button .wrlde.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wRLDE
-    button .wrlde.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wRLDE
+    button .wrlde.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wRLDE
+    button .wrlde.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wRLDE
+    button .wrlde.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wRLDE
+    button .wrlde.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wRLDE
 
     grid .wrlde.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wrlde.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -281,9 +281,9 @@ proc CancelButtonPress_wRLDE {} {
     if { $Lcl_wRLDE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wrlde
             return 0

@@ -91,10 +91,10 @@ proc wingAddRibPointsDataEdit {} {
 
     #-------------
     # buttons
-    button .wARPDE.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wARPDE
-    button .wARPDE.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wARPDE
-    button .wARPDE.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wARPDE
-    button .wARPDE.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wARPDE
+    button .wARPDE.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wARPDE
+    button .wARPDE.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wARPDE
+    button .wARPDE.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wARPDE
+    button .wARPDE.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wARPDE
 
     grid .wARPDE.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wARPDE.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -213,9 +213,9 @@ proc CancelButtonPress_wARPDE {} {
     if { $Lcl_wARPDE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wARPDE
             return 0
@@ -334,7 +334,7 @@ proc addEdit_wARPDE {} {
 
     #-------------
     # header for the item lines
-    label       .wARPDE.dataBot.scroll.widgets.n -width 10 -text "Num"
+    label       .wARPDE.dataBot.scroll.widgets.n -width 10 -text [::msgcat::mc "Num"]
     grid        .wARPDE.dataBot.scroll.widgets.n -row 0 -column 1 -sticky e
 
     label       .wARPDE.dataBot.scroll.widgets.pX -width 10 -text [::msgcat::mc "X Coord"]
@@ -456,11 +456,11 @@ proc AddItemLine_wARPDE { lineNum } {
     grid        .wARPDE.dataBot.scroll.widgets.n$lineNum -row [expr (4-1 + $lineNum)] -column 1 -sticky e
 
     ttk::entry  .wARPDE.dataBot.scroll.widgets.e_pX$lineNum -width 10 -textvariable Lcl_addRipPoX($lineNum)
-    SetHelpBind .wARPDE.dataBot.scroll.widgets.e_pX$lineNum addRipPoX   HelpText_wARPDE
+    SetHelpBind .wARPDE.dataBot.scroll.widgets.e_pX$lineNum [::msgcat::mc "Additional point x-coordinate"]   HelpText_wARPDE
     grid        .wARPDE.dataBot.scroll.widgets.e_pX$lineNum -row [expr (4-1 + $lineNum)] -column 2 -sticky e -pady 1
 
     ttk::entry  .wARPDE.dataBot.scroll.widgets.e_pY$lineNum -width 10 -textvariable Lcl_addRipPoY($lineNum)
-    SetHelpBind .wARPDE.dataBot.scroll.widgets.e_pY$lineNum addRipPoY   HelpText_wARPDE
+    SetHelpBind .wARPDE.dataBot.scroll.widgets.e_pY$lineNum [::msgcat::mc "Additional point y-coordinate"]   HelpText_wARPDE
     grid        .wARPDE.dataBot.scroll.widgets.e_pY$lineNum -row [expr (4-1 + $lineNum)] -column 3 -sticky e -pady 1
 }
 

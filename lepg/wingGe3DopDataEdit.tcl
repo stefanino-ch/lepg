@@ -72,10 +72,10 @@ proc wingGe3DopDataEdit {} {
 
     #-------------
     # buttons
-    button .wGE3DOP.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wGE3DOP
-    button .wGE3DOP.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wGE3DOP
-    button .wGE3DOP.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wGE3DOP
-    button .wGE3DOP.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wGE3DOP
+    button .wGE3DOP.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wGE3DOP
+    button .wGE3DOP.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wGE3DOP
+    button .wGE3DOP.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wGE3DOP
+    button .wGE3DOP.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wGE3DOP
 
     grid .wGE3DOP.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wGE3DOP.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -215,9 +215,9 @@ proc CancelButtonPress_wGE3DOP {} {
     if { $Lcl_wGE3DOP_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wGE3DOP
             return 0
@@ -327,7 +327,7 @@ proc addEdit_wGE3DOP {} {
     label       .wGE3DOP.dataTop.p -width 15 -text [::msgcat::mc "Config type"]
     grid        .wGE3DOP.dataTop.p -row 1 -column 0 -sticky e
     ttk::entry  .wGE3DOP.dataTop.e_p -width 20 -textvariable Lcl_k_section25
-    SetHelpBind .wGE3DOP.dataTop.e_p "Configuration, only type 1 available"   HelpText_wGE3DOP
+    SetHelpBind .wGE3DOP.dataTop.e_p [::msgcat::mc "Configuration, only type 1 available"]   HelpText_wGE3DOP
     grid        .wGE3DOP.dataTop.e_p -row 1 -column 1 -sticky e -pady 1
 
     #-------------
@@ -336,7 +336,7 @@ proc addEdit_wGE3DOP {} {
     label       .wGE3DOP.dataTop.spacer01 -width 10 -text ""
     grid        .wGE3DOP.dataTop.spacer01 -row 0 -column 0 -sticky e
 
-    label       .wGE3DOP.dataTop.n -width 10 -text "Num"
+    label       .wGE3DOP.dataTop.n -width 10 -text [::msgcat::mc "Num"]
     grid        .wGE3DOP.dataTop.n -row 2 -column 0 -sticky e
 
     label       .wGE3DOP.dataTop.p0 -width 20 -text [::msgcat::mc "Element"]
@@ -358,7 +358,7 @@ proc addEdit_wGE3DOP {} {
 
     #-------------
     # header for the item lines second bloc
-    label       .wGE3DOP.dataBot.n -width 10 -text "Num"
+    label       .wGE3DOP.dataBot.n -width 10 -text [::msgcat::mc "Num"]
     grid        .wGE3DOP.dataBot.n -row 1 -column 0 -sticky e
 
     label       .wGE3DOP.dataBot.p0 -width 20 -text [::msgcat::mc "Element"]
@@ -497,15 +497,15 @@ proc AddItemLine_wGE3DOP { lineNum } {
     grid        .wGE3DOP.dataTop.n$lineNum -row [expr (6-1 + $lineNum)] -column 0 -sticky e
 
     ttk::entry  .wGE3DOP.dataTop.e_p1$lineNum -width 20 -textvariable Lcl_dxf3DopA($lineNum)
-    SetHelpBind .wGE3DOP.dataTop.e_p1$lineNum "Element of the 3D DXF drawing"   HelpText_wGE3DOP
+    SetHelpBind .wGE3DOP.dataTop.e_p1$lineNum [::msgcat::mc "Element of the 3D DXF drawing"]   HelpText_wGE3DOP
     grid        .wGE3DOP.dataTop.e_p1$lineNum -row [expr (6-1 + $lineNum)] -column 1 -sticky e -pady 1
 
     ttk::entry  .wGE3DOP.dataTop.e_p2$lineNum -width 10 -textvariable Lcl_dxf3DopB($lineNum)
-    SetHelpBind .wGE3DOP.dataTop.e_p2$lineNum "CAD color"   HelpText_wGE3DOP
+    SetHelpBind .wGE3DOP.dataTop.e_p2$lineNum [::msgcat::mc "CAD color"]   HelpText_wGE3DOP
     grid        .wGE3DOP.dataTop.e_p2$lineNum -row [expr (6-1 + $lineNum)] -column 2 -sticky e -pady 1
 
     ttk::entry  .wGE3DOP.dataTop.e_p3$lineNum -width 15 -textvariable Lcl_dxf3DopC($lineNum)
-    SetHelpBind .wGE3DOP.dataTop.e_p3$lineNum "Color"   HelpText_wGE3DOP
+    SetHelpBind .wGE3DOP.dataTop.e_p3$lineNum [::msgcat::mc "Color"]   HelpText_wGE3DOP
     grid        .wGE3DOP.dataTop.e_p3$lineNum -row [expr (6-1 + $lineNum)] -column 3 -sticky e -pady 1
 
 }
@@ -529,19 +529,19 @@ proc AddItemLine_wGE3DOPm { lineNum } {
     grid        .wGE3DOP.dataBot.n$lineNum -row [expr (6-1 + $lineNum)] -column 0 -sticky e
 
     ttk::entry  .wGE3DOP.dataBot.e_p1$lineNum -width 20 -textvariable Lcl_dxf3DopA($lineNum)
-    SetHelpBind .wGE3DOP.dataBot.e_p1$lineNum "Element of the 3D DXF drawing"   HelpText_wGE3DOP
+    SetHelpBind .wGE3DOP.dataBot.e_p1$lineNum [::msgcat::mc "Element of the 3D DXF drawing"]   HelpText_wGE3DOP
     grid        .wGE3DOP.dataBot.e_p1$lineNum -row [expr (6-1 + $lineNum)] -column 1 -sticky e -pady 1
 
     ttk::entry  .wGE3DOP.dataBot.e_p2$lineNum -width 10 -textvariable Lcl_dxf3DopB($lineNum)
-    SetHelpBind .wGE3DOP.dataBot.e_p2$lineNum "Active"   HelpText_wGE3DOP
+    SetHelpBind .wGE3DOP.dataBot.e_p2$lineNum [::msgcat::mc "Active"]   HelpText_wGE3DOP
     grid        .wGE3DOP.dataBot.e_p2$lineNum -row [expr (6-1 + $lineNum)] -column 2 -sticky e -pady 1
 
     ttk::entry  .wGE3DOP.dataBot.e_p3$lineNum -width 10 -textvariable Lcl_dxf3DopC($lineNum)
-    SetHelpBind .wGE3DOP.dataBot.e_p3$lineNum "CAD color"   HelpText_wGE3DOP
+    SetHelpBind .wGE3DOP.dataBot.e_p3$lineNum [::msgcat::mc "CAD color"]   HelpText_wGE3DOP
     grid        .wGE3DOP.dataBot.e_p3$lineNum -row [expr (6-1 + $lineNum)] -column 3 -sticky e -pady 1
 
     ttk::entry  .wGE3DOP.dataBot.e_p4$lineNum -width 15 -textvariable Lcl_dxf3DopD($lineNum)
-    SetHelpBind .wGE3DOP.dataBot.e_p4$lineNum "Color"   HelpText_wGE3DOP
+    SetHelpBind .wGE3DOP.dataBot.e_p4$lineNum [::msgcat::mc "Color"]   HelpText_wGE3DOP
     grid        .wGE3DOP.dataBot.e_p4$lineNum -row [expr (6-1 + $lineNum)] -column 4 -sticky e -pady 1
 
 }

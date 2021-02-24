@@ -52,7 +52,7 @@ proc CreatePreProcRunWindow {} {
     #-------------
     #
     label  .pprun.status -width 80 -height 50 -background LightYellow  -justify left -textvariable Status
-    button .pprun.ok -width 10 -text "OK" -command OkButtonPress_pPR
+    button .pprun.ok -width 10 -text [::msgcat::mc "OK"] -command OkButtonPress_pPR
 
     grid .pprun.status -row 0 -column 0 -sticky nesw -padx 10 -pady 10
     grid .pprun.ok     -row 1 -column 0 -sticky e    -padx 10 -pady 10

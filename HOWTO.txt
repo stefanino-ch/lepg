@@ -1,5 +1,6 @@
-LEPG 2.6
-© Pere Casellas, Stefan Feuz
+LEPG 3.15-test2
+2021-01-31 
+Â© Pere Casellas, Stefan Feuz
 http://www.laboratoridenvol.com
 General Public License GNU GPL 3.0
 
@@ -37,10 +38,12 @@ First configurations
 --------------------
 4. Open Settings-> Geometry-Processor 
    Configure there the location where your PreProcessor executable is saved.
-   This is lepg\lep-2_60-win\pre/pre-1.4.exe
+   This is lepg\lep-3.15\lep3.15-win64\pre-1.6\pre-1.6-win64.exe
 5. Open Settings-> Wing-Processor
    Configure there the location where your Wing Processor (lep) executable is saved.
-   This is \lepg\lep-2_60-win\lep\lep-2.6.exe
+   This is lepg\lep-3.15\lep3.15-win64\lep\lep-3.15-win64.exe
+
+   (Select the included examples and executables win32 if necessary)
 
 
 Installationsanleitung deutsch Version
@@ -61,7 +64,7 @@ Lepg installieren
 -----------------
 1. Das komplette lepg Verzeichnis herunterladen und an einem beliebigen Ort speichern. 
 
-Lepg auf Windows ausführen
+Lepg auf Windows ausfÃ¼hren
 --------------------------
 2. Gehe in das lepg Verzeichnis
 3. Doppelclick auf die Datei lepg.bat => lepg startet
@@ -73,8 +76,8 @@ Run lepg on Linux
 
 Erste Konfigurationen
 ---------------------
-4. Öffne das Menu Settings-> Language wähle dort German
-5. Öffne das Menu Settings-> Geometry-Processor 
-   Konfiguriere das Verzeichnic in dem der PreProcessor gespeichert ist: lepg\lep-2_60-win\pre/pre-1.4.exe
-6. Öffne das Menu Settings-> Wing-Processor
-   Konfiguriere das Verzeichnic in dem der Wing Processor (lep) gespeichert ist: \lepg\lep-2_60-win\lep\lep-2.6.exe
+4. Ã–ffne das Menu Settings-> Language wÃ¤hle dort German
+5. Ã–ffne das Menu Settings-> Geometry-Processor 
+   Konfiguriere das Verzeichnic in dem der PreProcessor gespeichert ist: lepg\lep-3.15\lep3.15-win64\pre-1.6\pre-1.6-win64.exe
+6. Ã–ffne das Menu Settings-> Wing-Processor
+   Konfiguriere das Verzeichnic in dem der Wing Processor (lep) gespeichert ist: This is lepg\lep-3.15\lep3.15-win64\lep\lep-3.15-win64.exe

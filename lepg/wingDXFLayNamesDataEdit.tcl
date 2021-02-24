@@ -91,10 +91,10 @@ proc wingDXFLayNamesDataEdit {} {
 
     #-------------
     # buttons
-    button .wDXFLN.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wDXFLN
-    button .wDXFLN.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wDXFLN
-    button .wDXFLN.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wDXFLN
-    button .wDXFLN.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wDXFLN
+    button .wDXFLN.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wDXFLN
+    button .wDXFLN.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wDXFLN
+    button .wDXFLN.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wDXFLN
+    button .wDXFLN.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wDXFLN
 
     grid .wDXFLN.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wDXFLN.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -213,9 +213,9 @@ proc CancelButtonPress_wDXFLN {} {
     if { $Lcl_wDXFLN_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wDXFLN
             return 0
@@ -334,7 +334,7 @@ proc addEdit_wDXFLN {} {
 
     #-------------
     # header for the item lines
-    label       .wDXFLN.dataBot.scroll.widgets.n -width 10 -text "Num"
+    label       .wDXFLN.dataBot.scroll.widgets.n -width 10 -text [::msgcat::mc "Num"]
     grid        .wDXFLN.dataBot.scroll.widgets.n -row 0 -column 1 -sticky e
 
     label       .wDXFLN.dataBot.scroll.widgets.pX -width 20 -text [::msgcat::mc "Drawn object"]
@@ -456,11 +456,11 @@ proc AddItemLine_wDXFLN { lineNum } {
     grid        .wDXFLN.dataBot.scroll.widgets.n$lineNum -row [expr (4-1 + $lineNum)] -column 1 -sticky e
 
     ttk::entry  .wDXFLN.dataBot.scroll.widgets.e_pX$lineNum -width 20 -textvariable Lcl_dxfLayNaX($lineNum)
-    SetHelpBind .wDXFLN.dataBot.scroll.widgets.e_pX$lineNum dxfLayNaX   HelpText_wDXFLN
+    SetHelpBind .wDXFLN.dataBot.scroll.widgets.e_pX$lineNum [::msgcat::mc "dxfLayNaX"]   HelpText_wDXFLN
     grid        .wDXFLN.dataBot.scroll.widgets.e_pX$lineNum -row [expr (4-1 + $lineNum)] -column 2 -sticky e -pady 1
 
     ttk::entry  .wDXFLN.dataBot.scroll.widgets.e_pY$lineNum -width 20 -textvariable Lcl_dxfLayNaY($lineNum)
-    SetHelpBind .wDXFLN.dataBot.scroll.widgets.e_pY$lineNum dxfLayNaY   HelpText_wDXFLN
+    SetHelpBind .wDXFLN.dataBot.scroll.widgets.e_pY$lineNum [::msgcat::mc "dxfLayNaY"]   HelpText_wDXFLN
     grid        .wDXFLN.dataBot.scroll.widgets.e_pY$lineNum -row [expr (4-1 + $lineNum)] -column 3 -sticky e -pady 1
 }
 

@@ -75,10 +75,10 @@ proc wingCalagVarDataEdit {} {
 
     #-------------
     # buttons
-    button .wCALAGVAR.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wCALAGVAR
-    button .wCALAGVAR.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wCALAGVAR
-    button .wCALAGVAR.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wCALAGVAR
-    button .wCALAGVAR.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wCALAGVAR
+    button .wCALAGVAR.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wCALAGVAR
+    button .wCALAGVAR.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wCALAGVAR
+    button .wCALAGVAR.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wCALAGVAR
+    button .wCALAGVAR.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wCALAGVAR
 
     grid .wCALAGVAR.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wCALAGVAR.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -217,9 +217,9 @@ proc CancelButtonPress_wCALAGVAR {} {
     if { $Lcl_wCALAGVAR_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wCALAGVAR
             return 0
@@ -329,13 +329,13 @@ proc addEdit_wCALAGVAR {} {
     label       .wCALAGVAR.dataTop.p1 -width 20 -text [::msgcat::mc "Config type"]
     grid        .wCALAGVAR.dataTop.p1 -row 1 -column 0 -sticky e
     ttk::entry  .wCALAGVAR.dataTop.e_p1 -width 10 -textvariable Lcl_k_section28
-    SetHelpBind .wCALAGVAR.dataTop.e_p1 "Configuration, type 0 and 1 available"   HelpText_wCALAGVAR
+    SetHelpBind .wCALAGVAR.dataTop.e_p1 [::msgcat::mc "Configuration, type 0 and 1 available"]   HelpText_wCALAGVAR
     grid        .wCALAGVAR.dataTop.e_p1 -row 1 -column 1 -sticky e -pady 1
 
     label       .wCALAGVAR.dataTop.p2 -width 20 -text [::msgcat::mc "Num risers"]
     grid        .wCALAGVAR.dataTop.p2 -row 2 -column 0 -sticky e
     ttk::entry  .wCALAGVAR.dataTop.e_p2 -width 10 -textvariable Lcl_numRisersC
-    SetHelpBind .wCALAGVAR.dataTop.e_p2 "Number of riser used for calage"   HelpText_wCALAGVAR
+    SetHelpBind .wCALAGVAR.dataTop.e_p2 [::msgcat::mc "Number of risers used for calage"]   HelpText_wCALAGVAR
     grid        .wCALAGVAR.dataTop.e_p2 -row 2 -column 1 -sticky e -pady 1
 
     #-------------
@@ -354,66 +354,66 @@ proc addEdit_wCALAGVAR {} {
     grid        .wCALAGVAR.dataTop.n5 -row 4 -column 5 -sticky e
     label       .wCALAGVAR.dataTop.n6 -width 10 -text "F"
     grid        .wCALAGVAR.dataTop.n6 -row 4 -column 6 -sticky e
-    label       .wCALAGVAR.dataTop.n60 -width 20 -text "Position %"
+    label       .wCALAGVAR.dataTop.n60 -width 20 -text [::msgcat::mc "Position %"]
     grid        .wCALAGVAR.dataTop.n60 -row 5 -column 0 -sticky e
 
     #-------------
     # entrys for anchor points
     ttk::entry  .wCALAGVAR.dataTop.e_n1 -width 10 -textvariable Lcl_calagVarA(1)
-    SetHelpBind .wCALAGVAR.dataTop.e_n1 "A \% of chord"   HelpText_wCALAGVAR
+    SetHelpBind .wCALAGVAR.dataTop.e_n1 [::msgcat::mc "A \% of chord"]   HelpText_wCALAGVAR
     grid        .wCALAGVAR.dataTop.e_n1 -row 5 -column 1 -sticky e -pady 1
 
     ttk::entry  .wCALAGVAR.dataTop.e_n2 -width 10 -textvariable Lcl_calagVarB(1)
-    SetHelpBind .wCALAGVAR.dataTop.e_n2 "B \% of chord"   HelpText_wCALAGVAR
+    SetHelpBind .wCALAGVAR.dataTop.e_n2 [::msgcat::mc "B \% of chord"]   HelpText_wCALAGVAR
     grid        .wCALAGVAR.dataTop.e_n2 -row 5 -column 2 -sticky e -pady 1
 
     ttk::entry  .wCALAGVAR.dataTop.e_n3 -width 10 -textvariable Lcl_calagVarC(1)
-    SetHelpBind .wCALAGVAR.dataTop.e_n3 "C \% of chord"   HelpText_wCALAGVAR
+    SetHelpBind .wCALAGVAR.dataTop.e_n3 [::msgcat::mc "C \% of chord"]   HelpText_wCALAGVAR
     grid        .wCALAGVAR.dataTop.e_n3 -row 5 -column 3 -sticky e -pady 1
 
     ttk::entry  .wCALAGVAR.dataTop.e_n4 -width 10 -textvariable Lcl_calagVarD(1)
-    SetHelpBind .wCALAGVAR.dataTop.e_n4 "D \% of chord"   HelpText_wCALAGVAR
+    SetHelpBind .wCALAGVAR.dataTop.e_n4 [::msgcat::mc "D \% of chord"]   HelpText_wCALAGVAR
     grid        .wCALAGVAR.dataTop.e_n4 -row 5 -column 4 -sticky e -pady 1
 
     ttk::entry  .wCALAGVAR.dataTop.e_n5 -width 10 -textvariable Lcl_calagVarE(1)
-    SetHelpBind .wCALAGVAR.dataTop.e_n5 "E \% of chord"   HelpText_wCALAGVAR
+    SetHelpBind .wCALAGVAR.dataTop.e_n5 [::msgcat::mc "E \% of chord"]   HelpText_wCALAGVAR
     grid        .wCALAGVAR.dataTop.e_n5 -row 5 -column 5 -sticky e -pady 1
 
     ttk::entry  .wCALAGVAR.dataTop.e_n6 -width 10 -textvariable Lcl_calagVarF(1)
-    SetHelpBind .wCALAGVAR.dataTop.e_n6 "F $% of chord"   HelpText_wCALAGVAR
+    SetHelpBind .wCALAGVAR.dataTop.e_n6 [::msgcat::mc "F $% of chord"]   HelpText_wCALAGVAR
     grid        .wCALAGVAR.dataTop.e_n6 -row 5 -column 6 -sticky e -pady 1
 
     #-------------
     # header for speed and trim
     label       .wCALAGVAR.dataTop.spacer02 -width 10 -text ""
     grid        .wCALAGVAR.dataTop.spacer02 -row 6 -column 0 -sticky e
-    label       .wCALAGVAR.dataTop.n7 -width 10 -text "speed deg"
+    label       .wCALAGVAR.dataTop.n7 -width 10 -text [::msgcat::mc "speed deg"]
     grid        .wCALAGVAR.dataTop.n7 -row 7 -column 1 -sticky e
-    label       .wCALAGVAR.dataTop.n8 -width 10 -text "steps"
+    label       .wCALAGVAR.dataTop.n8 -width 10 -text [::msgcat::mc "steps"]
     grid        .wCALAGVAR.dataTop.n8 -row 7 -column 2 -sticky e
-    label       .wCALAGVAR.dataTop.n9 -width 10 -text "trim deg"
+    label       .wCALAGVAR.dataTop.n9 -width 10 -text [::msgcat::mc "trim deg"]
     grid        .wCALAGVAR.dataTop.n9 -row 7 -column 3 -sticky e
-    label       .wCALAGVAR.dataTop.n10 -width 10 -text "steps"
+    label       .wCALAGVAR.dataTop.n10 -width 10 -text [::msgcat::mc "steps"]
     grid        .wCALAGVAR.dataTop.n10 -row 7 -column 4 -sticky e
-    label       .wCALAGVAR.dataTop.n11 -width 20 -text "Speed-Trim"
+    label       .wCALAGVAR.dataTop.n11 -width 20 -text [::msgcat::mc "Speed-Trim"]
     grid        .wCALAGVAR.dataTop.n11 -row 8 -column 0 -sticky e
     label       .wCALAGVAR.dataTop.spacer03 -width 10 -text ""
     grid        .wCALAGVAR.dataTop.spacer03 -row 9 -column 0 -sticky e
 
     ttk::entry  .wCALAGVAR.dataTop.e_n7 -width 10 -textvariable Lcl_speedVarA(1)
-    SetHelpBind .wCALAGVAR.dataTop.e_n7 "Negative max angle for speed system (deg)"   HelpText_wCALAGVAR
+    SetHelpBind .wCALAGVAR.dataTop.e_n7 [::msgcat::mc "Negative max angle for speed system (deg)"]   HelpText_wCALAGVAR
     grid        .wCALAGVAR.dataTop.e_n7 -row 8 -column 1 -sticky e -pady 1
 
     ttk::entry  .wCALAGVAR.dataTop.e_n8 -width 10 -textvariable Lcl_speedVarB(1)
-    SetHelpBind .wCALAGVAR.dataTop.e_n8 "Calculation steps for speed"   HelpText_wCALAGVAR
+    SetHelpBind .wCALAGVAR.dataTop.e_n8 [::msgcat::mc "Calculation steps for speed"]   HelpText_wCALAGVAR
     grid        .wCALAGVAR.dataTop.e_n8 -row 8 -column 2 -sticky e -pady 1
 
     ttk::entry  .wCALAGVAR.dataTop.e_n9 -width 10 -textvariable Lcl_speedVarC(1)
-    SetHelpBind .wCALAGVAR.dataTop.e_n9 "Positive max angle for trim system (deg)"   HelpText_wCALAGVAR
+    SetHelpBind .wCALAGVAR.dataTop.e_n9 [::msgcat::mc "Positive max angle for trim system (deg)"]   HelpText_wCALAGVAR
     grid        .wCALAGVAR.dataTop.e_n9 -row 8 -column 3 -sticky e -pady 1
 
     ttk::entry  .wCALAGVAR.dataTop.e_n10 -width 10 -textvariable Lcl_speedVarD(1)
-    SetHelpBind .wCALAGVAR.dataTop.e_n10 "Calculation steps for trim"   HelpText_wCALAGVAR
+    SetHelpBind .wCALAGVAR.dataTop.e_n10 [::msgcat::mc "Calculation steps for trim"]   HelpText_wCALAGVAR
     grid        .wCALAGVAR.dataTop.e_n10 -row 8 -column 4 -sticky e -pady 1
 
 
@@ -527,11 +527,11 @@ proc AddItemLine_wCALAGVAR { lineNum } {
 #    grid        .wCALAGVAR.dataTop.n$lineNum -row [expr (6-1 + $lineNum)] -column 0 -sticky e
 
     ttk::entry  .wCALAGVAR.dataTop.e_p1$lineNum -width 15 -textvariable Lcl_calagVarA($lineNum)
-    SetHelpBind .wCALAGVAR.dataTop.e_p1$lineNum "Angle name"   HelpText_wCALAGVAR
+    SetHelpBind .wCALAGVAR.dataTop.e_p1$lineNum [::msgcat::mc "Angle name"]   HelpText_wCALAGVAR
     grid        .wCALAGVAR.dataTop.e_p1$lineNum -row [expr (2-1 + $lineNum)] -column 1 -sticky e -pady 1
 
     ttk::entry  .wCALAGVAR.dataTop.e_p2$lineNum -width 10 -textvariable Lcl_calagVarB($lineNum)
-    SetHelpBind .wCALAGVAR.dataTop.e_p2$lineNum "Angle degrees clockwise"   HelpText_wCALAGVAR
+    SetHelpBind .wCALAGVAR.dataTop.e_p2$lineNum [::msgcat::mc "Angle degrees clockwise"]   HelpText_wCALAGVAR
     grid        .wCALAGVAR.dataTop.e_p2$lineNum -row [expr (2-1 + $lineNum)] -column 2 -sticky e -pady 1
 
     label       .wCALAGVAR.dataTop.lbl1$lineNum -width 15 -text [::msgcat::mc "deg"]

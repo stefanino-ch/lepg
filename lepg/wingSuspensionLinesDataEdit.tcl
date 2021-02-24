@@ -44,7 +44,7 @@ proc wingSuspensionLinesDataEdit {} {
 
     wm protocol .wSLDE WM_DELETE_WINDOW { CancelButtonPress_wSLDE }
 
-    wm title .wSLDE [::msgcat::mc "Suspension lines configuration"]
+    wm title .wSLDE [::msgcat::mc "Section 9: Suspension lines configuration"]
 
     #-------------
     # Frames and grids
@@ -68,7 +68,7 @@ proc wingSuspensionLinesDataEdit {} {
     label       .wSLDE.dataTop.ctrl -width 16 -text [::msgcat::mc "Control param"]
     grid        .wSLDE.dataTop.ctrl -row 2 -column 0 -sticky e
     ttk::entry  .wSLDE.dataTop.e_ctrl -width 10 -textvariable Lcl_lineMode -state disabled
-    SetHelpBind .wSLDE.dataTop.e_ctrl lineMode   HelpText_wSLDE
+    SetHelpBind .wSLDE.dataTop.e_ctrl [::msgcat::mc "lineMode"]   HelpText_wSLDE
     grid        .wSLDE.dataTop.e_ctrl -row 2 -column 1 -sticky w -pady 1
 
     #-------------
@@ -98,10 +98,10 @@ proc wingSuspensionLinesDataEdit {} {
 
     #-------------
     # buttons
-    button .wSLDE.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wSLDE
-    button .wSLDE.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wSLDE
-    button .wSLDE.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wSLDE
-    button .wSLDE.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wSLDE
+    button .wSLDE.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wSLDE
+    button .wSLDE.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wSLDE
+    button .wSLDE.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wSLDE
+    button .wSLDE.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wSLDE
 
     grid .wSLDE.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wSLDE.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -265,9 +265,9 @@ proc CancelButtonPress_wSLDE {} {
     if { $Lcl_wSLDE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wSLDE
             return 0
@@ -464,7 +464,7 @@ proc addEditTab_wSLDE {tabNum_wSLDE} {
 
     #-------------
     # header for the item lines
-    label       .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.n -width 10 -text "Num"
+    label       .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.n -width 10 -text [::msgcat::mc "Num"]
     grid        .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.n -row 5 -column 1 -sticky e
 
     label       .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.p1 -width 10 -text [::msgcat::mc "Lvl 1"]
@@ -476,13 +476,13 @@ proc addEditTab_wSLDE {tabNum_wSLDE} {
     label       .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.p3 -width 10 -text [::msgcat::mc "Lvl 3"]
     grid        .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.p3 -row 5 -column 4 -sticky e
 
-    label       .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.p4 -width 10 -text "Lvl 4"
+    label       .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.p4 -width 10 -text [::msgcat::mc "Lvl 4"]
     grid        .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.p4 -row 5 -column 5 -sticky e
 
-    label       .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.p5 -width 10 -text "Anchor line"
+    label       .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.p5 -width 10 -text [::msgcat::mc "Anchor line"]
     grid        .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.p5 -row 5 -column 6 -sticky e
 
-    label       .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.p6 -width 10 -text "Rib num"
+    label       .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.p6 -width 10 -text [::msgcat::mc "Rib num"]
     grid        .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.p6 -row 5 -column 7 -sticky e
 
     label       .wSLDE.dataBot.ntebk.config$tabNum_wSLDE.spacer58 -width 5 -text ""
@@ -621,27 +621,27 @@ proc AddItemLine_wSLDE { tabNum lineNum} {
     grid        .wSLDE.dataBot.ntebk.config$tabNum.n$lineNum -row [expr (6-1 + $lineNum)] -column 1 -sticky e
 
     ttk::entry  .wSLDE.dataBot.ntebk.config$tabNum.e_p1$lineNum -width 10 -textvariable Lcl_linePath($currentTab,$lineNum,3)
-    SetHelpBind .wSLDE.dataBot.ntebk.config$tabNum.e_p1$lineNum linePath_L1   HelpText_wSLDE
+    SetHelpBind .wSLDE.dataBot.ntebk.config$tabNum.e_p1$lineNum [::msgcat::mc "linePath_L1"]   HelpText_wSLDE
     grid        .wSLDE.dataBot.ntebk.config$tabNum.e_p1$lineNum -row [expr (6-1 + $lineNum)] -column 2 -sticky e -pady 1
 
     ttk::entry  .wSLDE.dataBot.ntebk.config$tabNum.e_p2$lineNum -width 10 -textvariable Lcl_linePath($currentTab,$lineNum,5)
-    SetHelpBind .wSLDE.dataBot.ntebk.config$tabNum.e_p2$lineNum linePath_L2   HelpText_wSLDE
+    SetHelpBind .wSLDE.dataBot.ntebk.config$tabNum.e_p2$lineNum [::msgcat::mc "linePath_L2"]   HelpText_wSLDE
     grid        .wSLDE.dataBot.ntebk.config$tabNum.e_p2$lineNum -row [expr (6-1 + $lineNum)] -column 3 -sticky e -pady 1
 
     ttk::entry  .wSLDE.dataBot.ntebk.config$tabNum.e_p3$lineNum -width 10 -textvariable Lcl_linePath($currentTab,$lineNum,7)
-    SetHelpBind .wSLDE.dataBot.ntebk.config$tabNum.e_p3$lineNum linePath_L3   HelpText_wSLDE
+    SetHelpBind .wSLDE.dataBot.ntebk.config$tabNum.e_p3$lineNum [::msgcat::mc "linePath_L3"]   HelpText_wSLDE
     grid        .wSLDE.dataBot.ntebk.config$tabNum.e_p3$lineNum -row [expr (6-1 + $lineNum)] -column 4 -sticky e -pady 1
 
     ttk::entry  .wSLDE.dataBot.ntebk.config$tabNum.e_p4$lineNum -width 10 -textvariable Lcl_linePath($currentTab,$lineNum,9)
-    SetHelpBind .wSLDE.dataBot.ntebk.config$tabNum.e_p4$lineNum linePath_L4   HelpText_wSLDE
+    SetHelpBind .wSLDE.dataBot.ntebk.config$tabNum.e_p4$lineNum [::msgcat::mc "linePath_L4"]   HelpText_wSLDE
     grid        .wSLDE.dataBot.ntebk.config$tabNum.e_p4$lineNum -row [expr (6-1 + $lineNum)] -column 5 -sticky e -pady 1
 
     ttk::entry  .wSLDE.dataBot.ntebk.config$tabNum.e_p5$lineNum -width 10 -textvariable Lcl_linePath($currentTab,$lineNum,14)
-    SetHelpBind .wSLDE.dataBot.ntebk.config$tabNum.e_p5$lineNum linePath_A1   HelpText_wSLDE
+    SetHelpBind .wSLDE.dataBot.ntebk.config$tabNum.e_p5$lineNum [::msgcat::mc "linePath_A1"]   HelpText_wSLDE
     grid        .wSLDE.dataBot.ntebk.config$tabNum.e_p5$lineNum -row [expr (6-1 + $lineNum)] -column 6 -sticky e -pady 1
 
     ttk::entry  .wSLDE.dataBot.ntebk.config$tabNum.e_p6$lineNum -width 10 -textvariable Lcl_linePath($currentTab,$lineNum,15)
-    SetHelpBind .wSLDE.dataBot.ntebk.config$tabNum.e_p6$lineNum linePath_A2   HelpText_wSLDE
+    SetHelpBind .wSLDE.dataBot.ntebk.config$tabNum.e_p6$lineNum [::msgcat::mc "linePath_A2"]   HelpText_wSLDE
     grid        .wSLDE.dataBot.ntebk.config$tabNum.e_p6$lineNum -row [expr (6-1 + $lineNum)] -column 7 -sticky e -pady 1
 
 }

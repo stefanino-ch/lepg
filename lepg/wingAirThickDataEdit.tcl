@@ -94,15 +94,15 @@ proc wingAirThickDataEdit {} {
 
     #-------------
     # explanations
-    label .wAIRTHICK.help.e_help -width 80 -height 3 -background LightYellow -justify center -textvariable HelpText_wAIRTHICK
+    label .wAIRTHICK.help.e_help -width 60 -height 3 -background LightYellow -justify center -textvariable HelpText_wAIRTHICK
     grid  .wAIRTHICK.help.e_help -row 0 -column 0 -sticky nesw -padx 10 -pady 10
 
     #-------------
     # buttons
     button .wAIRTHICK.btn.apply  -width 10 -text [::msgcat::mc "Apply"]    -command ApplyButtonPress_wAIRTHICK
-    button .wAIRTHICK.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wAIRTHICK
-    button .wAIRTHICK.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wAIRTHICK
-    button .wAIRTHICK.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wAIRTHICK
+    button .wAIRTHICK.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wAIRTHICK
+    button .wAIRTHICK.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wAIRTHICK
+    button .wAIRTHICK.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wAIRTHICK
 
     grid .wAIRTHICK.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wAIRTHICK.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -162,6 +162,7 @@ proc ExportLclVars_wAIRTHICK {} {
         set airThickB($i)   $Lcl_airThickB($i)
     }
 
+
 }
 
 #----------------------------------------------------------------------
@@ -182,6 +183,10 @@ proc ApplyButtonPress_wAIRTHICK {} {
         set g_WingDataChanged       1
         set Lcl_wAIRTHICK_DataChanged    0
     }
+
+    # Actions to update (brute force)
+    destroy .wAIRTHICK
+    wingAirThickDataEdit
 }
 
 #----------------------------------------------------------------------
@@ -223,9 +228,9 @@ proc CancelButtonPress_wAIRTHICK {} {
     if { $Lcl_wAIRTHICK_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wAIRTHICK
             return 0
@@ -332,7 +337,7 @@ proc addEdit_wAIRTHICK {} {
     label       .wAIRTHICK.dataTop.p1 -width 15 -text [::msgcat::mc "Config type"]
     grid        .wAIRTHICK.dataTop.p1 -row 1 -column 0 -sticky e
     ttk::entry  .wAIRTHICK.dataTop.e_p1 -width 15 -textvariable Lcl_k_section30
-    SetHelpBind .wAIRTHICK.dataTop.e_p1 "Configuration, only type 1 or 0 available"   HelpText_wAIRTHICK
+    SetHelpBind .wAIRTHICK.dataTop.e_p1 [::msgcat::mc "Configuration, only type 1 or 0 available"]   HelpText_wAIRTHICK
     grid        .wAIRTHICK.dataTop.e_p1 -row 1 -column 1 -sticky e -pady 1
 
     #-------------
@@ -344,7 +349,7 @@ proc addEdit_wAIRTHICK {} {
 
     #-------------
     # header for the item lines
-    label       .wAIRTHICK.dataBot.scroll.widgets.n -width 15 -text "Num"
+    label       .wAIRTHICK.dataBot.scroll.widgets.n -width 15 -text [::msgcat::mc "Num"]
     grid        .wAIRTHICK.dataBot.scroll.widgets.n -row 0 -column 1 -sticky e
 
     label       .wAIRTHICK.dataBot.scroll.widgets.p0 -width 15 -text [::msgcat::mc "Thickness"]
@@ -465,7 +470,7 @@ proc AddItemLine_wAIRTHICK { lineNum } {
     grid        .wAIRTHICK.dataBot.scroll.widgets.n$lineNum -row [expr (4-1 + $lineNum)] -column 1 -sticky e
 
     ttk::entry  .wAIRTHICK.dataBot.scroll.widgets.e_p0$lineNum -width 15 -textvariable Lcl_airThickB($lineNum)
-    SetHelpBind .wAIRTHICK.dataBot.scroll.widgets.e_p0$lineNum "Airfoil thickness coefficient 0.0 to 1.0 or greater"   HelpText_wAIRTHICK
+    SetHelpBind .wAIRTHICK.dataBot.scroll.widgets.e_p0$lineNum [::msgcat::mc "Airfoil thickness coefficient 0.0 to 1.0 or greater"]   HelpText_wAIRTHICK
     grid        .wAIRTHICK.dataBot.scroll.widgets.e_p0$lineNum -row [expr (4-1 + $lineNum)] -column 2 -sticky e -pady 1
 }
 

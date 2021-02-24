@@ -63,10 +63,10 @@ proc lepDirSelect_lDS {} {
 
     #-------------
     # buttons
-    button .lDS.btn.apply -width 10 -text "Apply" -command ApplyButtonPress_lDS
-    button .lDS.btn.ok -width 10 -text "OK" -command OkButtonPress_lDS
-    button .lDS.btn.cancel -width 10 -text "Cancel" -command CancelButtonPress_lDS
-    button .lDS.btn.help -width 10  -text "Help" -command HelpButtonPress_lDS
+    button .lDS.btn.apply -width 10 -text [::msgcat::mc "Apply"] -command ApplyButtonPress_lDS
+    button .lDS.btn.ok -width 10 -text [::msgcat::mc "OK"] -command OkButtonPress_lDS
+    button .lDS.btn.cancel -width 10 -text [::msgcat::mc "Cancel"] -command CancelButtonPress_lDS
+    button .lDS.btn.help -width 10  -text [::msgcat::mc "Help"] -command HelpButtonPress_lDS
 
     grid .lDS.btn.apply -row 0 -column 0 -sticky e -padx 10 -pady 0
     grid .lDS.btn.ok -row 0 -column 1 -sticky e -padx 10 -pady 0
@@ -157,9 +157,9 @@ proc CancelButtonPress_lDS {} {
     if { $Lcl_lDS_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .lDS
             return 0

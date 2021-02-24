@@ -44,7 +44,7 @@ proc wingAirfoilHolesDataEdit {} {
 
     wm protocol .wahde WM_DELETE_WINDOW { CancelButtonPress_wAHDE }
 
-    wm title .wahde [::msgcat::mc "Airfoil holes configuration"]
+    wm title .wahde [::msgcat::mc "Section 4: Airfoil holes configuration"]
 
     #-------------
     # Frames and grids
@@ -57,14 +57,29 @@ proc wingAirfoilHolesDataEdit {} {
     grid .wahde.dataBot         -row 1 -column 0 -sticky w
     grid .wahde.help         -row 2 -column 0 -sticky e
     grid .wahde.btn          -row 3 -column 0 -sticky e
-    #
+
+    #-------------
+    # Print number of configurations
+    label       .wahde.dataTop.spacer0 -width 5 -text ""
+    grid        .wahde.dataTop.spacer0 -row 0 -column 0
+
+    label       .wahde.dataTop.numc -width 20 -text [::msgcat::mc "Num config"]
+    grid        .wahde.dataTop.numc -row 1 -column 0
+    ttk::entry  .wahde.dataTop.e_numc -width 15 -textvariable Lcl_airfConfigNum
+    SetHelpBind .wahde.dataTop.e_numc [::msgcat::mc "Number of configurations"] HelpText_wAHDE
+    grid        .wahde.dataTop.e_numc -row 1 -column 1 -sticky w -pady 1
+
+    #-------------
+    #Print data only if airfConfigNum is not 0
+    if { $Lcl_airfConfigNum != 0} {
+    
     #-------------
     # Config of configs
     button      .wahde.dataTop.b_dec     -width 20 -text [::msgcat::mc "dec Configs"] -command DecConfigTabs_wAHDE -state disabled
-    grid        .wahde.dataTop.b_dec    -row 0 -column 0 -sticky e -padx 3 -pady 3
+    grid        .wahde.dataTop.b_dec    -row 2 -column 0 -sticky e -padx 3 -pady 3
 
     button      .wahde.dataTop.b_inc     -width 20 -text [::msgcat::mc "inc Configs"]  -command IncConfigTabs_wAHDE
-    grid        .wahde.dataTop.b_inc    -row 0 -column 1 -sticky e -padx 3 -pady 3
+    grid        .wahde.dataTop.b_inc    -row 2 -column 1 -sticky e -padx 3 -pady 3
 
     ttk::notebook .wahde.dataBot.ntebk
     pack .wahde.dataBot.ntebk -fill both -expand 1
@@ -73,6 +88,9 @@ proc wingAirfoilHolesDataEdit {} {
     }
     UpdateConfigButtons_wAHDE
 
+    # If case not 0
+    }
+
     #-------------
     # explanations
     label .wahde.help.e_help -width 80 -height 3 -background LightYellow -justify left -textvariable HelpText_wAHDE
@@ -80,10 +98,10 @@ proc wingAirfoilHolesDataEdit {} {
 
     #-------------
     # buttons
-    button .wahde.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wAHDE
-    button .wahde.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wAHDE
-    button .wahde.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wAHDE
-    button .wahde.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wAHDE
+    button .wahde.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wAHDE
+    button .wahde.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wAHDE
+    button .wahde.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wAHDE
+    button .wahde.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wAHDE
 
     grid .wahde.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wahde.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -91,6 +109,7 @@ proc wingAirfoilHolesDataEdit {} {
     grid .wahde.btn.help      -row 1 -column 3 -sticky e -padx 10 -pady 10
 
     SetLclVarTrace_wAHDE
+
 }
 
 #----------------------------------------------------------------------
@@ -194,6 +213,10 @@ proc ApplyButtonPress_wAHDE {} {
         set g_WingDataChanged       1
         set Lcl_wAHDE_DataChanged    0
     }
+
+    # Destroy man window and enter data again
+    destroy .wahde
+    wingAirfoilHolesDataEdit
 }
 
 #----------------------------------------------------------------------
@@ -235,9 +258,9 @@ proc CancelButtonPress_wAHDE {} {
     if { $Lcl_wAHDE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wahde
             return 0
@@ -429,13 +452,13 @@ proc addEditTab_wAHDE {tabNum_wAHDE} {
     label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.firstRib -width 16 -text [::msgcat::mc "Initial Rib for config"]
     grid        .wahde.dataBot.ntebk.config$tabNum_wAHDE.firstRib -row 0 -column 1
     ttk::entry  .wahde.dataBot.ntebk.config$tabNum_wAHDE.e_firstRib -width 10 -textvariable Lcl_holeRibNum1($tabNum_wAHDE)
-    SetHelpBind .wahde.dataBot.ntebk.config$tabNum_wAHDE.e_firstRib holeRibNum1   HelpText_wAHDE
+    SetHelpBind .wahde.dataBot.ntebk.config$tabNum_wAHDE.e_firstRib [::msgcat::mc "holeRibNum1"]   HelpText_wAHDE
     grid        .wahde.dataBot.ntebk.config$tabNum_wAHDE.e_firstRib -row 0 -column 2 -sticky e -pady 1
 
     label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.lastRib -width 16 -text [::msgcat::mc "Last Rib for config"]
     grid        .wahde.dataBot.ntebk.config$tabNum_wAHDE.lastRib -row 1 -column 1
     ttk::entry  .wahde.dataBot.ntebk.config$tabNum_wAHDE.e_lastRib -width 10 -textvariable Lcl_holeRibNum2($tabNum_wAHDE)
-    SetHelpBind .wahde.dataBot.ntebk.config$tabNum_wAHDE.e_lastRib holeRibNum2   HelpText_wAHDE
+    SetHelpBind .wahde.dataBot.ntebk.config$tabNum_wAHDE.e_lastRib [::msgcat::mc "holeRibNum2"]   HelpText_wAHDE
     grid        .wahde.dataBot.ntebk.config$tabNum_wAHDE.e_lastRib -row 1 -column 2 -sticky e -pady 1
 
     label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.spacer2 -width 5 -text ""
@@ -454,7 +477,7 @@ proc addEditTab_wAHDE {tabNum_wAHDE} {
 
     #-------------
     # header for the item lines
-    label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.n -width 10 -text "Num"
+    label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.n -width 10 -text [::msgcat::mc "Num"]
     grid        .wahde.dataBot.ntebk.config$tabNum_wAHDE.n -row 5 -column 1 -sticky e
 
     label       .wahde.dataBot.ntebk.config$tabNum_wAHDE.p1 -width 10 -text [::msgcat::mc "P1: Type"]

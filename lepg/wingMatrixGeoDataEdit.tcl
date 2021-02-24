@@ -2,6 +2,7 @@
 #
 #  Window to edit the matrix og geometry
 #
+#  Pere Casellas
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
 #
@@ -44,7 +45,7 @@ proc wingMatrixGeoDataEdit {} {
 
     wm protocol .wMATRIXGE WM_DELETE_WINDOW { CancelButtonPress_wMATRIXGE }
 
-    wm title .wMATRIXGE [::msgcat::mc "01C. Matrix of geometry edit"]
+    wm title .wMATRIXGE [::msgcat::mc "Section 1C: Matrix of geometry edit"]
 
     #-------------
     # Frames and grids
@@ -67,7 +68,7 @@ proc wingMatrixGeoDataEdit {} {
 
     #-------------
     # Get a scrollable region
-    canvas .wMATRIXGE.dataBot.scroll  -width 400 -height 400 -yscrollcommand ".wMATRIXGE.dataBot.yscroll set"
+    canvas .wMATRIXGE.dataBot.scroll  -width 800 -height 400 -yscrollcommand ".wMATRIXGE.dataBot.yscroll set"
     ttk::scrollbar .wMATRIXGE.dataBot.yscroll -command ".wMATRIXGE.dataBot.scroll yview"
 
     grid .wMATRIXGE.dataBot.scroll -row 0 -column 0 -sticky nesw
@@ -91,10 +92,10 @@ proc wingMatrixGeoDataEdit {} {
 
     #-------------
     # buttons
-    button .wMATRIXGE.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wMATRIXGE
-    button .wMATRIXGE.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wMATRIXGE
-    button .wMATRIXGE.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wMATRIXGE
-    button .wMATRIXGE.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wMATRIXGE
+    button .wMATRIXGE.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wMATRIXGE
+    button .wMATRIXGE.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wMATRIXGE
+    button .wMATRIXGE.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wMATRIXGE
+    button .wMATRIXGE.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wMATRIXGE
 
     grid .wMATRIXGE.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wMATRIXGE.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -173,6 +174,10 @@ proc ApplyButtonPress_wMATRIXGE {} {
         set g_WingDataChanged       1
         set Lcl_wMATRIXGE_DataChanged    0
     }
+    
+    # Redraw top view
+    DrawTopView 
+    DrawTailView
 }
 
 #----------------------------------------------------------------------
@@ -194,6 +199,10 @@ proc OkButtonPress_wMATRIXGE {} {
         set Lcl_wMATRIXGE_DataChanged    0
     }
 
+    # Redraw top view
+    DrawTopView 
+    DrawTailView
+
     UnsetLclVarTrace_wMATRIXGE
     destroy .wMATRIXGE
 }
@@ -214,9 +223,9 @@ proc CancelButtonPress_wMATRIXGE {} {
     if { $Lcl_wMATRIXGE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wMATRIXGE
             return 0
@@ -324,47 +333,56 @@ proc addEdit_wMATRIXGE {} {
     label       .wMATRIXGE.dataMid.spacer00 -width 5 -text ""
     grid        .wMATRIXGE.dataMid.spacer00 -row 0 -column 0
 
-#    button      .wMATRIXGE.dataMid.b_decItems -width 10 -text [::msgcat::mc "dec Points"] -command DecItemLines_wMATRIXGE -state disabled
-#    grid        .wMATRIXGE.dataMid.b_decItems -row 1 -column 1 -sticky e -padx 3 -pady 3
+    button      .wMATRIXGE.dataMid.b_decItems -width 10 -text [::msgcat::mc "dec Points"] -command DecItemLines_wMATRIXGE -state disabled
+    grid        .wMATRIXGE.dataMid.b_decItems -row 1 -column 1 -sticky e -padx 3 -pady 3
 
-#    button      .wMATRIXGE.dataMid.b_incItems -width 10 -text [::msgcat::mc "inc Points"]  -command IncItemLines_wMATRIXGE
-#    grid        .wMATRIXGE.dataMid.b_incItems -row 1 -column 2 -sticky e -padx 3 -pady 3
+    button      .wMATRIXGE.dataMid.b_incItems -width 10 -text [::msgcat::mc "inc Points"]  -command IncItemLines_wMATRIXGE
+    grid        .wMATRIXGE.dataMid.b_incItems -row 1 -column 2 -sticky e -padx 3 -pady 3
+
+    button      .wMATRIXGE.dataMid.ih  -width 10 -text [::msgcat::mc "Graphic"] -command PutHelpImage
+    grid        .wMATRIXGE.dataMid.ih  -row 1 -column 4 -sticky e -pady 1
+
+    label       .wMATRIXGE.dataMid.spacer20 -width 5 -text ""
+    grid        .wMATRIXGE.dataMid.spacer20 -row 2 -column 0
+
+#    label       .wMATRIXGE.dataMid.note1 -width 120 -text [::msgcat::mc "This numerical matrix describes the main wing geometry"]
+#    grid        .wMATRIXGE.dataMid.note1 -row 3 -column 0
 
 #    label       .wMATRIXGE.dataMid.spacer20 -width 5 -text ""
-#    grid        .wMATRIXGE.dataMid.spacer20 -row 2 -column 0
+#    grid        .wMATRIXGE.dataMid.spacer20 -row 4 -column 0
 
     #-------------
     # header for the item lines
 
-    label       .wMATRIXGE.dataMid.spacerr -width 10 -text ""
-    grid        .wMATRIXGE.dataMid.spacerr -row 3 -column 9 -sticky e
+#    label       .wMATRIXGE.dataMid.spacerr -width 10 -text ""
+#    grid        .wMATRIXGE.dataMid.spacerr -row 5 -column 9 -sticky e
 
-    label       .wMATRIXGE.dataMid.n1 -width 10 -text "Num"
-    grid        .wMATRIXGE.dataMid.n1 -row 3 -column 0 -sticky e
+    label       .wMATRIXGE.dataMid.n1 -width 10 -text [::msgcat::mc "Num"]
+    grid        .wMATRIXGE.dataMid.n1 -row 6 -column 0 -sticky e
 
     label       .wMATRIXGE.dataMid.n2 -width 10 -text [::msgcat::mc "x-rib"]
-    grid        .wMATRIXGE.dataMid.n2 -row 3 -column 1 -sticky e
+    grid        .wMATRIXGE.dataMid.n2 -row 6 -column 1 -sticky e
 
     label       .wMATRIXGE.dataMid.n3 -width 10 -text [::msgcat::mc "y-LE"]
-    grid        .wMATRIXGE.dataMid.n3 -row 3 -column 2 -sticky e
+    grid        .wMATRIXGE.dataMid.n3 -row 6 -column 2 -sticky e
 
     label       .wMATRIXGE.dataMid.n4 -width 10 -text [::msgcat::mc "y-TE"]
-    grid        .wMATRIXGE.dataMid.n4 -row 3 -column 3 -sticky e 
+    grid        .wMATRIXGE.dataMid.n4 -row 6 -column 3 -sticky e 
 
     label       .wMATRIXGE.dataMid.n5 -width 10 -text [::msgcat::mc "xp"]
-    grid        .wMATRIXGE.dataMid.n5 -row 3 -column 4 -sticky e
+    grid        .wMATRIXGE.dataMid.n5 -row 6 -column 4 -sticky e
 
     label       .wMATRIXGE.dataMid.n6 -width 10 -text [::msgcat::mc "z"]
-    grid        .wMATRIXGE.dataMid.n6 -row 3 -column 5 -sticky e
+    grid        .wMATRIXGE.dataMid.n6 -row 6 -column 5 -sticky e
 
     label       .wMATRIXGE.dataMid.n7 -width 10 -text [::msgcat::mc "beta"]
-    grid        .wMATRIXGE.dataMid.n7 -row 3 -column 6 -sticky e
+    grid        .wMATRIXGE.dataMid.n7 -row 6 -column 6 -sticky e
 
     label       .wMATRIXGE.dataMid.n8 -width 10 -text [::msgcat::mc "RP"]
-    grid        .wMATRIXGE.dataMid.n8 -row 3 -column 7 -sticky e
+    grid        .wMATRIXGE.dataMid.n8 -row 6 -column 7 -sticky e
 
     label       .wMATRIXGE.dataMid.n9 -width 10 -text [::msgcat::mc "washin"]
-    grid        .wMATRIXGE.dataMid.n9 -row 3 -column 8 -sticky e
+    grid        .wMATRIXGE.dataMid.n9 -row 6 -column 8 -sticky e
 
 
         #-------------
@@ -375,6 +393,19 @@ proc addEdit_wMATRIXGE {} {
 
 #    UpdateItemLineButtons_wMATRIXGE
 }
+
+
+#----------------------------------------------------------------------
+# Call help image
+#----------------------------------------------------------------------
+proc PutHelpImage {} {
+
+    source "openHelpImage.tcl"
+    set imageName "img/S01C.png"
+    OpenHelpImage $imageName
+}
+#----------------------------------------------------------------------
+
 
 #----------------------------------------------------------------------
 #  DecItemLines_wMATRIXGE
@@ -513,7 +544,7 @@ proc AddItemLine_wMATRIXGE { lineNum } {
     grid        .wMATRIXGE.dataBot.scroll.widgets.e_n7$lineNum -row [expr (4-1 + $lineNum)] -column 6 -sticky e -pady 1
 
     ttk::entry  .wMATRIXGE.dataBot.scroll.widgets.e_n8$lineNum -width 10 -textvariable Lcl_ribConfig($lineNum,10)
-    SetHelpBind .wMATRIXGE.dataBot.scroll.widgets.e_n8$lineNum [::msgcat::mc "Washin rotation point along chord (percent)"] HelpText_wMATRIXGE
+    SetHelpBind .wMATRIXGE.dataBot.scroll.widgets.e_n8$lineNum [::msgcat::mc "Washin rotation point along chord %%"] HelpText_wMATRIXGE
     grid        .wMATRIXGE.dataBot.scroll.widgets.e_n8$lineNum -row [expr (4-1 + $lineNum)] -column 7 -sticky e -pady 1
 
     ttk::entry  .wMATRIXGE.dataBot.scroll.widgets.e_n9$lineNum -width 10 -textvariable Lcl_ribConfig($lineNum,51)

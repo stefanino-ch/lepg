@@ -71,10 +71,10 @@ proc wingSpecWtDataEdit {} {
 
     #-------------
     # buttons
-    button .wSPECWT.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wSPECWT
-    button .wSPECWT.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wSPECWT
-    button .wSPECWT.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wSPECWT
-    button .wSPECWT.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wSPECWT
+    button .wSPECWT.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wSPECWT
+    button .wSPECWT.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wSPECWT
+    button .wSPECWT.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wSPECWT
+    button .wSPECWT.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wSPECWT
 
     grid .wSPECWT.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wSPECWT.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -82,6 +82,10 @@ proc wingSpecWtDataEdit {} {
     grid .wSPECWT.btn.help      -row 1 -column 3 -sticky e -padx 10 -pady 10
 
     SetLclVarTrace_wSPECWT
+
+
+
+    
 }
 
 #----------------------------------------------------------------------
@@ -204,9 +208,9 @@ proc CancelButtonPress_wSPECWT {} {
     if { $Lcl_wSPECWT_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wSPECWT
             return 0
@@ -319,6 +323,9 @@ proc addEdit_wSPECWT {} {
     SetHelpBind .wSPECWT.dataTop.e_p "Configuration, type 0 and 1 available"   HelpText_wSPECWT
     grid        .wSPECWT.dataTop.e_p -row 1 -column 1 -sticky e -pady 1
 
+    button      .wSPECWT.dataTop.ih  -width 10 -text [::msgcat::mc "Graphic"] -command PutHelpImage
+    grid        .wSPECWT.dataTop.ih  -row 1 -column 3 -sticky e -pady 1
+
     label       .wSPECWT.dataTop.p11 -width 20 -text [::msgcat::mc "Angle LE"]
     grid        .wSPECWT.dataTop.p11 -row 2 -column 0 -sticky e
 
@@ -348,6 +355,18 @@ proc addEdit_wSPECWT {} {
 #    UpdateItemLineButtons_wSPECWT
 
 }
+
+#----------------------------------------------------------------------
+# Call help image
+#----------------------------------------------------------------------
+proc PutHelpImage {} {
+
+    source "openHelpImage.tcl"
+    set imageName "img/S27.png"
+    OpenHelpImage $imageName
+}
+#----------------------------------------------------------------------
+
 
 #----------------------------------------------------------------------
 #  DecItemLines_wSPECWT
@@ -453,11 +472,11 @@ proc AddItemLine_wSPECWT { lineNum } {
 #    grid        .wSPECWT.dataTop.n$lineNum -row [expr (6-1 + $lineNum)] -column 0 -sticky e
 
     ttk::entry  .wSPECWT.dataTop.e_p1$lineNum -width 15 -textvariable Lcl_specWtA($lineNum)
-    SetHelpBind .wSPECWT.dataTop.e_p1$lineNum "Angle name"   HelpText_wSPECWT
+    SetHelpBind .wSPECWT.dataTop.e_p1$lineNum [::msgcat::mc "Angle name"]   HelpText_wSPECWT
     grid        .wSPECWT.dataTop.e_p1$lineNum -row [expr (2-1 + $lineNum)] -column 1 -sticky e -pady 1
 
     ttk::entry  .wSPECWT.dataTop.e_p2$lineNum -width 10 -textvariable Lcl_specWtB($lineNum)
-    SetHelpBind .wSPECWT.dataTop.e_p2$lineNum "Angle degrees clockwise"   HelpText_wSPECWT
+    SetHelpBind .wSPECWT.dataTop.e_p2$lineNum [::msgcat::mc "Angle degrees clockwise"]   HelpText_wSPECWT
     grid        .wSPECWT.dataTop.e_p2$lineNum -row [expr (2-1 + $lineNum)] -column 2 -sticky e -pady 1
 
     label       .wSPECWT.dataTop.lbl1$lineNum -width 15 -text [::msgcat::mc "deg"]

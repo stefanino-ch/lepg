@@ -42,6 +42,9 @@ set g_PreProcFileTypes {
 set g_PreProcFilePathName ""
                                     # path and name of the file with the geometry data in
 
+set g_PreImagePathName ""
+                                    # path and name of the image
+
 
 set g_WingDataAvailable 0
                                     # set to 1 if wing data is available for edit
@@ -66,8 +69,8 @@ set data_le(c0) 10.11
 #
 #  LEparagliding GUI
 set LepVersioNumber "3.15"
-set LepgNumber      "V0.99.5 test"
-set VersionDate     "2021-01-14"
+set LepgNumber      "V0.99.7 test2"
+set VersionDate     "2021-01-31"
 #
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
@@ -97,6 +100,8 @@ proc myAppMain { argc argv } {
     dict set ::GlobalConfig PreProcDirectory ""
     dict set ::GlobalConfig LepDirectory ""
     dict set ::GlobalConfig PreProcPathName ""
+    dict set ::GlobalConfig PreImagePathName ""
+
 
     # Hardcoded defaults will be overwritten by config file values
     set ::GlobalConfig [::lepConfigFile::loadFile $::GlobalConfig]
@@ -205,7 +210,7 @@ proc InitGui { root } {
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "01A. Basic Data"]            -command OpenWingBasicDataEdit -state disabled
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "01B. Washin"]                -command OpenWingWashinDataEdit -state disabled
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "01C. Geometry edit"]         -command OpenWingGeoEditDataEdit -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "01D. Cells number"]          -command OpenWingCellsNumberDataEdit -state disabled
+    #$base.menu.wing add command -underline 0 -label [::msgcat::mc "01D. Cells number"]          -command OpenWingCellsNumberDataEdit -state disabled
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "02. Airfoils"]               -command OpenWingAirfoilsDataEdit  -state disabled
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "03. Anchor Points"]          -command OpenWingAnchorsDataEdit -state disabled
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "04. Airfoil Holes"]          -command OpenWingAirfoilHolesDataEdit -state disabled
@@ -215,8 +220,8 @@ proc InitGui { root } {
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "10. Brake lines"]            -command OpenBrakeLinesDataEdit -state disabled
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "11. Ramification lengths"]   -command OpenRamificationLengthDataEdit -state disabled
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "12. HV-VH Ribs"]             -command OpenHV-VH-RibsDataEdit -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "15. Extrados Colors"]        -command OpenWingLEColorDataEdit -state disabled
-    $base.menu.wing add command -underline 0 -label [::msgcat::mc "16. Intrados Colors"]        -command OpenWingTEColorDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "15. Extrados Colors"]        -command OpenWingTEColorDataEdit -state disabled
+    $base.menu.wing add command -underline 0 -label [::msgcat::mc "16. Intrados Colors"]        -command OpenWingLEColorDataEdit -state disabled
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "17. Additional rib points"]  -command OpenWingAddRibPointsDataEdit -state disabled
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "18. Elastic lines corr"]     -command OpenElasticLinesCorrEdit -state disabled
     $base.menu.wing add command -underline 0 -label [::msgcat::mc "21. Joncs definition"]       -command OpenWingJoncsDefDataEdit -state disabled
@@ -243,26 +248,33 @@ proc InitGui { root } {
 
     # Draw menu
     $base.menu add cascade -label [::msgcat::mc "Draw"] -underline 0 -menu $base.menu.draw
-    $base.menu.draw add command -underline 6 -label [::msgcat::mc "Redraw"] -command DrawTopView
+    $base.menu.draw add command -underline 6 -label [::msgcat::mc "Redraw"] -command DrawTopViewAndVault
 
     # Run menu
     $base.menu add cascade -label [::msgcat::mc "Run"] -underline 0 -menu $base.menu.run
-    $base.menu.run add command -underline 6 -label [::msgcat::mc "Check coherence"]
-    $base.menu.run add command -underline 4 -label [::msgcat::mc "Run LEparagliding"]
+    $base.menu.run add command -underline 6 -label [::msgcat::mc "Check coherence"] -state disabled
+    $base.menu.run add command -underline 4 -label [::msgcat::mc "Run LEparagliding"]  -command lepProcRun -state disabled
 
     # Settings menu
     $base.menu add cascade -label [::msgcat::mc "Settings"] -underline 0 -menu $base.menu.settings
     $base.menu.settings add cascade -label [::msgcat::mc "Language"] -underline 0 -menu $base.menu.settings.language
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Catalan"] -command {SetLanguage "ca"}
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Dutch"] -command {SetLanguage "nl"}
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "English"] -command {SetLanguage "en"}
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "German"]  -command {SetLanguage "de"}
-    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Polish"]  -command {SetLanguage "pl"}
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "French"]  -command {SetLanguage "fr"}
-    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Catalan"] -command {SetLanguage "ca"}
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Italian"]  -command {SetLanguage "it"}
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Polish"]  -command {SetLanguage "pl"}
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Portuguese"]  -command {SetLanguage "pt"}
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Spanish"]  -command {SetLanguage "es"}
     $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Russian"] -command {SetLanguage "ru"}
-
-
+    $base.menu.settings.language add command -underline 0 -label [::msgcat::mc "Ukrainian"] -command {SetLanguage "ua"}
+    $base.menu.settings add separator
     $base.menu.settings add command -underline 0 -label [::msgcat::mc "Geometry-Processor"] -command PreProcDirSelect_lepg
     $base.menu.settings add command -underline 0 -label [::msgcat::mc "Wing-Processor"] -command LepDirSelect
+    $base.menu.settings add separator
+    $base.menu.settings add command -underline 0 -label [::msgcat::mc "Main window image"] -command MainwImageSelect
+
 
     # Help menu
     $base.menu add cascade -label [::msgcat::mc "Help"] -underline 0 -menu $base.menu.help
@@ -284,6 +296,40 @@ proc InitGui { root } {
 
 #    End InitGui
 
+
+#----------------------------------------------------------------------
+# Create only image window
+#----------------------------------------------------------------------
+
+proc CreateOnlyImage {} {
+
+    source "globalWingVars.tcl"
+
+    global .sidev.c_sidev
+
+    # Side view
+    ttk::labelframe .sidev -text [::msgcat::mc "Project image"]
+#    canvas .sidev.c_sidev -width 500 -height 300 -bg white
+#    pack .sidev.c_sidev -expand yes -fill both
+
+#   Image selected from your path
+    global Status_lPR
+    set PreImagePathName [dict get $::GlobalConfig PreImagePathName]
+#    set img [image create photo -file img/dissphc.gif]
+    set img [image create photo -file $PreImagePathName] 
+    label .sidev.c_sidev -image $img
+    pack  .sidev.c_sidev -expand yes -fill both
+#    puts "WWWW $PreImagePathName"
+
+    grid .sidev -row 0 -column 1 -sticky nesw
+
+
+}
+
+#----------------------------------------------------------------------
+# Create Main Window
+#----------------------------------------------------------------------
+
 proc CreateMainWindow {} {
 
     source "globalWingVars.tcl"
@@ -304,14 +350,19 @@ proc CreateMainWindow {} {
     pack .tailv.c_tailv -expand yes -fill both
 
     # Side view
-    ttk::labelframe .sidev -text [::msgcat::mc "Laboratori logo"]
+    ttk::labelframe .sidev -text [::msgcat::mc "Project image"]
 #    canvas .sidev.c_sidev -width 500 -height 300 -bg white
 #    pack .sidev.c_sidev -expand yes -fill both
 
-    set img [image create photo -file img/dissphc.gif]
+#   Image selected from your path
+    global Status_lPR
+    set PreImagePathName [dict get $::GlobalConfig PreImagePathName]
+#    set img [image create photo -file img/dissphc.gif]
+    set img [image create photo -file $PreImagePathName] 
+#    set img [image create photo -file $PreImagePathName -width 500] 
     label .sidev.c_sidev -image $img
-    pack  .sidev.c_sidev -side  top
-
+    pack  .sidev.c_sidev -expand yes -fill both
+#    puts "WWWW $PreImagePathName"
 
     # Basic data
     ttk::labelframe .bd -text [::msgcat::mc "Basic wing data"]
@@ -404,6 +455,14 @@ proc CalcScaleFactor {} {
     set SF [expr $SF * 0.9]
 
     return $SF
+}
+
+proc DrawTopViewAndVault {} {
+
+    # Redraw top and tail view
+    DrawTopView 
+    DrawTailView
+
 }
 
 proc DrawTopView {} {
@@ -562,7 +621,9 @@ proc OpenPreProcFile { {FilePathName ""} } {
         set ReturnValue [ readPreProcDataFile $FilePathName ]
 
         if { $ReturnValue != 0 } {
-            error "Cannot Open File $FilePathName for Reading"
+           # error [::msgcat::mc "Cannot Open File"] $FilePathName "for Reading"
+        error "Cannot Open File $FilePathName for Reading"
+
         }
 
         set g_PreProcDataChanged    0
@@ -667,7 +728,8 @@ proc ImportWingGeometry {} {
         set ReturnValue [ importPreProcOutFile $FilePathName ]
 
         if { $ReturnValue != 0 } {
-            error "Cannot open file $FilePathName for reading"
+             error "Cannot open file $FilePathName for reading"]
+
         }
 
         set g_WingDataChanged 0
@@ -817,18 +879,18 @@ proc SaveWingFileAs { } {
 #           0   if user want to abort
 #----------------------------------------------------------------------
 proc PromptForGeometrySave { } {
-    set answer [tk_messageBox -title "Geometry: you have unsaved data!" \
+    set answer [tk_messageBox -title [::msgcat::mc "Geometry: you have unsaved data!"] \
         -type yesno -icon question \
-        -message "You have unsaved Geometry data. \n Do you want to save the changes?"]
+        -message [::msgcat::mc "You have unsaved Geometry data. \n Do you want to save the changes?"]]
     if { $answer == "yes" } {
         SavePreProcFileAs
     }
 }
 
 proc PromptForWingSave { } {
-    set answer [tk_messageBox -title "Wing: you have unsaved data!" \
+    set answer [tk_messageBox -title [::msgcat::mc "Wing: you have unsaved data!"] \
         -type yesno -icon question \
-        -message "You have unsaved Wing data. \n Do you want to save the changes?"]
+        -message [::msgcat::mc "You have unsaved Wing data. \n Do you want to save the changes?"]]
     if { $answer == "yes" } {
         SaveWingFileAs
     }
@@ -915,16 +977,16 @@ proc OpenHV-VH-RibsDataEdit { } {
     wingHV-VH-RibsDataEdit
 }
 
-proc OpenWingLEColorDataEdit { } {
-    source "wingLEColorsDataEdit.tcl"
-
-    wingLeadingEdgeColorsDataEdit
-}
-
 proc OpenWingTEColorDataEdit { } {
     source "wingTEColorsDataEdit.tcl"
 
     wingTrailingEdgeColorsDataEdit
+}
+
+proc OpenWingLEColorDataEdit { } {
+    source "wingLEColorsDataEdit.tcl"
+
+    wingLeadingEdgeColorsDataEdit
 }
 
 proc OpenWingAddRibPointsDataEdit { } {
@@ -1086,7 +1148,7 @@ proc HelpAbout { } {
     pack .helplep.fr1.lb2 .helplep.fr1.lb3 .helplep.fr1.lb4 .helplep.fr1.lb5 \
     .helplep.fr1.lb6 -side top
 
-    button .helplep.fr1.holaok -text " OK " -command {destroy .helplep}
+    button .helplep.fr1.holaok -text [::msgcat::mc " OK "] -command {destroy .helplep}
     pack .helplep.fr1.holaok -padx 20 -pady 10
 
 }
@@ -1137,7 +1199,23 @@ proc PreProcDirSelect_lepg {} {
     source "preProcDirSelect.tcl"
 
     PreProcDirSelect_pPDS
+
+    # CreateMainWindow 
 }
+
+#---------------------------------------------------------------------
+#  Main window image selection
+#---------------------------------------------------------------------
+proc MainwImageSelect {} {
+    source "mainwImageSelect.tcl"
+
+    MainwIS_pIDS
+
+# Refresh main window not here
+#    .sidev.c_sidev delete "all"   
+#    CreateMainWindow
+}
+
 
 
 proc SetGlobalVarTrace {} {
@@ -1191,7 +1269,7 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "01A. Basic Data"]   -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "01B. Washin"]   -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "01C. Geometry edit"]   -state disabled
-        $base.menu.wing entryconfigure [::msgcat::mc "01D. Cells number"]   -state disabled
+       # $base.menu.wing entryconfigure [::msgcat::mc "01D. Cells number"]   -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "02. Airfoils"]     -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "03. Anchor Points"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "04. Airfoil Holes"] -state disabled
@@ -1215,19 +1293,23 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "30. Airfoil thickness"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "31. New skin tension"] -state disabled
         $base.menu.wing entryconfigure [::msgcat::mc "Calc Wing"] -state disabled
+
         $base.menu.wingplan entryconfigure [::msgcat::mc "06. Sewing Allowances"] -state disabled
         $base.menu.wingplan entryconfigure [::msgcat::mc "07. Marks"] -state disabled
         $base.menu.wingplan entryconfigure [::msgcat::mc "19. DXF layer names"] -state disabled
         $base.menu.wingplan entryconfigure [::msgcat::mc "20. Marks types"] -state disabled
         $base.menu.wingplan entryconfigure [::msgcat::mc "24. General 2D DXF options"] -state disabled
         $base.menu.wingplan entryconfigure [::msgcat::mc "25. General 3D DXF options"] -state disabled
+
+        $base.menu.run entryconfigure [::msgcat::mc "Check coherence"] -state disabled
+        $base.menu.run entryconfigure [::msgcat::mc "Run LEparagliding"] -state disabled
     } else {
         $base.menu.wing entryconfigure [::msgcat::mc "Save data"]    -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Save data As"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "01A. Basic Data"]   -state active
         $base.menu.wing entryconfigure [::msgcat::mc "01B. Washin"]   -state active
         $base.menu.wing entryconfigure [::msgcat::mc "01C. Geometry edit"]   -state active
-        $base.menu.wing entryconfigure [::msgcat::mc "01D. Cells number"]   -state active
+       # $base.menu.wing entryconfigure [::msgcat::mc "01D. Cells number"]   -state active
         $base.menu.wing entryconfigure [::msgcat::mc "02. Airfoils"]     -state active
         $base.menu.wing entryconfigure [::msgcat::mc "03. Anchor Points"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "04. Airfoil Holes"] -state active
@@ -1251,12 +1333,15 @@ proc SetWingBtnStatus { a e op } {
         $base.menu.wing entryconfigure [::msgcat::mc "30. Airfoil thickness"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "31. New skin tension"] -state active
         $base.menu.wing entryconfigure [::msgcat::mc "Calc Wing"] -state active
+
         $base.menu.wingplan entryconfigure [::msgcat::mc "06. Sewing Allowances"] -state active
         $base.menu.wingplan entryconfigure [::msgcat::mc "07. Marks"] -state active
         $base.menu.wingplan entryconfigure [::msgcat::mc "19. DXF layer names"] -state active
         $base.menu.wingplan entryconfigure [::msgcat::mc "20. Marks types"] -state active
         $base.menu.wingplan entryconfigure [::msgcat::mc "24. General 2D DXF options"] -state active
         $base.menu.wingplan entryconfigure [::msgcat::mc "25. General 3D DXF options"] -state active
+
+        $base.menu.run entryconfigure [::msgcat::mc "Run LEparagliding"] -state active
     }
 }
 

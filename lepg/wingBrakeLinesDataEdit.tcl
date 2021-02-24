@@ -44,7 +44,7 @@ proc wingBrakeLinesDataEdit {} {
 
     wm protocol .wBLDE WM_DELETE_WINDOW { CancelButtonPress_wBLDE }
 
-    wm title .wBLDE [::msgcat::mc "Brake lines configuration"]
+    wm title .wBLDE [::msgcat::mc "Section 10: Brake lines configuration"]
 
     #-------------
     # Frames and grids
@@ -67,10 +67,10 @@ proc wingBrakeLinesDataEdit {} {
 
     #-------------
     # buttons
-    button .wBLDE.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wBLDE
-    button .wBLDE.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wBLDE
-    button .wBLDE.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wBLDE
-    button .wBLDE.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wBLDE
+    button .wBLDE.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wBLDE
+    button .wBLDE.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wBLDE
+    button .wBLDE.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wBLDE
+    button .wBLDE.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wBLDE
 
     grid .wBLDE.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wBLDE.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -227,9 +227,9 @@ proc CancelButtonPress_wBLDE {} {
     if { $Lcl_wBLDE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wBLDE
             return 0
@@ -345,7 +345,7 @@ proc addEdit_wBLDE {} {
 
     #-------------
     # header for the item lines
-    label       .wBLDE.dataTop.n -width 10 -text "Num"
+    label       .wBLDE.dataTop.n -width 10 -text [::msgcat::mc "Num"]
     grid        .wBLDE.dataTop.n -row 5 -column 1 -sticky e
 
     label       .wBLDE.dataTop.p1 -width 10 -text [::msgcat::mc "Lvl 1"]
@@ -357,13 +357,13 @@ proc addEdit_wBLDE {} {
     label       .wBLDE.dataTop.p3 -width 10 -text [::msgcat::mc "Lvl 3"]
     grid        .wBLDE.dataTop.p3 -row 5 -column 4 -sticky e
 
-    label       .wBLDE.dataTop.p4 -width 10 -text "Lvl 4"
+    label       .wBLDE.dataTop.p4 -width 10 -text [::msgcat::mc "Lvl 4"]
     grid        .wBLDE.dataTop.p4 -row 5 -column 5 -sticky e
 
-    label       .wBLDE.dataTop.p5 -width 10 -text "Anchor line"
+    label       .wBLDE.dataTop.p5 -width 10 -text [::msgcat::mc "Anchor line"]
     grid        .wBLDE.dataTop.p5 -row 5 -column 6 -sticky e
 
-    label       .wBLDE.dataTop.p6 -width 10 -text "Rib num"
+    label       .wBLDE.dataTop.p6 -width 10 -text [::msgcat::mc "Rib num"]
     grid        .wBLDE.dataTop.p6 -row 5 -column 7 -sticky e
 
     label       .wBLDE.dataTop.spacer58 -width 5 -text ""
@@ -380,7 +380,7 @@ proc addEdit_wBLDE {} {
     label       .wBLDE.dataBot.spacer00 -width 5 -text ""
     grid        .wBLDE.dataBot.spacer00 -row 0 -column 0 -sticky e
 
-    label       .wBLDE.dataBot.t1 -width 15 -text "Distribution"
+    label       .wBLDE.dataBot.t1 -width 15 -text [::msgcat::mc "Distribution"]
     grid        .wBLDE.dataBot.t1 -row 1 -column 1 -sticky e
 
     label       .wBLDE.dataBot.p1 -width 10 -text [::msgcat::mc "Point 1"]
@@ -392,23 +392,23 @@ proc addEdit_wBLDE {} {
     label       .wBLDE.dataBot.p3 -width 10 -text [::msgcat::mc "Point 3"]
     grid        .wBLDE.dataBot.p3 -row 2 -column 4 -sticky e
 
-    label       .wBLDE.dataBot.p4 -width 10 -text "Point 4"
+    label       .wBLDE.dataBot.p4 -width 10 -text [::msgcat::mc "Point 4"]
     grid        .wBLDE.dataBot.p4 -row 2 -column 5 -sticky e
 
-    label       .wBLDE.dataBot.p5 -width 10 -text "Point 5"
+    label       .wBLDE.dataBot.p5 -width 10 -text [::msgcat::mc "Point 5"]
     grid        .wBLDE.dataBot.p5 -row 2 -column 6 -sticky e
 
-    label       .wBLDE.dataBot.l1 -width 10 -text "S \[%\]"
+    label       .wBLDE.dataBot.l1 -width 10 -text [::msgcat::mc "S \[%\]"]
     grid        .wBLDE.dataBot.l1 -row 3 -column 1 -sticky e
 
-    label       .wBLDE.dataBot.l2 -width 10 -text "delta L"
+    label       .wBLDE.dataBot.l2 -width 10 -text [::msgcat::mc "delta L"]
     grid        .wBLDE.dataBot.l2 -row 4 -column 1 -sticky e
 
     #-------------
     # brake distribution, data line 1
     for {set i 1} {$i <= 5 } {incr i} {
         ttk::entry  .wBLDE.dataBot.e_p1$i -width 10 -textvariable Lcl_brakeDistr(1,$i)
-        SetHelpBind .wBLDE.dataBot.e_p1$i brakeLinedistr_S   HelpText_wBLDE
+        SetHelpBind .wBLDE.dataBot.e_p1$i [::msgcat::mc "brakeLinedistr_S"]   HelpText_wBLDE
         grid        .wBLDE.dataBot.e_p1$i -row 3 -column [expr (1 + $i)] -sticky e -pady 1
     }
 
@@ -416,7 +416,7 @@ proc addEdit_wBLDE {} {
     # brake distribution, data line 2
     for {set i 1} {$i <= 5 } {incr i} {
         ttk::entry  .wBLDE.dataBot.e_p2$i -width 10 -textvariable Lcl_brakeDistr(2,$i)
-        SetHelpBind .wBLDE.dataBot.e_p2$i brakeLinedistr_L   HelpText_wBLDE
+        SetHelpBind .wBLDE.dataBot.e_p2$i [::msgcat::mc "brakeLinedistr_L"]   HelpText_wBLDE
         grid        .wBLDE.dataBot.e_p2$i -row 4 -column [expr (1 + $i)] -sticky e -pady 1
     }
 
@@ -525,27 +525,27 @@ proc AddItemLine_wBLDE { lineNum } {
     grid        .wBLDE.dataTop.n$lineNum -row [expr (6-1 + $lineNum)] -column 1 -sticky e
 
     ttk::entry  .wBLDE.dataTop.e_p1$lineNum -width 10 -textvariable Lcl_brakeLinePath($lineNum,3)
-    SetHelpBind .wBLDE.dataTop.e_p1$lineNum brakeLinePath_L1   HelpText_wBLDE
+    SetHelpBind .wBLDE.dataTop.e_p1$lineNum [::msgcat::mc "brakeLinePath_L1"]   HelpText_wBLDE
     grid        .wBLDE.dataTop.e_p1$lineNum -row [expr (6-1 + $lineNum)] -column 2 -sticky e -pady 1
 
     ttk::entry  .wBLDE.dataTop.e_p2$lineNum -width 10 -textvariable Lcl_brakeLinePath($lineNum,5)
-    SetHelpBind .wBLDE.dataTop.e_p2$lineNum brakeLinePath_L2   HelpText_wBLDE
+    SetHelpBind .wBLDE.dataTop.e_p2$lineNum [::msgcat::mc "brakeLinePath_L2"]   HelpText_wBLDE
     grid        .wBLDE.dataTop.e_p2$lineNum -row [expr (6-1 + $lineNum)] -column 3 -sticky e -pady 1
 
     ttk::entry  .wBLDE.dataTop.e_p3$lineNum -width 10 -textvariable Lcl_brakeLinePath($lineNum,7)
-    SetHelpBind .wBLDE.dataTop.e_p3$lineNum brakeLinePath_L3   HelpText_wBLDE
+    SetHelpBind .wBLDE.dataTop.e_p3$lineNum [::msgcat::mc "brakeLinePath_L3"]   HelpText_wBLDE
     grid        .wBLDE.dataTop.e_p3$lineNum -row [expr (6-1 + $lineNum)] -column 4 -sticky e -pady 1
 
     ttk::entry  .wBLDE.dataTop.e_p4$lineNum -width 10 -textvariable Lcl_brakeLinePath($lineNum,9)
-    SetHelpBind .wBLDE.dataTop.e_p4$lineNum brakeLinePath_L4   HelpText_wBLDE
+    SetHelpBind .wBLDE.dataTop.e_p4$lineNum [::msgcat::mc "brakeLinePath_L4"]   HelpText_wBLDE
     grid        .wBLDE.dataTop.e_p4$lineNum -row [expr (6-1 + $lineNum)] -column 5 -sticky e -pady 1
 
     ttk::entry  .wBLDE.dataTop.e_p5$lineNum -width 10 -textvariable Lcl_brakeLinePath($lineNum,14)
-    SetHelpBind .wBLDE.dataTop.e_p5$lineNum brakeLinePath_A1   HelpText_wBLDE
+    SetHelpBind .wBLDE.dataTop.e_p5$lineNum [::msgcat::mc "brakeLinePath_A1"]   HelpText_wBLDE
     grid        .wBLDE.dataTop.e_p5$lineNum -row [expr (6-1 + $lineNum)] -column 6 -sticky e -pady 1
 
     ttk::entry  .wBLDE.dataTop.e_p6$lineNum -width 10 -textvariable Lcl_brakeLinePath($lineNum,15)
-    SetHelpBind .wBLDE.dataTop.e_p6$lineNum brakeLinePath_A2   HelpText_wBLDE
+    SetHelpBind .wBLDE.dataTop.e_p6$lineNum [::msgcat::mc "brakeLinePath_A2"]   HelpText_wBLDE
     grid        .wBLDE.dataTop.e_p6$lineNum -row [expr (6-1 + $lineNum)] -column 7 -sticky e -pady 1
 
 }

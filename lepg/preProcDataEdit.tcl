@@ -157,16 +157,16 @@ proc editPreProcData {} {
     ttk::entry .ppde.le.e_c02LE -width 8 -textvariable Lcl_c02LE
     ttk::entry .ppde.le.e_ex2LE -width 8 -textvariable Lcl_ex2LE
 
-    SetHelpBind .ppde.le.e_typeLE typeLE HelpText_pPDE
-    SetHelpBind .ppde.le.e_a1LE a1LE HelpText_pPDE
-    SetHelpBind .ppde.le.e_b1LE b1LE HelpText_pPDE
-    SetHelpBind .ppde.le.e_x1LE x1LE HelpText_pPDE
-    SetHelpBind .ppde.le.e_x2LE x2LE HelpText_pPDE
-    SetHelpBind .ppde.le.e_xmLE xmLE HelpText_pPDE
-    SetHelpBind .ppde.le.e_c01LE c01LE HelpText_pPDE
-    SetHelpBind .ppde.le.e_ex1LE ex1LE HelpText_pPDE
-    SetHelpBind .ppde.le.e_c02LE c02LE HelpText_pPDE
-    SetHelpBind .ppde.le.e_ex2LE ex2LE HelpText_pPDE
+    SetHelpBind .ppde.le.e_typeLE [::msgcat::mc "typeLE"] HelpText_pPDE
+    SetHelpBind .ppde.le.e_a1LE [::msgcat::mc "a1LE"] HelpText_pPDE
+    SetHelpBind .ppde.le.e_b1LE [::msgcat::mc "b1LE"] HelpText_pPDE
+    SetHelpBind .ppde.le.e_x1LE [::msgcat::mc "x1LE"] HelpText_pPDE
+    SetHelpBind .ppde.le.e_x2LE [::msgcat::mc "x2LE"] HelpText_pPDE
+    SetHelpBind .ppde.le.e_xmLE [::msgcat::mc "xmLE"] HelpText_pPDE
+    SetHelpBind .ppde.le.e_c01LE [::msgcat::mc "c01LE"] HelpText_pPDE
+    SetHelpBind .ppde.le.e_ex1LE [::msgcat::mc "ex1LE"] HelpText_pPDE
+    SetHelpBind .ppde.le.e_c02LE [::msgcat::mc "c02LE"] HelpText_pPDE
+    SetHelpBind .ppde.le.e_ex2LE [::msgcat::mc "ex2LE"] HelpText_pPDE
 
     grid .ppde.le.typeLE -row 0 -column 0 -sticky e
     grid .ppde.le.e_typeLE -row 0 -column 1 -sticky w
@@ -209,14 +209,14 @@ proc editPreProcData {} {
     ttk::entry .ppde.te.e_y0TE -width 8 -textvariable Lcl_y0TE
     ttk::entry .ppde.te.e_ex1TE -width 8 -textvariable Lcl_ex1TE
 
-    SetHelpBind .ppde.te.e_typeTE typeTE HelpText_pPDE
-    SetHelpBind .ppde.te.e_a1TE a1TE HelpText_pPDE
-    SetHelpBind .ppde.te.e_b1TE b1TE HelpText_pPDE
-    SetHelpBind .ppde.te.e_x1TE x1TE HelpText_pPDE
-    SetHelpBind .ppde.te.e_xmTE xmTE HelpText_pPDE
-    SetHelpBind .ppde.te.e_c0TE c0TE HelpText_pPDE
-    SetHelpBind .ppde.te.e_y0TE y0TE HelpText_pPDE
-    SetHelpBind .ppde.te.e_ex1TE ex1TE HelpText_pPDE
+    SetHelpBind .ppde.te.e_typeTE [::msgcat::mc "typeTE"] HelpText_pPDE
+    SetHelpBind .ppde.te.e_a1TE [::msgcat::mc "a1TE"] HelpText_pPDE
+    SetHelpBind .ppde.te.e_b1TE [::msgcat::mc "b1TE"] HelpText_pPDE
+    SetHelpBind .ppde.te.e_x1TE [::msgcat::mc "x1TE"] HelpText_pPDE
+    SetHelpBind .ppde.te.e_xmTE [::msgcat::mc "xmTE"] HelpText_pPDE
+    SetHelpBind .ppde.te.e_c0TE [::msgcat::mc "c0TE"] HelpText_pPDE
+    SetHelpBind .ppde.te.e_y0TE [::msgcat::mc "y0TE"] HelpText_pPDE
+    SetHelpBind .ppde.te.e_ex1TE [::msgcat::mc "ex1TE"] HelpText_pPDE
 
     grid .ppde.te.typeTE -row 0 -column 0 -sticky e
     grid .ppde.te.e_typeTE -row 0 -column 1 -sticky w
@@ -253,10 +253,10 @@ proc editPreProcData {} {
     ttk::entry .ppde.vault.e_x1Vault -width 8 -state $VaultMode1 -textvariable Lcl_x1Vault
     ttk::entry .ppde.vault.e_xmVault -width 8 -state $VaultMode1 -textvariable Lcl_c1Vault
 
-    SetHelpBind .ppde.vault.e_a1Vault a1Vault HelpText_pPDE
-    SetHelpBind .ppde.vault.e_b1Vault b1Vault HelpText_pPDE
-    SetHelpBind .ppde.vault.e_x1Vault x1Vault HelpText_pPDE
-    SetHelpBind .ppde.vault.e_xmVault xmVault HelpText_pPDE
+    SetHelpBind .ppde.vault.e_a1Vault [::msgcat::mc "a1Vault"] HelpText_pPDE
+    SetHelpBind .ppde.vault.e_b1Vault [::msgcat::mc "b1Vault"] HelpText_pPDE
+    SetHelpBind .ppde.vault.e_x1Vault [::msgcat::mc "x1Vault"] HelpText_pPDE
+    SetHelpBind .ppde.vault.e_xmVault [::msgcat::mc "xmVault"] HelpText_pPDE
 
     foreach i {1 2 3 4} {
         # radius
@@ -304,7 +304,7 @@ proc editPreProcData {} {
     ttk::radiobutton .ppde.cells.ra -variable cellDistrType -value 3 -text [::msgcat::mc "Cell width proportional to chord"]
     ttk::radiobutton .ppde.cells.rb -variable cellDistrType -value 4 -text [::msgcat::mc "Explicit width of each cell"]
 
-    button .ppde.cells.setb  -width 10 -text "Widths"  -command SetpreCellsDis4DataEdit
+    button .ppde.cells.setb  -width 10 -text [::msgcat::mc "Widths"]  -command SetpreCellsDis4DataEdit
 
     bind .ppde.cells.rc <ButtonPress> { SetCellType 1 }
     bind .ppde.cells.rd <ButtonPress> { SetCellType 2 }
@@ -324,8 +324,8 @@ proc editPreProcData {} {
     ttk::entry .ppde.cells.e_cellDistrCoeff -width 8 -textvariable Lcl_cellDistrCoeff
     ttk::entry .ppde.cells.e_numCellsPreProc -width 8 -textvariable Lcl_numCellsPreProc
 
-    SetHelpBind .ppde.cells.e_cellDistrCoeff cellDistrCoeff HelpText_pPDE
-    SetHelpBind .ppde.cells.e_numCellsPreProc numCellsPreProc HelpText_pPDE
+    SetHelpBind .ppde.cells.e_cellDistrCoeff [::msgcat::mc "cellDistrCoeff"] HelpText_pPDE
+    SetHelpBind .ppde.cells.e_numCellsPreProc [::msgcat::mc "numCellsPreProc"] HelpText_pPDE
 
     grid .ppde.cells.cellDistrCoeff -row 4 -column 0 -sticky e
     grid .ppde.cells.e_cellDistrCoeff -row 4 -column 1 -sticky w
@@ -342,10 +342,10 @@ proc editPreProcData {} {
 
     #-------------
     # buttons
-    button .ppde.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_pPDE
-    button .ppde.btn.ok     -width 10 -text "OK"        -command OkButtonPress_pPDE
-    button .ppde.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_pPDE_pPDE
-    button .ppde.btn.help   -width 10 -text "Help"      -command HelpButtonPress_pPDE
+    button .ppde.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_pPDE
+    button .ppde.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_pPDE
+    button .ppde.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_pPDE_pPDE
+    button .ppde.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_pPDE
 
     grid .ppde.btn.apply -row 0 -column 0 -sticky e -padx 10 -pady 0
     grid .ppde.btn.ok -row 0 -column 1 -sticky e -padx 10 -pady 0
@@ -1650,9 +1650,9 @@ proc CancelButtonPress_pPDE_pPDE {} {
     if { $Lcl_pPDE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
             -type yesno -icon warning \
-            -message "All changed data will be lost.\nDo you really want to close the window"]
+            -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .ppde
             return 0

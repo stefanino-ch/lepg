@@ -63,7 +63,7 @@ proc CreateLepProcRunWindow {} {
     #-------------
     #
     label  .lPR.status_lPR -width 80 -height 50 -background LightYellow  -justify left -textvariable Status_lPR
-    button .lPR.ok -width 10 -text "OK" -command OkButtonPress_lPR
+    button .lPR.ok -width 10 -text [::msgcat::mc "OK"] -command OkButtonPress_lPR
 
     grid .lPR.status_lPR -row 0 -column 0 -sticky nesw -padx 10 -pady 10
     grid .lPR.ok     -row 1 -column 0 -sticky e    -padx 10 -pady 10
@@ -72,14 +72,14 @@ proc CreateLepProcRunWindow {} {
     grid rowconfigure    .lPR 0    -weight 1
     grid rowconfigure    .lPR 1    -weight 0
 
-    set answer [tk_messageBox -title "Copy data" \
+ #   set answer [tk_messageBox -title [::msgcat::mc "Copy data"] \
                 -type okcancel -icon warning \
                 -message [::msgcat::mc "txt_copyAirfoilFiles" ] ]
-    if { $answer == "cancel" } {
-        focus .lPR
-        append Status_lPR "Calculation aborted.\n"
-        return 0
-    }
+   # if { $answer == "cancel" } {
+    #    focus .lPR
+     #   append Status_lPR [::msgcat::mc "Calculation aborted.\n"]
+      #  return 0
+    #}
 
     set AirfoilDefinitionsReady 1
     focus .lPR

@@ -63,10 +63,10 @@ proc PreProcDirSelect_pPDS {} {
 
     #-------------
     # buttons
-    button .ppds.btn.apply -width 10 -text "Apply" -command ApplyButtonPress_pPDS
-    button .ppds.btn.ok -width 10 -text "OK" -command OkButtonPress_pPDS
-    button .ppds.btn.cancel -width 10 -text "Cancel" -command CancelButtonPress_pPDS
-    button .ppds.btn.help -width 10  -text "Help" -command HelpButtonPress_pPDS
+    button .ppds.btn.apply -width 10 -text [::msgcat::mc "Apply"] -command ApplyButtonPress_pPDS
+    button .ppds.btn.ok -width 10 -text [::msgcat::mc "OK"] -command OkButtonPress_pPDS
+    button .ppds.btn.cancel -width 10 -text [::msgcat::mc "Cancel"] -command CancelButtonPress_pPDS
+    button .ppds.btn.help -width 10  -text [::msgcat::mc "Help"] -command HelpButtonPress_pPDS
 
     grid .ppds.btn.apply -row 0 -column 0 -sticky e -padx 10 -pady 0
     grid .ppds.btn.ok -row 0 -column 1 -sticky e -padx 10 -pady 0
@@ -74,6 +74,7 @@ proc PreProcDirSelect_pPDS {} {
     grid .ppds.btn.help -row 1 -column 2 -sticky e -padx 10 -pady 20
 
     SetLclVarTrace_pPDS
+
 }
 
 #----------------------------------------------------------------------
@@ -157,9 +158,9 @@ proc CancelButtonPress_pPDS {} {
     if { $Lcl_pPDS_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .ppds
             return 0

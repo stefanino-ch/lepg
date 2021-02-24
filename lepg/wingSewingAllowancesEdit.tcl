@@ -49,7 +49,7 @@ proc wingSewingAllowancesEdit {} {
 
     wm protocol .wsae WM_DELETE_WINDOW { CancelButtonPress_wSAE }
 
-    wm title .wsae [::msgcat::mc "Wing Sewing Allowances"]
+    wm title .wsae [::msgcat::mc "Section 6: Wing Sewing Allowances"]
 
     #-------------
     # Frames and grids
@@ -83,16 +83,16 @@ proc wingSewingAllowancesEdit {} {
     ttk::label .wsae.data.seamVRib -text [::msgcat::mc "V-Ribs \[mm\]"] -width 18
     ttk::entry .wsae.data.e_seamVRib -width 10 -textvariable Lcl_seamVRib
 
-    SetHelpBind .wsae.data.e_seamUp   seamUp   HelpText_wSAE
-    SetHelpBind .wsae.data.e_seamUpLe seamUpLe HelpText_wSAE
-    SetHelpBind .wsae.data.e_seamUpTe seamUpTe HelpText_wSAE
+    SetHelpBind .wsae.data.e_seamUp   [::msgcat::mc "seamUp"]   HelpText_wSAE
+    SetHelpBind .wsae.data.e_seamUpLe [::msgcat::mc "seamUpLe"] HelpText_wSAE
+    SetHelpBind .wsae.data.e_seamUpTe [::msgcat::mc "seamUpTe"] HelpText_wSAE
 
-    SetHelpBind .wsae.data.e_seamLo   seamLo   HelpText_wSAE
-    SetHelpBind .wsae.data.e_seamLoLe seamLoLe HelpText_wSAE
-    SetHelpBind .wsae.data.e_seamLoTe seamLoTe HelpText_wSAE
+    SetHelpBind .wsae.data.e_seamLo   [::msgcat::mc "seamLo"]   HelpText_wSAE
+    SetHelpBind .wsae.data.e_seamLoLe [::msgcat::mc "seamLoLe"] HelpText_wSAE
+    SetHelpBind .wsae.data.e_seamLoTe [::msgcat::mc "seamLoTe"] HelpText_wSAE
 
-    SetHelpBind .wsae.data.e_seamRib  seamRib   HelpText_wSAE
-    SetHelpBind .wsae.data.e_seamVRib seamVRib  HelpText_wSAE
+    SetHelpBind .wsae.data.e_seamRib  [::msgcat::mc "seamRib"]   HelpText_wSAE
+    SetHelpBind .wsae.data.e_seamVRib [::msgcat::mc "seamVRib"]  HelpText_wSAE
 
     #-------------
     # Add data fields to grid
@@ -123,10 +123,10 @@ proc wingSewingAllowancesEdit {} {
 
     #-------------
     # buttons
-    button .wsae.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wSAE
-    button .wsae.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wSAE
-    button .wsae.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wSAE
-    button .wsae.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wSAE
+    button .wsae.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wSAE
+    button .wsae.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wSAE
+    button .wsae.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wSAE
+    button .wsae.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wSAE
 
     grid .wsae.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wsae.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -250,9 +250,9 @@ proc CancelButtonPress_wSAE {} {
     if { $Lcl_wSAE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wsae
             return 0

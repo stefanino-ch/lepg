@@ -45,7 +45,7 @@ proc wingGlobalAoADataEdit {} {
 
     wm protocol .wgade WM_DELETE_WINDOW { CancelButtonPress_wGADE }
 
-    wm title .wgade [::msgcat::mc "Global AoA estimation"]
+    wm title .wgade [::msgcat::mc "Section 8: Global AoA estimation"]
 
     #-------------
     # Frames and grids
@@ -68,39 +68,39 @@ proc wingGlobalAoADataEdit {} {
     ttk::label  .wgade.data.u_finesse -text "\[deg\]" -width 10 -anchor e
     grid        .wgade.data.u_finesse -row 1 -column 2 -sticky e
     ttk::entry  .wgade.data.e_finesse -width 10 -textvariable Lcl_finesse
-    SetHelpBind .wgade.data.e_finesse finesse  HelpText_wGADE
+    SetHelpBind .wgade.data.e_finesse [::msgcat::mc "glide ratio"]  HelpText_wGADE
     grid        .wgade.data.e_finesse -row 1 -column 3 -sticky e
 
     ttk::label  .wgade.data.cop   -text [::msgcat::mc "Center of pressure"] -width 20 -anchor e
     grid        .wgade.data.cop   -row 2 -column 1 -sticky e
-    ttk::label  .wgade.data.u_cop -text "\[% chord\]" -width 10 -anchor e
+    ttk::label  .wgade.data.u_cop -text [::msgcat::mc "\[% chord\]"] -width 10 -anchor e
     grid        .wgade.data.u_cop -row 2 -column 2 -sticky e
     ttk::entry  .wgade.data.e_cop -width 10 -textvariable Lcl_posCop
-    SetHelpBind .wgade.data.e_cop posCop  HelpText_wGADE
+    SetHelpBind .wgade.data.e_cop [::msgcat::mc "center of pressure position"]  HelpText_wGADE
     grid        .wgade.data.e_cop -row 2 -column 3 -sticky e
 
     ttk::label  .wgade.data.calage   -text [::msgcat::mc "Calage"] -width 20 -anchor e
     grid        .wgade.data.calage   -row 3 -column 1 -sticky e
-    ttk::label  .wgade.data.u_calage -text "\[% chord\]" -width 10 -anchor e
+    ttk::label  .wgade.data.u_calage -text [::msgcat::mc "\[% chord\]"] -width 10 -anchor e
     grid        .wgade.data.u_calage -row 3 -column 2 -sticky e
     ttk::entry  .wgade.data.e_calage -width 10 -textvariable Lcl_calage
-    SetHelpBind .wgade.data.e_calage calage HelpText_wGADE
+    SetHelpBind .wgade.data.e_calage [::msgcat::mc "calage"] HelpText_wGADE
     grid        .wgade.data.e_calage -row 3 -column 3 -sticky e
 
     ttk::label  .wgade.data.riser   -text [::msgcat::mc "Riser length"] -width 20 -anchor e
     grid        .wgade.data.riser   -row 4 -column 1 -sticky e
-    ttk::label  .wgade.data.u_riser -text "\[cm\]" -width 10 -anchor e
+    ttk::label  .wgade.data.u_riser -text [::msgcat::mc "\[cm\]"] -width 10 -anchor e
     grid        .wgade.data.u_riser -row 4 -column 2 -sticky e
     ttk::entry  .wgade.data.e_riser -width 10 -textvariable Lcl_riserLength
-    SetHelpBind .wgade.data.e_riser riserLength  HelpText_wGADE
+    SetHelpBind .wgade.data.e_riser [::msgcat::mc "riserLength"]  HelpText_wGADE
     grid        .wgade.data.e_riser -row 4 -column 3 -sticky e
 
     ttk::label  .wgade.data.lines   -text [::msgcat::mc "Length of lines"] -width 20 -anchor e
     grid        .wgade.data.lines   -row 5 -column 1 -sticky e
-    ttk::label  .wgade.data.u_lines -text "\[cm\]" -width 10 -anchor e
+    ttk::label  .wgade.data.u_lines -text [::msgcat::mc "\[cm\]"] -width 10 -anchor e
     grid        .wgade.data.u_lines -row 5 -column 2 -sticky e
     ttk::entry  .wgade.data.e_lines -width 10 -textvariable Lcl_lineLength
-    SetHelpBind .wgade.data.e_lines lineLength  HelpText_wGADE
+    SetHelpBind .wgade.data.e_lines [::msgcat::mc "lineLength"]  HelpText_wGADE
     grid        .wgade.data.e_lines -row 5 -column 3 -sticky e
 
     ttk::label  .wgade.data.carab   -text [::msgcat::mc "Main carabiners distance"] -width 20 -anchor e
@@ -108,7 +108,7 @@ proc wingGlobalAoADataEdit {} {
     ttk::label  .wgade.data.u_carab -text "\[cm\]" -width 10 -anchor e
     grid        .wgade.data.u_carab -row 6 -column 2 -sticky e
     ttk::entry  .wgade.data.e_carab -width 10 -textvariable Lcl_distTowP
-    SetHelpBind .wgade.data.e_carab distTowP HelpText_wGADE
+    SetHelpBind .wgade.data.e_carab [::msgcat::mc "distTowP"] HelpText_wGADE
     grid        .wgade.data.e_carab -row 6 -column 3 -sticky e
 
     ttk::label  .wgade.data.spacer2_wGADE -text "" -width 20 -anchor e
@@ -121,10 +121,10 @@ proc wingGlobalAoADataEdit {} {
 
     #-------------
     # buttons
-    button .wgade.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wGADE
-    button .wgade.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wGADE
-    button .wgade.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wGADE
-    button .wgade.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wGADE
+    button .wgade.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wGADE
+    button .wgade.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wGADE
+    button .wgade.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wGADE
+    button .wgade.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wGADE
 
     grid .wgade.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wgade.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -245,9 +245,9 @@ proc CancelButtonPress_wGADE {} {
     if { $Lcl_wGADE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wgade
             return 0

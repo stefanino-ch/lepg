@@ -1128,6 +1128,23 @@ proc ReadHV-VH-RibSectV2_52 {File} {
     # numMiniRibs
     set numMiniRibs  [gets $File]
 
+    # if numMiniribs is 0 set initial values
+    if { $numMiniRibs == 0 } {
+    # miniRibXSep
+    set miniRibXSep 80
+    # miniRibYSep
+    set miniRibYSep 150
+    # set one minirib
+    foreach i { 1 2 } {
+    foreach j {1 2 3 4 5 6 7 8 9 10 11 12} {
+    set miniRib($i,$j) 0
+    }
+    }
+    }
+
+    # if numMiniribs is not 0 continue reading
+    if { $numMiniRibs != 0 } {
+
     set DataLine [gets $File]
     # miniRibXSep
     set miniRibXSep [lindex $DataLine 0]
@@ -1137,7 +1154,7 @@ proc ReadHV-VH-RibSectV2_52 {File} {
     set i 1
     while {$i <= $numMiniRibs} {
         set DataLine [gets $File]
-        foreach j {0 1 2 3 4 5 6 7 8 9} {
+        foreach j {0 1 2 3 4 5 6 7 8 9 10 11} {
             # miniRib
             set miniRib($i,[expr $j+1]) [lindex $DataLine $j]
         }
@@ -1148,7 +1165,15 @@ proc ReadHV-VH-RibSectV2_52 {File} {
                 set miniRib($i,[expr $j+1]) [lindex $DataLine $j]
             }
         }
+        if { $miniRib($i,2) == 16 } {
+            foreach j {0 1 2 3 4 5 6 7 8 9 10 11} {
+                set miniRib($i,[expr $j+1]) [lindex $DataLine $j]
+            }
+        }
+
         incr i
+    }
+    # numMiniribs is not 0
     }
 
     return [list 0 $File]
@@ -1170,6 +1195,15 @@ proc ReadTeColSectV2_52 {File} {
 
     # numTeCol (extrados colors)
     set numTeCol  [gets $File]
+
+    if { $numTeCol == 0 } {
+    # set some initial values
+    set teColRibNum(1) 1
+    set numTeColMarks(1) 1
+    set teColMarkNum(1,1) 1
+    set teColMarkYDist(1,1) 0.0
+    set teColMarkXDist(1,1) 0.0
+    }
 
     set TeColIt 1
 
@@ -1213,6 +1247,15 @@ proc ReadLeColSectV2_52 {File} {
 
     # numLeCol (intrados colors)
     set numLeCol  [gets $File]
+
+    if { $numLeCol == 0 } {
+    # set some initial values
+    set leColRibNum(1) 1
+    set numLeColMarks(1) 1
+    set leColMarkNum(1,1) 1
+    set leColMarkYDist(1,1) 0.0
+    set leColMarkXDist(1,1) 0.0
+    }
 
     set LeColIt 1
     while {$LeColIt <= $numLeCol} {
@@ -1416,12 +1459,28 @@ proc ReadJoncsDefSectV2_52 {File} {
     if {$k_section21 == 0 } {
     #  Stop reading
     #  set data blocs number to 0
-    set numGroupsJDdb 0
+    set numGroupsJD(1) 1
     #  set data blocs number to 0
-    set numGroupsJDdb 0
+    set numGroupsJDdb 1
+    foreach k { 1 2 3 4 5 6 } {
     # set data bloc number and type
-    set numDataBlocJD(1,1) 0
-    set numDataBlocJD(1,2) 0
+    set numDataBlocJD($k,1) 1
+    set numDataBlocJD($k,2) 1
+    foreach i { 1 2 3 } {
+    set numJoncsDef(1,$k,$i) 1
+    foreach j { 1 2 3 4 } {
+    set lineJoncsDef1(1,$k,$i,$j) 1
+    }
+    }
+    }
+    # set data type 2
+    foreach j { 1 2 3 4 5 } {
+    set lineJoncsDef2(1,1,1,$j) 1
+    }
+    foreach j { 1 2 3 4 } {
+    set lineJoncsDef2(1,1,2,$j) 1
+    }
+
     }
 
     # Case scheme 1
@@ -1552,8 +1611,8 @@ proc ReadNoseMySectV2_52 {File} {
 
     # Case 0
     if {$k_section22 == 0 } {
-    #  Stop reading
-    set numGroupsMY 8
+    #  Stop reading and set collection of initial values
+    set numGroupsMY 1
     foreach i {1 2 3 4 5 6 7 8 9 10} {
     foreach j {1 2 3 4 5 6 7 8 9 10} {
     set numNoseMy($i,$j) 1
@@ -1609,8 +1668,15 @@ proc ReadTabReinfSectV2_52 {File} {
 
     # Case 0
     if {$k_section23 == 0 } {
-    #  Stop reading
-    set numGroupsTR 1
+    #  Stop reading but initialize some values
+        set numGroupsTR 1
+        foreach i { 1 2 3 4 5 } {
+        set numTabReinf(1,$i) 1
+        set lineTabReinf(1,$i) 1
+        foreach j { 1 2 3 4 5 6 7 } {
+        set schemesTR($i,$j) 1
+        }
+        }
     }
 
     # Case 1
@@ -1760,7 +1826,13 @@ proc ReadGlueVenSectV2_52 {File} {
     set k_section26 [gets $File]
 
     if {$k_section26 == 0} {
-#   Nothing
+    # Set default values
+    set i 1
+    while {$i <= $numRibsTot} {
+    set glueVenA($i) $i
+    set glueVenB($i) 0 
+    incr i
+    }
     }
 
     if {$k_section26 == 1} {
@@ -1895,12 +1967,60 @@ proc ReadP3DShapingSectV2_52 {File} {
 
     # Case 0
     if {$k_section29 == 0 } {
-    #  Stop reading
+    #  Stop reading and set values by default
     set k_section29b 1
     set numGroups3DS(1) groups
-    set numGroups3DS(2) 0
-
-    # set values pp by default
+    set numGroups3DS(2) 1
+    set num3DS(1,1) group
+    set num3DS(1,2) 1
+    set num3DS(1,3) 1
+    set num3DS(1,4) 1
+    set num3DS(1,5) upper
+    set num3DS(1,6) 2
+    set num3DS(1,7) 1
+    set num3DS(1,8) lower
+    set num3DS(1,9) 1
+    set num3DS(1,10) 1
+    # set default upper data
+    set line3DSu(1,1,1) 1
+    set line3DSu(1,1,2) 25
+    set line3DSu(1,1,3) 35
+    set line3DSu(1,1,4) 0.8
+    set line3DSu(1,2,1) 2
+    set line3DSu(1,2,2) 40
+    set line3DSu(1,2,3) 45
+    set line3DSu(1,2,4) 0.8
+    # set default lower data
+    set line3DSl(1,1,1) 1
+    set line3DSl(1,1,2) 70
+    set line3DSl(1,1,3) 75
+    set line3DSl(1,1,4) 0.8
+    # set default print values
+    set line3DSpp(1,1) Inter3D
+    set line3DSpp(1,2) 1
+    set line3DSpp(1,3) 1
+    set line3DSpp(1,4) $numRibsHalf
+    set line3DSpp(1,5) 0
+    set line3DSpp(2,1) Ovali3D
+    set line3DSpp(2,2) 1
+    set line3DSpp(2,3) 1
+    set line3DSpp(2,4) $numRibsHalf
+    set line3DSpp(2,5) 0
+    set line3DSpp(3,1) tesse3D
+    set line3DSpp(3,2) 1
+    set line3DSpp(3,3) 1
+    set line3DSpp(3,4) $numRibsHalf
+    set line3DSpp(3,5) 0
+    set line3DSpp(4,1) exteDXF
+    set line3DSpp(4,2) 0
+    set line3DSpp(4,3) 1
+    set line3DSpp(4,4) $numRibsHalf
+    set line3DSpp(4,5) 0
+    set line3DSpp(5,1) exteSTL
+    set line3DSpp(5,2) 0
+    set line3DSpp(5,3) 1
+    set line3DSpp(5,4) $numRibsHalf
+    set line3DSpp(5,5) 0
     }
 
     # Case 1
@@ -1990,7 +2110,14 @@ proc ReadAirThickSectV2_52 {File} {
     set k_section30 [gets $File]
 
     if {$k_section30 == 0 } {
-    #  Stop reading
+    # Set default values
+    set i 1
+    while {$i <= $numRibsTot} {
+    set airThickA($i) $i
+    set airThickB($i) 1.0 
+    incr i
+    set airThickB($numRibsTot) 0.0 
+    }
     }
 
     if {$k_section30 == 1 } {

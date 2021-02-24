@@ -68,15 +68,19 @@ proc wingNewSkinDataEdit {} {
     label       .wNESK.dataTop.ctrl1 -width 16 -text [::msgcat::mc "Configuration"]
     grid        .wNESK.dataTop.ctrl1 -row 2 -column 0 -sticky e
     ttk::entry  .wNESK.dataTop.e_ctrl1 -width 10 -textvariable Lcl_k_section31
-    SetHelpBind .wNESK.dataTop.e_ctrl1 k_section31   HelpText_wNESK
+    SetHelpBind .wNESK.dataTop.e_ctrl1 [::msgcat::mc "section 31 configuration"]   HelpText_wNESK
     grid        .wNESK.dataTop.e_ctrl1 -row 2 -column 1 -sticky w -pady 1
+
+
+    # Case k_section31 is not 0
+    if { $Lcl_k_section31 != 0 } {
 
     #-------------
     # Control parameter, entry
     label       .wNESK.dataTop.ctrl2 -width 16 -text [::msgcat::mc "Groups"]
     grid        .wNESK.dataTop.ctrl2 -row 3 -column 0 -sticky e
     ttk::entry  .wNESK.dataTop.e_ctrl2 -width 10 -textvariable Lcl_numGroupsNS
-    SetHelpBind .wNESK.dataTop.e_ctrl2 k_section31   HelpText_wNESK
+    SetHelpBind .wNESK.dataTop.e_ctrl2 [::msgcat::mc "section 31 groups"]   HelpText_wNESK
     grid        .wNESK.dataTop.e_ctrl2 -row 3 -column 1 -sticky w -pady 1
 
 
@@ -100,6 +104,9 @@ proc wingNewSkinDataEdit {} {
     }
     UpdateConfigButtons_wNESK
 
+    # Case not 0
+    }
+
     #-------------
     # explanations
     label .wNESK.help.e_help -width 80 -height 3 -background LightYellow -justify left -textvariable HelpText_wNESK
@@ -107,10 +114,10 @@ proc wingNewSkinDataEdit {} {
 
     #-------------
     # buttons
-    button .wNESK.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wNESK
-    button .wNESK.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wNESK
-    button .wNESK.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wNESK
-    button .wNESK.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wNESK
+    button .wNESK.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wNESK
+    button .wNESK.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wNESK
+    button .wNESK.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wNESK
+    button .wNESK.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wNESK
 
     grid .wNESK.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wNESK.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -222,6 +229,9 @@ proc ApplyButtonPress_wNESK {} {
         set g_WingDataChanged       1
         set Lcl_wNESK_DataChanged    0
     }
+
+    destroy .wNESK
+    wingNewSkinDataEdit
 }
 
 #----------------------------------------------------------------------
@@ -263,9 +273,9 @@ proc CancelButtonPress_wNESK {} {
     if { $Lcl_wNESK_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wNESK
             return 0
@@ -484,23 +494,23 @@ proc addEditTab_wNESK {tabNum_wNESK} {
     #-------------
     # entrys for the group configuration
     ttk::entry  .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq1 -width 10 -textvariable Lcl_numNewSkin($tabNum_wNESK,1)
-    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq1 lineNeSk_L1   HelpText_wNESK
+    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq1 [::msgcat::mc "lineNeSk_L1"]   HelpText_wNESK
     grid        .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq1 -row 7 -column 1 -sticky e -pady 1
 
     ttk::entry  .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq2 -width 10 -textvariable Lcl_numNewSkin($tabNum_wNESK,2)
-    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq2 lineNeSk_L2   HelpText_wNESK
+    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq2 [::msgcat::mc "lineNeSk_L2"]   HelpText_wNESK
     grid        .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq2 -row 7 -column 2 -sticky e -pady 1
 
     ttk::entry  .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq3 -width 10 -textvariable Lcl_numNewSkin($tabNum_wNESK,3)
-    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq3 lineNeSk_L3   HelpText_wNESK
+    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq3 [::msgcat::mc "lineNeSk_L3"]   HelpText_wNESK
     grid        .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq3 -row 7 -column 3 -sticky e -pady 1
 
     ttk::entry  .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq4 -width 10 -textvariable Lcl_numNewSkin($tabNum_wNESK,4)
-    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq4 lineNeSk_L4   HelpText_wNESK
+    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq4 [::msgcat::mc "lineNeSk_L4"]   HelpText_wNESK
     grid        .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq4 -row 7 -column 4 -sticky e -pady 1
 
     ttk::entry  .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq5 -width 10 -textvariable Lcl_numNewSkin($tabNum_wNESK,5)
-    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq5 lineNeSk_L5   HelpText_wNESK
+    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq5 [::msgcat::mc "lineNeSk_L5"]   HelpText_wNESK
     grid        .wNESK.dataBot.ntebk.config$tabNum_wNESK.e_pq5 -row 7 -column 5 -sticky e -pady 1
 
 
@@ -647,23 +657,23 @@ proc AddItemLine_wNESK { tabNum lineNum} {
     }
 
     ttk::entry  .wNESK.dataBot.ntebk.config$tabNum.e_p1$lineNum -width 10 -textvariable Lcl_lineNeSk($currentTab,$lineNum,1)
-    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum.e_p1$lineNum lineNeSk_L1   HelpText_wNESK
+    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum.e_p1$lineNum [::msgcat::mc "lineNeSk_L1"]   HelpText_wNESK
     grid        .wNESK.dataBot.ntebk.config$tabNum.e_p1$lineNum -row [expr (10-1 + $lineNum)] -column 1 -sticky e -pady 1
 
     ttk::entry  .wNESK.dataBot.ntebk.config$tabNum.e_p2$lineNum -width 10 -textvariable Lcl_lineNeSk($currentTab,$lineNum,2)
-    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum.e_p2$lineNum lineNeSk_L2   HelpText_wNESK
+    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum.e_p2$lineNum [::msgcat::mc "lineNeSk_L2"]   HelpText_wNESK
     grid        .wNESK.dataBot.ntebk.config$tabNum.e_p2$lineNum -row [expr (10-1 + $lineNum)] -column 2 -sticky e -pady 1
 
     ttk::entry  .wNESK.dataBot.ntebk.config$tabNum.e_p3$lineNum -width 10 -textvariable Lcl_lineNeSk($currentTab,$lineNum,3)
-    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum.e_p3$lineNum lineNeSk_L3   HelpText_wNESK
+    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum.e_p3$lineNum [::msgcat::mc "lineNeSk_L3"]   HelpText_wNESK
     grid        .wNESK.dataBot.ntebk.config$tabNum.e_p3$lineNum -row [expr (10-1 + $lineNum)] -column 3 -sticky e -pady 1
 
     ttk::entry  .wNESK.dataBot.ntebk.config$tabNum.e_p4$lineNum -width 10 -textvariable Lcl_lineNeSk($currentTab,$lineNum,4)
-    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum.e_p4$lineNum lineNeSk_L4   HelpText_wNESK
+    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum.e_p4$lineNum [::msgcat::mc "lineNeSk_L4"]   HelpText_wNESK
     grid        .wNESK.dataBot.ntebk.config$tabNum.e_p4$lineNum -row [expr (10-1 + $lineNum)] -column 4 -sticky e -pady 1
 
     ttk::entry  .wNESK.dataBot.ntebk.config$tabNum.e_p5$lineNum -width 10 -textvariable Lcl_lineNeSk($currentTab,$lineNum,5)
-    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum.e_p5$lineNum lineNeSk_L5   HelpText_wNESK
+    SetHelpBind .wNESK.dataBot.ntebk.config$tabNum.e_p5$lineNum [::msgcat::mc "lineNeSk_L5"]   HelpText_wNESK
     grid        .wNESK.dataBot.ntebk.config$tabNum.e_p5$lineNum -row [expr (10-1 + $lineNum)] -column 5 -sticky e -pady 1
 
 }

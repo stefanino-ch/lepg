@@ -1,7 +1,8 @@
 #---------------------------------------------------------------------
 #
-#  Window to edit the wing airfoils data
+#  Window to edit the matrix og geometry
 #
+#  Pere Casellas
 #  Stefan Feuz
 #  http://www.laboratoridenvol.com
 #
@@ -11,18 +12,15 @@
 
 #-------
 # Globals
-global .wade
-
 global  Lcl_wADE_DataChanged
 set     Lcl_wADE_DataChanged    0
 
 global  AllGlobalVars_wADE
-set     AllGlobalVars_wADE { airfoilName ribConfig }
-
+set     AllGlobalVars_wADE { numRibsHalf airfoilName ribConfig }
 
 #----------------------------------------------------------------------
-#  wingAirfolilsDataEdit
-#  Displays a window to edit the wing airfoils data
+#  wingAddRibPointsDataEdit
+#  Displays a window to edit the additional rib points
 #
 #  IN:      N/A
 #  OUT:     N/A
@@ -32,106 +30,77 @@ set     AllGlobalVars_wADE { airfoilName ribConfig }
 proc wingAirfoilsDataEdit {} {
     source "windowExplanationsHelper.tcl"
 
-    global .wade
+    global .wADE
 
-    global Lcl_ribConfig
-    global numRibsHalf
+    # make sure Lcl_ variables are known
+    global  AllGlobalVars_wADE
+    foreach {e} $AllGlobalVars_wADE {
+        global Lcl_$e
+    }
 
     SetLclVars_wADE
 
-    toplevel .wade
-    focus .wade
+    toplevel .wADE
+    focus .wADE
 
-    wm protocol .wade WM_DELETE_WINDOW { CancelButtonPress_wADE }
+    wm protocol .wADE WM_DELETE_WINDOW { CancelButtonPress_wADE }
 
-    wm title .wade [::msgcat::mc "Wing Airfoils Data"]
+    wm title .wADE [::msgcat::mc "Section 2: Wing Airfoils Data"]
 
     #-------------
     # Frames and grids
-    ttk::frame      .wade.data
-    ttk::labelframe .wade.help -text [::msgcat::mc "Explanations"]
-    ttk::frame      .wade.btn
-    #
-    grid .wade.data         -row 0 -column 0 -sticky e
-    grid .wade.help         -row 1 -column 0 -sticky e
-    grid .wade.btn          -row 2 -column 0 -sticky e
-    #
+    # ttk::frame      .wADE.dataTop
+    ttk::frame      .wADE.dataMid
+    ttk::frame      .wADE.dataBot
+    ttk::labelframe .wADE.help -text [::msgcat::mc "Explanations"]
+    ttk::frame      .wADE.btn
+
     #-------------
-    # Data fields setup
+    # Place frames
+    # grid .wADE.dataTop         -row 0 -column 0 -sticky w
+    grid .wADE.dataMid         -row 1 -column 0 -sticky w
+    grid .wADE.dataBot         -row 2 -column 0 -sticky nesw
+    grid .wADE.help            -row 3 -column 0 -sticky e
+    grid .wADE.btn             -row 4 -column 0 -sticky e
 
-    # do the header
-    ttk::label .wade.data.title1 -text [::msgcat::mc "Rib Num"] -width 10 -anchor e
-    ttk::label .wade.data.title2 -text [::msgcat::mc "Airfoil name"] -width 20 -anchor w
-    ttk::label .wade.data.title3 -text [::msgcat::mc "% cord inlet start"] -width 20 -anchor w
-    ttk::label .wade.data.title4 -text [::msgcat::mc "% cord inlet stop"] -width 20 -anchor w
-    ttk::label .wade.data.title5 -text [::msgcat::mc "Closed/ open cell"] -width 20 -anchor w
-    ttk::label .wade.data.title6 -text [::msgcat::mc "Disp."] -width 20 -anchor w
-    ttk::label .wade.data.title7 -text [::msgcat::mc "rweight"] -width 20 -anchor w
-    ttk::label .wade.data.title8 -text [::msgcat::mc "Rot/ % Mini Rib"] -width 20 -anchor w
-    # Add header fields to grid
-    set i 1
-    while {$i <= 8 } {
-        grid .wade.data.title$i -row 0 -column [expr $i -1] -sticky e -padx 0 -pady 0
-        incr i
-    }
+    grid columnconfigure .wADE 0 -weight 1
+    grid rowconfigure .wADE 2 -weight 1
 
-    # do a line for each rib
-    set i 1
-    while {$i <= $numRibsHalf} {
+    #-------------
+    # Get a scrollable region
+    canvas .wADE.dataBot.scroll  -width 1200 -height 400 -yscrollcommand ".wADE.dataBot.yscroll set"
+    ttk::scrollbar .wADE.dataBot.yscroll -command ".wADE.dataBot.scroll yview"
 
-        ttk::label  .wade.data.numRib$i -text $i -width 20 -anchor e
-        grid        .wade.data.numRib$i -row [expr $i] -column 0 -sticky e
+    grid .wADE.dataBot.scroll -row 0 -column 0 -sticky nesw
+    grid .wADE.dataBot.yscroll -row 0 -column 1 -sticky nesw
 
-        ttk::entry  .wade.data.e_airfoilName$i -width 20 -textvariable Lcl_airfoilName($i)
-        SetHelpBind .wade.data.e_airfoilName$i airfoilName HelpText_wADE
-        grid        .wade.data.e_airfoilName$i -row [expr $i] -column 1 -sticky e
+    grid columnconfigure .wADE.dataBot 0 -weight 1
+    grid columnconfigure .wADE.dataBot 1 -weight 0
+    grid rowconfigure .wADE.dataBot 0 -weight 1
 
-        ttk::entry  .wade.data.e_inletStart$i -width 20 -textvariable Lcl_ribConfig($i,11)
-        SetHelpBind .wade.data.e_inletStart$i inletStartPerc HelpText_wADE
-        grid        .wade.data.e_inletStart$i -row [expr $i] -column 2 -sticky e
+    ttk::frame .wADE.dataBot.scroll.widgets -borderwidth 1
+    grid .wADE.dataBot.scroll.widgets -row 0 -column 0
 
-        ttk::entry  .wade.data.e_inletStop$i -width 20 -textvariable Lcl_ribConfig($i,12)
-        SetHelpBind .wade.data.e_inletStop$i inletStopPerc HelpText_wADE
-        grid        .wade.data.e_inletStop$i -row [expr $i] -column 3 -sticky e
+    addEdit_wADE
 
-        ttk::entry  .wade.data.e_closedOpen$i -width 20 -textvariable Lcl_ribConfig($i,14)
-        SetHelpBind .wade.data.e_closedOpen$i closedOpenCell HelpText_wADE
-        grid        .wade.data.e_closedOpen$i -row [expr $i] -column 4 -sticky e
-
-        ttk::entry  .wade.data.e_disp$i -width 20 -textvariable Lcl_ribConfig($i,50)
-        SetHelpBind .wade.data.e_disp$i ribDisplacement HelpText_wADE
-        grid        .wade.data.e_disp$i -row [expr $i] -column 5 -sticky e
-
-        ttk::entry  .wade.data.e_rweight$i -width 20 -textvariable Lcl_ribConfig($i,55)
-        SetHelpBind .wade.data.e_rweight$i relWeightChord HelpText_wADE
-        grid        .wade.data.e_rweight$i -row [expr $i] -column 6 -sticky e
-
-        ttk::entry  .wade.data.e_rotMini$i -width 20 -textvariable Lcl_ribConfig($i,56)
-        SetHelpBind .wade.data.e_rotMini$i rotMiniRIbPerc HelpText_wADE
-        grid        .wade.data.e_rotMini$i -row [expr $i] -column 7 -sticky e
-
-        ttk::label  .wade.data.spacer$i -text "" -width 5 -anchor e
-        grid        .wade.data.spacer$i -row [expr $i] -column 8 -sticky e
-
-        incr i
-    }
+    ResizeScrollFrame_wADE
 
     #-------------
     # explanations
-    label .wade.help.e_help -width 80 -height 3 -background LightYellow -justify left -textvariable HelpText_wADE
-    grid  .wade.help.e_help -row 0 -column 0 -sticky nesw -padx 10 -pady 10
+    label .wADE.help.e_help -width 100 -height 3 -background LightYellow -justify left -textvariable HelpText_wADE
+    grid  .wADE.help.e_help -row 0 -column 0 -sticky nesw -padx 10 -pady 10
 
     #-------------
     # buttons
-    button .wade.btn.apply  -width 10 -text "Apply"     -command ApplyButtonPress_wADE
-    button .wade.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wADE
-    button .wade.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wADE
-    button .wade.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wADE
+    button .wADE.btn.apply  -width 10 -text [::msgcat::mc "Apply"]     -command ApplyButtonPress_wADE
+    button .wADE.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wADE
+    button .wADE.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wADE
+    button .wADE.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wADE
 
-    grid .wade.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
-    grid .wade.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
-    grid .wade.btn.cancel    -row 0 -column 3 -sticky e -padx 10 -pady 10
-    grid .wade.btn.help      -row 1 -column 3 -sticky e -padx 10 -pady 10
+    grid .wADE.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
+    grid .wADE.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
+    grid .wADE.btn.cancel    -row 0 -column 3 -sticky e -padx 10 -pady 10
+    grid .wADE.btn.help      -row 1 -column 3 -sticky e -padx 10 -pady 10
 
     SetLclVarTrace_wADE
 }
@@ -147,22 +116,20 @@ proc wingAirfoilsDataEdit {} {
 proc SetLclVars_wADE {} {
     source "globalWingVars.tcl"
 
-    global Lcl_ribConfig
-    global Lcl_airfoilName
+    # make sure Lcl_ variables are known
+    global  AllGlobalVars_wADE
+    foreach {e} $AllGlobalVars_wADE {
+        global Lcl_$e
+    }
+    set Lcl_numRibsHalf    $numRibsHalf
 
-    set i 1
-    while {$i <= $numRibsHalf} {
+    for {set i 1} {$i <= $numRibsHalf} {incr i} {
 
         set Lcl_airfoilName($i) $airfoilName($i)
 
-        set Lcl_ribConfig($i,11) $ribConfig($i,11)
-        set Lcl_ribConfig($i,12) $ribConfig($i,12)
-        set Lcl_ribConfig($i,14) $ribConfig($i,14)
-        set Lcl_ribConfig($i,50) $ribConfig($i,50)
-        set Lcl_ribConfig($i,55) $ribConfig($i,55)
-        set Lcl_ribConfig($i,56) $ribConfig($i,56)
-
-        incr i
+        foreach k {1 11 12 14 50 55 56} {
+        set Lcl_ribConfig($i,$k)   $ribConfig($i,$k)
+        }
     }
 }
 
@@ -177,22 +144,21 @@ proc SetLclVars_wADE {} {
 proc ExportLclVars_wADE {} {
     source "globalWingVars.tcl"
 
-    global Lcl_ribConfig
-    global Lcl_airfoilName
+    # make sure Lcl_ variables are known
+    global  AllGlobalVars_wADE
+    foreach {e} $AllGlobalVars_wADE {
+        global Lcl_$e
+    }
 
-    set i 1
-    while {$i <= $numRibsHalf} {
+    set numRibsHalf    $Lcl_numRibsHalf
+
+    for {set i 1} {$i <= $numRibsHalf} {incr i} {
 
         set airfoilName($i) $Lcl_airfoilName($i)
 
-        set ribConfig($i,11) $Lcl_ribConfig($i,11)
-        set ribConfig($i,12) $Lcl_ribConfig($i,12)
-        set ribConfig($i,14) $Lcl_ribConfig($i,14)
-        set ribConfig($i,50) $Lcl_ribConfig($i,50)
-        set ribConfig($i,55) $Lcl_ribConfig($i,55)
-        set ribConfig($i,56) $Lcl_ribConfig($i,56)
-
-        incr i
+        foreach k {1 11 12 14 50 55 56} {
+        set ribConfig($i,$k)   $Lcl_ribConfig($i,$k)
+        }
     }
 }
 
@@ -214,10 +180,14 @@ proc ApplyButtonPress_wADE {} {
         set g_WingDataChanged       1
         set Lcl_wADE_DataChanged    0
     }
+    
+    # Redraw top view
+    #DrawTopView 
+    #DrawTailView
 }
 
 #----------------------------------------------------------------------
-#  OkButtonPress_wBDE
+#  OkButtonPress_wADE
 #  All action after the Ok button was pressed
 #
 #  IN:      N/A
@@ -225,7 +195,7 @@ proc ApplyButtonPress_wADE {} {
 #  Returns: N/A
 #----------------------------------------------------------------------
 proc OkButtonPress_wADE {} {
-    global .wade
+    global .wADE
     global g_WingDataChanged
     global Lcl_wADE_DataChanged
 
@@ -235,8 +205,12 @@ proc OkButtonPress_wADE {} {
         set Lcl_wADE_DataChanged    0
     }
 
+    # Redraw top view
+    #DrawTopView 
+    #DrawTailView
+
     UnsetLclVarTrace_wADE
-    destroy .wade
+    destroy .wADE
 }
 
 #----------------------------------------------------------------------
@@ -248,25 +222,25 @@ proc OkButtonPress_wADE {} {
 #  Returns: N/A
 #----------------------------------------------------------------------
 proc CancelButtonPress_wADE {} {
-    global .wade
+    global .wADE
     global g_WingDataChanged
     global Lcl_wADE_DataChanged
 
     if { $Lcl_wADE_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
-            focus .wade
+            focus .wADE
             return 0
         }
     }
 
     set Lcl_wADE_DataChanged 0
     UnsetLclVarTrace_wADE
-    destroy .wade
+    destroy .wADE
 
 }
 
@@ -281,7 +255,7 @@ proc CancelButtonPress_wADE {} {
 proc HelpButtonPress_wADE {} {
     source "userHelp.tcl"
 
-    displayHelpfile "airfoil-basic-data"
+    displayHelpfile "geometry-matrix-data"
 }
 
 #----------------------------------------------------------------------
@@ -304,7 +278,7 @@ proc SetLclVarTrace_wADE {} {
 }
 
 #----------------------------------------------------------------------
-#  UnsetLclVarTrace_wBDE
+#  UnsetLclVarTrace_wADE
 #  Stops tracing the changes of relevant local variables
 #
 #  IN:      N/A
@@ -337,4 +311,244 @@ proc SetLclChangeFlag_wADE { a e op } {
     global Lcl_wADE_DataChanged
 
     set Lcl_wADE_DataChanged 1
+}
+
+#----------------------------------------------------------------------
+#  addEdit_wADE
+#  Adds all the edit elements needed for the config
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc addEdit_wADE {} {
+    global .wADE
+
+    # make sure Lcl_ variables are known
+    global  AllGlobalVars_wADE
+    foreach {e} $AllGlobalVars_wADE {
+        global Lcl_$e
+    }
+
+    #-------------
+    # Config of top data section
+    # There's none
+
+    #-------------
+    # Config num of items
+    label       .wADE.dataMid.spacer00 -width 5 -text ""
+    grid        .wADE.dataMid.spacer00 -row 0 -column 0
+
+    button      .wADE.dataMid.b_decItems -width 10 -text [::msgcat::mc "dec Points"] -command DecItemLines_wADE -state disabled
+    grid        .wADE.dataMid.b_decItems -row 1 -column 1 -sticky e -padx 3 -pady 3
+
+    button      .wADE.dataMid.b_incItems -width 10 -text [::msgcat::mc "inc Points"]  -command IncItemLines_wADE
+    grid        .wADE.dataMid.b_incItems -row 1 -column 2 -sticky e -padx 3 -pady 3
+
+    label       .wADE.dataMid.spacer20 -width 5 -text ""
+    grid        .wADE.dataMid.spacer20 -row 2 -column 0
+
+    #-------------
+    # header for the item lines
+
+    label       .wADE.dataMid.spacerr -width 10 -text ""
+    grid        .wADE.dataMid.spacerr -row 3 -column 8 -sticky e
+
+    label       .wADE.dataMid.n1 -width 10 -text [::msgcat::mc "Num"]
+    grid        .wADE.dataMid.n1 -row 3 -column 0 -sticky e
+
+    label       .wADE.dataMid.n2 -width 20 -text [::msgcat::mc "Airfoil name"]
+    grid        .wADE.dataMid.n2 -row 3 -column 1 -sticky e
+
+    label       .wADE.dataMid.n3 -width 20 -text [::msgcat::mc "% cord inlet start"]
+    grid        .wADE.dataMid.n3 -row 3 -column 2 -sticky e
+
+    label       .wADE.dataMid.n4 -width 20 -text [::msgcat::mc "% cord inlet stop"]
+    grid        .wADE.dataMid.n4 -row 3 -column 3 -sticky e 
+
+    label       .wADE.dataMid.n5 -width 20 -text [::msgcat::mc "Closed/ open cell"]
+    grid        .wADE.dataMid.n5 -row 3 -column 4 -sticky e
+
+    label       .wADE.dataMid.n6 -width 20 -text [::msgcat::mc "Disp."]
+    grid        .wADE.dataMid.n6 -row 3 -column 5 -sticky e
+
+    label       .wADE.dataMid.n7 -width 20 -text [::msgcat::mc "rweight"]
+    grid        .wADE.dataMid.n7 -row 3 -column 6 -sticky e
+
+    label       .wADE.dataMid.n8 -width 20 -text [::msgcat::mc "Rot/ % Mini Rib"]
+    grid        .wADE.dataMid.n8 -row 3 -column 7 -sticky e
+
+        #-------------
+    # item lines
+    for { set i 1 } { $i <= $Lcl_numRibsHalf } { incr i } {
+        AddItemLine_wADE $i
+    }
+
+#    UpdateItemLineButtons_wADE
+}
+
+#----------------------------------------------------------------------
+#  DecItemLines_wADE
+#  Decreases the number of config item lines
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc DecItemLines_wADE {} {
+    global .wADE
+    global Lcl_numRibsHalf
+
+    destroy .wADE.dataBot.scroll.widgets.e_n1$Lcl_numRibsHalf
+    destroy .wADE.dataBot.scroll.widgets.e_n2$Lcl_numRibsHalf
+    destroy .wADE.dataBot.scroll.widgets.e_n3$Lcl_numRibsHalf
+    destroy .wADE.dataBot.scroll.widgets.e_n4$Lcl_numRibsHalf
+    destroy .wADE.dataBot.scroll.widgets.e_n5$Lcl_numRibsHalf
+    destroy .wADE.dataBot.scroll.widgets.e_n6$Lcl_numRibsHalf
+    destroy .wADE.dataBot.scroll.widgets.e_n7$Lcl_numRibsHalf
+    destroy .wADE.dataBot.scroll.widgets.e_n8$Lcl_numRibsHalf
+
+    incr Lcl_numRibsHalf -1
+
+    UpdateItemLineButtons_wADE
+
+    ResizeScrollFrame_wADE
+}
+
+#----------------------------------------------------------------------
+#  IncItemLines_wADE
+#  Increases the number of config item lines
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc IncItemLines_wADE {} {
+    global .wADE
+    global Lcl_numRibsHalf
+
+    incr Lcl_numRibsHalf
+
+    UpdateItemLineButtons_wADE
+
+    # init additional variables
+    CreateInitialItemLineVars_wADE
+
+    AddItemLine_wADE $Lcl_numRibsHalf
+
+    ResizeScrollFrame_wADE
+}
+
+#----------------------------------------------------------------------
+#  CreateInitialItemLineVars_wADE
+#  Create the initial vars to display an empty item line
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc CreateInitialItemLineVars_wADE {} {
+    global .wADE
+    # make sure Lcl_ variables are known
+    global  AllGlobalVars_wADE
+    foreach {e} $AllGlobalVars_wADE {
+        global Lcl_$e
+
+    }
+
+    # New airfoil name (!)
+    set Lcl_airfoilName($Lcl_numRibsHalf) "AirfoilName"
+
+    foreach k {1 11 12 14 50 55 56} {
+    set Lcl_ribConfig($Lcl_numRibsHalf,$k) 0
+    }
+    set Lcl_ribConfig($Lcl_numRibsHalf,1) $Lcl_numRibsHalf
+}
+
+
+#----------------------------------------------------------------------
+#  UpdateItemLineButtons_wADE
+#  Updates the status of the config item buttons depending on the number of
+#  lines.
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc UpdateItemLineButtons_wADE { } {
+    global .wADE
+    global Lcl_numRibsHalf
+
+    if {$Lcl_numRibsHalf > 1} {
+        .wADE.dataMid.b_decItems configure -state normal
+    } else {
+        .wADE.dataMid.b_decItems configure -state disabled
+    }
+}
+
+#----------------------------------------------------------------------
+#  AddItemLine_wADE
+#  Adds an additional Item Line to a tab
+#
+#  IN:      Line number to be added
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc AddItemLine_wADE { lineNum } {
+    global .wADE
+    global Lcl_numRibsHalf
+
+    ttk::entry  .wADE.dataBot.scroll.widgets.e_n1$lineNum -width 10 -textvariable Lcl_ribConfig($lineNum,1)
+    SetHelpBind .wADE.dataBot.scroll.widgets.e_n1$lineNum [::msgcat::mc "Rib number"] HelpText_wADE
+    grid        .wADE.dataBot.scroll.widgets.e_n1$lineNum -row [expr (4-1 + $lineNum)] -column 0 -sticky e -pady 1
+
+    ttk::entry  .wADE.dataBot.scroll.widgets.e_n2$lineNum -width 20 -textvariable Lcl_airfoilName($lineNum)
+    SetHelpBind .wADE.dataBot.scroll.widgets.e_n2$lineNum [::msgcat::mc "Airfoil name\nPut all airfoils in the working directory"] HelpText_wADE
+    grid        .wADE.dataBot.scroll.widgets.e_n2$lineNum -row [expr (4-1 + $lineNum)] -column 1 -sticky e -pady 1
+
+    ttk::entry  .wADE.dataBot.scroll.widgets.e_n3$lineNum -width 20 -textvariable Lcl_ribConfig($lineNum,11)
+    SetHelpBind .wADE.dataBot.scroll.widgets.e_n3$lineNum [::msgcat::mc "%% cord inlet start\nWARNING! Must be consistent with the txt airfoil points definition"] HelpText_wADE
+    grid        .wADE.dataBot.scroll.widgets.e_n3$lineNum -row [expr (4-1 + $lineNum)] -column 2 -sticky e -pady 1
+
+    ttk::entry  .wADE.dataBot.scroll.widgets.e_n4$lineNum -width 20 -textvariable Lcl_ribConfig($lineNum,12)
+    SetHelpBind .wADE.dataBot.scroll.widgets.e_n4$lineNum [::msgcat::mc "%% cord inlet stop\nWARNING! Must be consistent with the txt airfoil points definition"] HelpText_wADE
+    grid        .wADE.dataBot.scroll.widgets.e_n4$lineNum -row [expr (4-1 + $lineNum)] -column 3 -sticky e -pady 1
+
+    ttk::entry  .wADE.dataBot.scroll.widgets.e_n5$lineNum -width 20 -textvariable Lcl_ribConfig($lineNum,14)
+    SetHelpBind .wADE.dataBot.scroll.widgets.e_n5$lineNum [::msgcat::mc "Closed/ open cell\nTip: use section 26 for better control"] HelpText_wADE
+    grid        .wADE.dataBot.scroll.widgets.e_n5$lineNum -row [expr (4-1 + $lineNum)] -column 4 -sticky e -pady 1
+
+    ttk::entry  .wADE.dataBot.scroll.widgets.e_n6$lineNum -width 20 -textvariable Lcl_ribConfig($lineNum,50)
+    SetHelpBind .wADE.dataBot.scroll.widgets.e_n6$lineNum [::msgcat::mc "Vertical displacement"] HelpText_wADE
+    grid        .wADE.dataBot.scroll.widgets.e_n6$lineNum -row [expr (4-1 + $lineNum)] -column 5 -sticky e -pady 1
+
+    ttk::entry  .wADE.dataBot.scroll.widgets.e_n7$lineNum -width 20 -textvariable Lcl_ribConfig($lineNum,55)
+    SetHelpBind .wADE.dataBot.scroll.widgets.e_n7$lineNum [::msgcat::mc "Relative rib weight"] HelpText_wADE
+    grid        .wADE.dataBot.scroll.widgets.e_n7$lineNum -row [expr (4-1 + $lineNum)] -column 6 -sticky e -pady 1
+
+    ttk::entry  .wADE.dataBot.scroll.widgets.e_n8$lineNum -width 20 -textvariable Lcl_ribConfig($lineNum,56)
+    SetHelpBind .wADE.dataBot.scroll.widgets.e_n8$lineNum [::msgcat::mc "Set free rotation in ss or %% Mini Rib in ds"] HelpText_wADE
+    grid        .wADE.dataBot.scroll.widgets.e_n8$lineNum -row [expr (4-1 + $lineNum)] -column 7 -sticky e -pady 1
+
+
+}
+
+#----------------------------------------------------------------------
+#  ResizeScrollFrame_wADE
+#  Bandaid as the scroll pane will not resize correctly.
+#  Call this if items where added or deleted.
+#
+#  IN:      N/A
+#  OUT:     N/A
+#  Returns: N/A
+#----------------------------------------------------------------------
+proc ResizeScrollFrame_wADE { } {
+    global .wADE
+
+    set framesize [grid size .wADE.dataBot.scroll.widgets]
+
+    .wADE.dataBot.scroll.widgets configure -height [expr [lindex $framesize 1] * 22]
+
+    .wADE.dataBot.scroll create window 0 0 -anchor nw -window .wADE.dataBot.scroll.widgets
+    .wADE.dataBot.scroll configure -scrollregion [.wADE.dataBot.scroll bbox all]
 }

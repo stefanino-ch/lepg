@@ -93,9 +93,9 @@ proc wingMarksTypesDataEdit {} {
     #-------------
     # buttons
     button .wMARTY.btn.apply  -width 10 -text [::msgcat::mc "Apply"]    -command ApplyButtonPress_wMARTY
-    button .wMARTY.btn.ok     -width 10 -text "OK"        -command OkButtonPress_wMARTY
-    button .wMARTY.btn.cancel -width 10 -text "Cancel"    -command CancelButtonPress_wMARTY
-    button .wMARTY.btn.help   -width 10 -text "Help"      -command HelpButtonPress_wMARTY
+    button .wMARTY.btn.ok     -width 10 -text [::msgcat::mc "OK"]        -command OkButtonPress_wMARTY
+    button .wMARTY.btn.cancel -width 10 -text [::msgcat::mc "Cancel"]    -command CancelButtonPress_wMARTY
+    button .wMARTY.btn.help   -width 10 -text [::msgcat::mc "Help"]      -command HelpButtonPress_wMARTY
 
     grid .wMARTY.btn.apply     -row 0 -column 1 -sticky e -padx 10 -pady 10
     grid .wMARTY.btn.ok        -row 0 -column 2 -sticky e -padx 10 -pady 10
@@ -224,9 +224,9 @@ proc CancelButtonPress_wMARTY {} {
     if { $Lcl_wMARTY_DataChanged == 1} {
         # there is changed data
         # do warning dialog
-        set answer [tk_messageBox -title "Cancel" \
+        set answer [tk_messageBox -title [::msgcat::mc "Cancel"] \
                     -type yesno -icon warning \
-                    -message "All changed data will be lost.\nDo you really want to close the window"]
+                    -message [::msgcat::mc "All changed data will be lost.\nDo you really want to close the window?"]]
         if { $answer == "no" } {
             focus .wMARTY
             return 0
@@ -346,7 +346,7 @@ proc addEdit_wMARTY {} {
 
     #-------------
     # header for the item lines
-    label       .wMARTY.dataBot.scroll.widgets.n -width 10 -text "Num"
+    label       .wMARTY.dataBot.scroll.widgets.n -width 10 -text [::msgcat::mc "Num"]
     grid        .wMARTY.dataBot.scroll.widgets.n -row 0 -column 1 -sticky e
 
     label       .wMARTY.dataBot.scroll.widgets.p0 -width 15 -text [::msgcat::mc "Name"]
@@ -493,31 +493,31 @@ proc AddItemLine_wMARTY { lineNum } {
     grid        .wMARTY.dataBot.scroll.widgets.n$lineNum -row [expr (4-1 + $lineNum)] -column 1 -sticky e
 
     ttk::entry  .wMARTY.dataBot.scroll.widgets.e_p0$lineNum -width 15 -textvariable Lcl_marksType0($lineNum)
-    SetHelpBind .wMARTY.dataBot.scroll.widgets.e_p0$lineNum "Mark name"   HelpText_wMARTY
+    SetHelpBind .wMARTY.dataBot.scroll.widgets.e_p0$lineNum [::msgcat::mc "Mark name"]   HelpText_wMARTY
     grid        .wMARTY.dataBot.scroll.widgets.e_p0$lineNum -row [expr (4-1 + $lineNum)] -column 2 -sticky e -pady 1
 
     ttk::entry  .wMARTY.dataBot.scroll.widgets.e_p1$lineNum -width 10 -textvariable Lcl_marksType1($lineNum)
-    SetHelpBind .wMARTY.dataBot.scroll.widgets.e_p1$lineNum marksType1   HelpText_wMARTY
+    SetHelpBind .wMARTY.dataBot.scroll.widgets.e_p1$lineNum [::msgcat::mc "marksType1"]   HelpText_wMARTY
     grid        .wMARTY.dataBot.scroll.widgets.e_p1$lineNum -row [expr (4-1 + $lineNum)] -column 3 -sticky e -pady 1
 
     ttk::entry  .wMARTY.dataBot.scroll.widgets.e_p2$lineNum -width 10 -textvariable Lcl_marksType2($lineNum)
-    SetHelpBind .wMARTY.dataBot.scroll.widgets.e_p2$lineNum marksType2   HelpText_wMARTY
+    SetHelpBind .wMARTY.dataBot.scroll.widgets.e_p2$lineNum [::msgcat::mc "marksType2"]   HelpText_wMARTY
     grid        .wMARTY.dataBot.scroll.widgets.e_p2$lineNum -row [expr (4-1 + $lineNum)] -column 4 -sticky e -pady 1
 
     ttk::entry  .wMARTY.dataBot.scroll.widgets.e_p3$lineNum -width 10 -textvariable Lcl_marksType3($lineNum)
-    SetHelpBind .wMARTY.dataBot.scroll.widgets.e_p3$lineNum marksType3   HelpText_wMARTY
+    SetHelpBind .wMARTY.dataBot.scroll.widgets.e_p3$lineNum [::msgcat::mc "marksType3"]   HelpText_wMARTY
     grid        .wMARTY.dataBot.scroll.widgets.e_p3$lineNum -row [expr (4-1 + $lineNum)] -column 5 -sticky e -pady 1
 
     ttk::entry  .wMARTY.dataBot.scroll.widgets.e_p4$lineNum -width 10 -textvariable Lcl_marksType4($lineNum)
-    SetHelpBind .wMARTY.dataBot.scroll.widgets.e_p4$lineNum marksType4   HelpText_wMARTY
+    SetHelpBind .wMARTY.dataBot.scroll.widgets.e_p4$lineNum [::msgcat::mc "marksType4"]   HelpText_wMARTY
     grid        .wMARTY.dataBot.scroll.widgets.e_p4$lineNum -row [expr (4-1 + $lineNum)] -column 6 -sticky e -pady 1
 
     ttk::entry  .wMARTY.dataBot.scroll.widgets.e_p5$lineNum -width 10 -textvariable Lcl_marksType5($lineNum)
-    SetHelpBind .wMARTY.dataBot.scroll.widgets.e_p5$lineNum marksType5   HelpText_wMARTY
+    SetHelpBind .wMARTY.dataBot.scroll.widgets.e_p5$lineNum [::msgcat::mc "marksType5"]   HelpText_wMARTY
     grid        .wMARTY.dataBot.scroll.widgets.e_p5$lineNum -row [expr (4-1 + $lineNum)] -column 7 -sticky e -pady 1
 
     ttk::entry  .wMARTY.dataBot.scroll.widgets.e_p6$lineNum -width 10 -textvariable Lcl_marksType6($lineNum)
-    SetHelpBind .wMARTY.dataBot.scroll.widgets.e_p6$lineNum marksType6   HelpText_wMARTY
+    SetHelpBind .wMARTY.dataBot.scroll.widgets.e_p6$lineNum [::msgcat::mc "marksType6"]   HelpText_wMARTY
     grid        .wMARTY.dataBot.scroll.widgets.e_p6$lineNum -row [expr (4-1 + $lineNum)] -column 8 -sticky e -pady 1
 
 }
